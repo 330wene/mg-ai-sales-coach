@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="成交教练 · 对练">
+  <meta name="theme-color" content="#09172c">
+  <title>对练 · 产品讲解</title>
+  <style>
+    :root {
+      --navy: #09172c;
+      --navy-2: #0d2342;
+      --blue: #2869df;
+      --blue-light: #eef5ff;
+      --ink: #172033;
+      --text: #465268;
+      --muted: #8e98a9;
+      --line: #e3e8f0;
+      --page: #f3f5f8;
+      --white: #fff;
+      --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; background: #dfe4ec; color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+    button { appearance: none; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
+    .phone { width: min(390px, 100vw); height: min(844px, calc(100vh - 36px)); min-height: 700px; overflow: hidden; background: var(--page); border: 1px solid #cfd6e1; border-radius: 28px; box-shadow: 0 24px 64px rgba(20,32,52,.2); display: flex; flex-direction: column; }
+
+    .screen { display: none; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+    .screen.active { display: flex; }
+
+    /* ============================================= */
+    /*  OVERVIEW — 干净、专业、有动力感                */
+    /* ============================================= */
+
+    /* 深蓝顶栏 + 大字标题，延续原页面氛围 */
+    .ov-header { padding: 16px 16px 24px; color: #fff; background: #0d2342; flex-shrink: 0; }
+    .topbar { min-height: 30px; display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; }
+    .back { width: 30px; height: 30px; display: grid; place-items: center; color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.2); border-radius: 50%; font-size: 20px; }
+    .page-name { text-align: center; font-size: 14px; font-weight: 700; }
+    .ov-hero { margin-top: 20px; }
+    .ov-hero-eyebrow { color: #9fc2ff; font-size: 10px; font-weight: 700; letter-spacing: .5px; }
+    .ov-hero h1 { max-width: 300px; margin-top: 6px; font-size: 24px; line-height: 1.4; font-weight: 800; }
+    .ov-hero-meta { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: rgba(255,255,255,.6); font-size: 12px; }
+    .ov-hero-meta b { color: #fff; font-weight: 700; }
+
+    .ov-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+    .ov-scroll::-webkit-scrollbar { display: none; }
+
+    /* 分区标题 */
+    .ov-section { padding: 18px 16px 0; }
+    .ov-section-label { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .ov-section-label span { font-size: 13px; font-weight: 800; color: var(--ink); }
+    .ov-section-label .count { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--muted); }
+
+    /* 对练卡片 — 白底简洁，靠内容和层次打动导购 */
+    .ov-card { margin: 0 16px 8px; padding: 14px 16px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 10px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 4px rgba(20,40,72,.03); }
+    .ov-card-num { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 7px; font-size: 11px; font-weight: 800; flex-shrink: 0; color: var(--blue); background: var(--blue-light); }
+    .ov-card-info { flex: 1; min-width: 0; }
+    .ov-card-scene { font-size: 13px; font-weight: 700; line-height: 1.35; }
+    .ov-card-sub { margin-top: 2px; font-size: 11px; color: var(--muted); }
+
+    /* 底部按钮 — 深色按钮更有分量感，导购看了想点 */
+    .ov-bottom { padding: 20px 16px 28px; display: flex; flex-direction: column; align-items: center; }
+    .btn-start { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; color: #fff; background: #172033; border-radius: 12px; font-size: 16px; font-weight: 800; transition: transform .15s, box-shadow .15s; }
+    .btn-start:active { transform: scale(.98); }
+    .btn-start .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: dotBlink 1.2s ease-in-out infinite; }
+    @keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .ov-bottom-hint { margin-top: 10px; color: var(--muted); font-size: 11px; }
+
+    /* ============================================= */
+    /*  COUNTDOWN                                     */
+    /* ============================================= */
+    .countdown-overlay { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; background: rgba(9,23,44,.92); }
+    .countdown-overlay.show { display: grid; }
+    .countdown-num { font-size: 96px; font-weight: 900; color: #fff; animation: countPop .6s ease-out; }
+    @keyframes countPop {
+      0% { transform: scale(1.6); opacity: 0; }
+      60% { transform: scale(.95); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ============================================= */
+    /*  PRACTICE — 对练中                             */
+    /* ============================================= */
+    .pr-header { padding: 14px 16px 0; flex-shrink: 0; }
+    .pr-topbar { display: flex; align-items: center; gap: 10px; }
+    .pr-back { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #d5dbe5; border-radius: 50%; font-size: 18px; color: var(--text); }
+    .pr-path { display: flex; align-items: center; gap: 4px; margin: 8px 0 0; font-size: 10px; color: var(--muted); }
+    .pr-path .pdot { width: 6px; height: 6px; border-radius: 50%; background: #d0d7e2; flex-shrink: 0; }
+    .pr-path .pdot.active { background: var(--blue); }
+    .pr-path .pdot.done { background: #4ade80; }
+    .pr-progress-wrap { flex: 1; display: flex; align-items: center; gap: 8px; }
+    .pr-progress-bar { flex: 1; height: 5px; background: #e3e8f0; border-radius: 3px; overflow: hidden; }
+    .pr-progress-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width .35s ease; }
+    .pr-progress-label { font-size: 11px; font-weight: 700; color: var(--text); white-space: nowrap; }
+
+    .pr-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 16px 16px 0; }
+    .pr-scroll::-webkit-scrollbar { display: none; }
+
+    /* 场景标签 */
+    .pr-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; margin-bottom: 12px; color: var(--blue); background: var(--blue-light); }
+
+    /* 客户气泡 */
+    .pr-customer { margin-bottom: 14px; }
+    .pr-customer-label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .pr-customer-avatar { width: 28px; height: 28px; display: grid; place-items: center; color: #fff; background: #6b7d99; border-radius: 50%; font-size: 10px; font-weight: 700; }
+    .pr-customer-name { font-size: 12px; font-weight: 700; color: var(--text); }
+    .pr-customer-msg { padding: 14px 16px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 12px; border-top-left-radius: 4px; font-size: 14px; line-height: 1.6; box-shadow: 0 1px 4px rgba(20,40,72,.04); }
+
+    /* 播放语音按钮 — 统一蓝色系 */
+    .pr-play-wrap { margin-bottom: 18px; }
+    .btn-play { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background: #f0f4fb; border: 1px solid #d5e0f2; border-radius: 10px; color: var(--blue); font-size: 13px; font-weight: 700; transition: background .2s; }
+    .btn-play:active { background: #e3ebf8; }
+    .btn-play.played { background: #f4f9f6; border-color: #c3e0d2; color: #2d7a4a; }
+    .voice-waves { display: flex; align-items: center; gap: 2px; height: 16px; }
+    .voice-waves .bar { width: 3px; background: currentColor; border-radius: 2px; opacity: .35; }
+    .voice-waves.anim .bar { animation: waveAnim .6s ease-in-out infinite; }
+    .voice-waves.anim .bar:nth-child(1) { animation-delay: 0s; height: 8px; }
+    .voice-waves.anim .bar:nth-child(2) { animation-delay: .15s; height: 14px; }
+    .voice-waves.anim .bar:nth-child(3) { animation-delay: .3s; height: 10px; }
+    .voice-waves.anim .bar:nth-child(4) { animation-delay: .45s; height: 16px; }
+    @keyframes waveAnim { 0%,100%{opacity:.35;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.5)} }
+
+    /* 引导话术 — 用淡蓝底，与品牌一致 */
+    .pr-guide { margin-bottom: 14px; padding: 14px 16px; background: var(--blue-light); border: 1px solid #d5e0f2; border-radius: 10px; }
+    .pr-guide-label { display: flex; align-items: center; gap: 4px; color: var(--blue); font-size: 9px; font-weight: 800; margin-bottom: 6px; }
+    .pr-guide-text { font-size: 13px; line-height: 1.6; font-weight: 700; color: var(--ink); }
+
+    /* 说话区域 */
+    .pr-speaking { margin-bottom: 18px; padding: 24px 16px; background: var(--white); border: 2px solid #dfe5ed; border-radius: 12px; text-align: center; transition: border-color .3s, box-shadow .3s; }
+    .pr-speaking.listening { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(40,105,223,.08); }
+    .pr-speaking.done { border-color: #c3e0d2; background: #f9fdfb; }
+    .pr-mic { width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: #f0f4fb; display: grid; place-items: center; font-size: 22px; transition: background .3s; }
+    .pr-speaking.listening .pr-mic { background: var(--blue); color: #fff; animation: pulseRing 1.5s ease-in-out infinite; }
+    .pr-speaking.done .pr-mic { background: #e6f4ed; }
+    @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(40,105,223,.35)} 100%{box-shadow:0 0 0 18px rgba(40,105,223,0)} }
+    .pr-speaking-label { font-size: 12px; font-weight: 700; color: var(--text); }
+    .pr-speaking.listening .pr-speaking-label { color: var(--blue); }
+    .pr-speaking.done .pr-speaking-label { color: #2d7a4a; }
+    .pr-speaking-hint { margin-top: 4px; color: var(--muted); font-size: 10px; }
+
+    /* 底部操作 */
+    .pr-bottom { padding: 12px 16px 24px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
+    .btn-next { width: 100%; min-height: 46px; display: none; align-items: center; justify-content: center; gap: 6px; padding: 12px; color: #fff; background: #172033; border-radius: 10px; font-size: 14px; font-weight: 800; transition: transform .15s; }
+    .btn-next:active { transform: scale(.98); }
+    .btn-next.show { display: flex; }
+    .btn-end { width: 100%; min-height: 38px; display: flex; align-items: center; justify-content: center; padding: 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .btn-end:active { color: var(--text); }
+
+    /* ============================================= */
+    /*  COMPLETION — 鼓励但不油腻                      */
+    /* ============================================= */
+    .cp-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 48px 24px 28px; }
+    .cp-scroll::-webkit-scrollbar { display: none; }
+
+    .cp-icon { width: 80px; height: 80px; display: grid; place-items: center; background: #f0f4fb; border-radius: 50%; font-size: 40px; margin-bottom: 20px; }
+    .cp-title { font-size: 24px; font-weight: 900; color: var(--ink); }
+    .cp-sub { margin-top: 8px; color: var(--text); font-size: 14px; line-height: 1.6; }
+    .cp-sub b { color: var(--ink); }
+
+    .cp-stats { width: 100%; margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cp-stat { padding: 18px 14px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 10px; text-align: center; }
+    .cp-stat-val { font-size: 30px; font-weight: 900; color: var(--blue); }
+    .cp-stat-label { margin-top: 4px; font-size: 11px; color: var(--muted); }
+
+    .cp-store { width: 100%; margin-top: 16px; padding: 18px 16px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 10px; }
+    .cp-store-label { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .cp-store-sub { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .cp-store-avatars { display: flex; justify-content: center; margin-top: 12px; }
+    .cp-store-avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; border: 2px solid #fff; font-size: 11px; font-weight: 700; color: #fff; margin-left: -8px; }
+    .cp-store-avatar:first-child { margin-left: 0; }
+    .cp-store-avatar:nth-child(1) { background: #4b5563; }
+    .cp-store-avatar:nth-child(2) { background: #6b7280; }
+    .cp-store-avatar:nth-child(3) { background: #9ca3af; }
+    .cp-store-avatar:nth-child(4) { background: #4b5563; }
+    .cp-store-avatar:nth-child(5) { background: #6b7280; }
+    .cp-store-more { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; border: 2px solid #fff; background: #e5e7eb; font-size: 9px; font-weight: 700; color: var(--muted); margin-left: -8px; }
+
+    .cp-actions { width: 100%; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .btn-again { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; color: #fff; background: #172033; border-radius: 10px; font-size: 14px; font-weight: 800; }
+    .btn-goback { width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; padding: 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
+
+    @media (max-width: 430px) {
+      .stage { padding: 0; }
+      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="phone" role="application" aria-label="产品讲解对练">
+
+      <!-- ==================== OVERVIEW ==================== -->
+      <div class="screen active" id="overviewScreen">
+        <div class="ov-header">
+          <div class="topbar">
+            <button class="back" onclick="history.back()" aria-label="返回">‹</button>
+            <span class="page-name">产品讲解 · 对练</span>
+            <span></span>
+          </div>
+          <div class="ov-hero">
+            <div class="ov-hero-eyebrow">成交教练已为你准备好今天的对练</div>
+            <h1>把产品讲解练到脱口而出</h1>
+            <div class="ov-hero-meta">共 <b>6 组</b> 对练 <span style="margin:0 4px;">·</span> 约 <b>8 分钟</b></div>
+          </div>
+        </div>
+
+        <div class="ov-scroll">
+          <div class="ov-section">
+            <div class="ov-section-label"><span>还原今天的客户</span><span class="count">3 组</span></div>
+          </div>
+          <div id="reviewList"></div>
+
+          <div class="ov-section" style="padding-top:6px;">
+            <div class="ov-section-label"><span>举一反三</span><span class="count">3 组</span></div>
+          </div>
+          <div id="extendList"></div>
+
+          <div class="ov-bottom">
+            <button class="btn-start" id="btnStartDrill" type="button">
+              <span class="dot"></span>
+              开始练习
+            </button>
+            <span class="ov-bottom-hint">戴上耳机，效果更好</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PRACTICE ==================== -->
+      <div class="screen" id="practiceScreen">
+        <div class="pr-header">
+          <div class="pr-topbar">
+            <button class="pr-back" onclick="confirmEndPractice()" aria-label="返回">‹</button>
+            <div class="pr-progress-wrap">
+              <div class="pr-progress-bar"><div class="pr-progress-fill" id="progressFill" style="width:0%"></div></div>
+              <span class="pr-progress-label" id="progressLabel">0 / 6</span>
+            </div>
+          </div>
+          <div class="pr-path" id="prPath" style="display:none;">
+            <span>学习路径</span>
+            <span class="pdot active"></span><span>练</span>
+            <span style="margin:0 2px;">→</span>
+            <span class="pdot"></span><span>看</span>
+            <span style="margin:0 2px;">→</span>
+            <span class="pdot"></span><span>学</span>
+          </div>
+        </div>
+        <div class="pr-scroll" id="prScroll">
+          <span class="pr-tag" id="prTag">还原产品讲解</span>
+          <div class="pr-customer">
+            <div class="pr-customer-label">
+              <div class="pr-customer-avatar">客</div>
+              <span class="pr-customer-name" id="prCustomerName">客户</span>
+            </div>
+            <div class="pr-customer-msg" id="prCustomerMsg"></div>
+          </div>
+          <div class="pr-play-wrap">
+            <button class="btn-play" id="btnPlay" type="button">
+              <span class="voice-waves" id="voiceWaves"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
+              <span id="playLabel">播放客户语音</span>
+            </button>
+          </div>
+          <div class="pr-guide" id="prGuide" style="display:none;">
+            <div class="pr-guide-label">💡 你应该这样回应</div>
+            <div class="pr-guide-text" id="prGuideText"></div>
+          </div>
+          <div class="pr-speaking" id="prSpeaking">
+            <div class="pr-mic">🎤</div>
+            <div class="pr-speaking-label" id="prSpeakingLabel">听完客户语音后开始回答</div>
+            <div class="pr-speaking-hint" id="prSpeakingHint">请大声说出你的回应</div>
+          </div>
+        </div>
+        <div class="pr-bottom">
+          <button class="btn-next" id="btnNext" type="button"><span id="btnNextLabel">下一组 ›</span></button>
+          <button class="btn-end" id="btnEndPractice" type="button">结束练习</button>
+        </div>
+      </div>
+
+      <!-- ==================== COMPLETION ==================== -->
+      <div class="screen" id="completionScreen">
+        <div class="cp-scroll">
+          <div class="cp-icon">🏆</div>
+          <div class="cp-title">太棒了</div>
+          <div class="cp-sub">你今天完成了一次完整的对练，<br>每多练一次，面对客户就<b>多一分底气</b>。</div>
+
+          <div class="cp-stats">
+            <div class="cp-stat">
+              <div class="cp-stat-val">6<small style="font-size:15px;font-weight:600;"> 组</small></div>
+              <div class="cp-stat-label">今日完成对练</div>
+            </div>
+            <div class="cp-stat">
+              <div class="cp-stat-val">~8<small style="font-size:15px;font-weight:600;"> 分钟</small></div>
+              <div class="cp-stat-label">练习时长</div>
+            </div>
+          </div>
+
+          <div class="cp-store">
+            <div class="cp-store-label">张江门店</div>
+            <div class="cp-store-sub">今日已有 12 位同事完成对练</div>
+            <div class="cp-store-avatars">
+              <div class="cp-store-avatar">李</div>
+              <div class="cp-store-avatar">王</div>
+              <div class="cp-store-avatar">张</div>
+              <div class="cp-store-avatar">赵</div>
+              <div class="cp-store-avatar">陈</div>
+              <div class="cp-store-more">+7</div>
+            </div>
+          </div>
+
+          <div class="cp-actions">
+            <button class="btn-again" onclick="restartPractice()" type="button">再练一次</button>
+            <button class="btn-goback" id="btnGoBack" onclick="goBackAfterComplete()" type="button">返回产品讲解</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== COUNTDOWN ==================== -->
+  <div class="countdown-overlay" id="countdownOverlay">
+    <div class="countdown-num" id="countdownNum">3</div>
+  </div>
+
+  <script>
+    var PRACTICE_GROUPS = [
+      { id:'r1', type:'review', tag:'还原产品讲解', title:'带娃的姐姐 · MG7空间讲解', customerName:'带娃的姐姐', customerMsg:'后排放两个安全座椅，还能再坐一个大人吗？我平时还要带老人出门。', guide:'不要先报参数。先把空间翻译成一家人怎么坐：两个安全座椅装好，中间还能坐一个大人，接老人也方便。' },
+      { id:'r2', type:'review', tag:'还原产品讲解', title:'看半天的小伙子 · 配置与需求', customerName:'看半天的小伙子', customerMsg:'你讲了一堆配置，但我还是没搞明白，这车跟我每天上下班有什么关系？', guide:'别继续堆配置。问客户每天通勤多久、走什么路，然后把配置翻译成他每天遇到的具体场景。' },
+      { id:'r3', type:'review', tag:'还原产品讲解', title:'带媳妇那哥 · 婴儿车放置', customerName:'带媳妇那哥', customerMsg:'我媳妇比较在意后备箱，婴儿车好放吗？平时还要买菜装东西。', guide:'不要只说容积数字。让客户想象：婴儿车折叠后竖着放，旁边还能搁两袋超市的东西，媳妇肯定满意。' },
+      { id:'e1', type:'extend', tag:'AI 举一反三', title:'带父母的女儿 · 老人上下车', customerName:'带父母的女儿', customerMsg:'我爸妈年纪大了腿脚不太方便，这个车上下车会不会很费劲？', guide:'用场景代入法：车门开合角度大，座椅高度刚好不用弯腰也不用爬，让客户想象爸妈一抬脚就能坐进去。' },
+      { id:'e2', type:'extend', tag:'AI 举一反三', title:'刚拿驾照的女生 · 安全配置', customerName:'刚拿驾照的女生', customerMsg:'我刚拿了驾照不久，这个车有什么对我这种新手比较友好的功能吗？', guide:'不讲复杂术语。说自动刹车就像副驾坐了个老司机帮你踩刹车，车道保持就像方向盘自己会回正。' },
+      { id:'e3', type:'extend', tag:'AI 举一反三', title:'做生意的老板 · 商务接待', customerName:'做生意的老板', customerMsg:'我偶尔要接客户吃饭，后排空间够不够体面？不能让人觉得挤。', guide:'不用参数，用画面：客户坐后排翘个二郎腿，中间扶手放下来搁茶杯，聊着聊着就到了。' }
+    ];
+
+    var isDirect = (function(){
+      var params = new URLSearchParams(window.location.search);
+      return params.get('direct') === 'true';
+    })();
+
+    var currentIndex = 0;
+    var total = PRACTICE_GROUPS.length;
+    var hasPlayed = false;
+    var isListening = false;
+    var completed = false;
+    var $ = function(id){ return document.getElementById(id); };
+
+    // ---- Build overview lists ----
+    (function(){
+      var reviewHtml = '', extendHtml = '';
+      PRACTICE_GROUPS.forEach(function(g,i){
+        var card = '<div class="ov-card">'
+          + '<span class="ov-card-num">' + (i+1) + '</span>'
+          + '<div class="ov-card-info">'
+          + '<div class="ov-card-scene">' + g.title + '</div>'
+          + '<div class="ov-card-sub">' + g.tag + '</div>'
+          + '</div></div>';
+        if (g.type === 'review') reviewHtml += card;
+        else extendHtml += card;
+      });
+      $('reviewList').innerHTML = reviewHtml;
+      $('extendList').innerHTML = extendHtml;
+    })();
+
+    // ---- Screen switching ----
+    function showScreen(id){
+      document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+      var el = $(id);
+      if (el) el.classList.add('active');
+    }
+
+    // ---- Countdown ----
+    function countdown(cb){
+      var overlay = $('countdownOverlay');
+      var num = $('countdownNum');
+      overlay.classList.add('show');
+      var n = 3;
+      (function tick(){
+        if (n <= 0) { overlay.classList.remove('show'); cb(); return; }
+        num.textContent = n;
+        num.style.animation = 'none'; num.offsetHeight;
+        num.style.animation = 'countPop .6s ease-out';
+        n--; setTimeout(tick, 800);
+      })();
+    }
+
+    // ---- Start ----
+    $('btnStartDrill').addEventListener('click', function(){
+      startDrill();
+    });
+
+    function startDrill() {
+      countdown(function(){
+        currentIndex = 0; completed = false;
+        showScreen('practiceScreen');
+        // 学习路径指示器只在从产品讲解直通时显示
+        if (isDirect) $('prPath').style.display = 'flex';
+        loadGroup(0);
+      });
+    }
+
+    // 从产品讲解页直通：跳过总览，直接开始
+    if (isDirect) startDrill();
+
+    // ---- Load a group ----
+    function loadGroup(i){
+      var g = PRACTICE_GROUPS[i];
+      hasPlayed = false; isListening = false;
+      $('progressFill').style.width = Math.round((i/total)*100) + '%';
+      $('progressLabel').textContent = i + ' / ' + total;
+      $('prTag').textContent = g.tag;
+      $('prCustomerName').textContent = g.customerName;
+      $('prCustomerMsg').textContent = g.customerMsg;
+      $('prGuideText').textContent = g.guide;
+      $('prGuide').style.display = 'none';
+      var btn = $('btnPlay');
+      btn.classList.remove('played');
+      $('playLabel').textContent = '播放客户语音';
+      $('voiceWaves').classList.remove('anim');
+      $('prSpeaking').classList.remove('listening','done');
+      $('prSpeakingLabel').textContent = '听完客户语音后开始回答';
+      $('prSpeakingHint').textContent = '请大声说出你的回应';
+      $('btnNext').classList.remove('show');
+      $('prScroll').scrollTop = 0;
+    }
+
+    // ---- Play voice ----
+    $('btnPlay').addEventListener('click', function(){
+      var btn = this;
+      if (btn.classList.contains('played')) return;
+      btn.classList.add('played');
+      $('playLabel').textContent = '正在播放...';
+      $('voiceWaves').classList.add('anim');
+      setTimeout(function(){
+        $('playLabel').textContent = '已播放';
+        $('voiceWaves').classList.remove('anim');
+        hasPlayed = true;
+        $('prGuide').style.display = 'block';
+        setTimeout(startListening, 600);
+      }, 2500);
+    });
+
+    // ---- Listening ----
+    function startListening(){
+      if (!hasPlayed) return;
+      isListening = true;
+      $('prSpeaking').classList.add('listening');
+      $('prSpeaking').classList.remove('done');
+      $('prSpeakingLabel').textContent = '正在聆听...';
+      $('prSpeakingHint').textContent = '请对着麦克风说出你的回应';
+      setTimeout(function(){ if (isListening) completeSpeaking(); }, 4500);
+    }
+
+    $('prSpeaking').addEventListener('click', function(){
+      if (hasPlayed && isListening) completeSpeaking();
+    });
+
+    function completeSpeaking(){
+      isListening = false;
+      $('prSpeaking').classList.remove('listening');
+      $('prSpeaking').classList.add('done');
+      $('prSpeakingLabel').textContent = '已收到你的回答';
+      $('prSpeakingHint').textContent = '很好，继续保持';
+      $('btnNext').classList.add('show');
+      $('btnNextLabel').textContent = currentIndex >= total - 1 ? '完成练习' : '下一组 ›';
+    }
+
+    // ---- Next ----
+    $('btnNext').addEventListener('click', function(){
+      if (currentIndex >= total - 1) { showCompletion(); return; }
+      currentIndex++;
+      loadGroup(currentIndex);
+    });
+
+    // ---- End practice ----
+    function confirmEndPractice(){
+      if (completed) { goBack(); return; }
+      if (currentIndex > 0 || hasPlayed) {
+        if (confirm('确定要结束本次练习吗？已完成的进度不会丢失。')) showCompletion();
+      } else {
+        goBack();
+      }
+    }
+    function goBack(){
+      if (isDirect) { window.location.href = 'product-explanation.html'; }
+      else { showScreen('overviewScreen'); }
+    }
+    $('btnEndPractice').addEventListener('click', confirmEndPractice);
+
+    // ---- Completion ----
+    function showCompletion(){
+      completed = true; isListening = false;
+      $('progressFill').style.width = '100%';
+      $('progressLabel').textContent = total + ' / ' + total;
+      // 从产品讲解直通过来的，引导去下一步
+      if (isDirect) {
+        $('btnGoBack').textContent = '回去看看销冠怎么做的 →';
+        $('btnGoBack').style.fontWeight = '700';
+        $('btnGoBack').style.color = 'var(--blue)';
+      }
+      showScreen('completionScreen');
+    }
+
+    function goBackAfterComplete(){
+      if (isDirect) {
+        window.location.href = 'product-explanation.html?step=2';
+      } else {
+        history.back();
+      }
+    }
+
+    function restartPractice(){
+      if (isDirect) {
+        window.location.href = 'practice-drill.html?direct=true';
+      } else {
+        showScreen('overviewScreen');
+      }
+    }
+  </script>
+</body>
+</html>

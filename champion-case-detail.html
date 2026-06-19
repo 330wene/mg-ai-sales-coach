@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="销冠成交案例详情 — 小李・带娃客户成交案例">
+  <meta name="theme-color" content="#08172b">
+  <title>销冠案例详情</title>
+  <style>
+    /* ===== Design Tokens ===== */
+    :root {
+      --navy-950: #071327;
+      --navy-900: #0b234a;
+      --navy-800: #08172b;
+      --primary: #1677FF;
+      --primary-light: #EAF2FF;
+      --accent:       #c2410c;
+      --accent-soft:  #fff7ed;
+      --accent-light: #ffedd5;
+      --success: #10b981;
+      --ink: #1e293b;
+      --text: #334155;
+      --muted: #94a3b8;
+      --line: #e2e8f0;
+      --page: #eef1f6;
+      --card: #fff;
+      --card-border: #dde4f0;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.035), 0 2px 8px rgba(0,0,0,.025);
+      --shadow:    0 1px 3px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.04);
+      --shadow-lg: 0 24px 64px rgba(20, 32, 52, .2);
+      --radius-sm: 6px;
+      --radius: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    /* ===== Reset ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%; background: #dfe4ec;
+      font-family: var(--font); color: var(--ink);
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+    }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
+    button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
+    /* ===== Phone Container ===== */
+    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
+    .phone {
+      position: relative; width: min(390px, 100vw); height: min(844px, calc(100vh - 36px));
+      min-height: 700px; overflow: hidden; background: var(--page);
+      border: 1px solid #cfd6e1; border-radius: 28px; box-shadow: var(--shadow-lg);
+    }
+    .scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* ============================================
+       TOP NAV BAR
+       ============================================ */
+    .detail-nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 50px; padding: 14px 16px;
+      background: var(--navy-800);
+    }
+    .detail-back {
+      position: absolute; left: 14px;
+      width: 28px; height: 28px; display: grid; place-items: center;
+      color: #fff; font-size: 18px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 50%;
+      transition: background 0.15s;
+    }
+    .detail-back:active { background: rgba(255,255,255,.1); }
+    .detail-nav-title {
+      font-size: 15px; font-weight: 700; color: #fff; text-align: center;
+      padding: 0 40px; line-height: 1.35;
+    }
+
+    /* ===== Body ===== */
+    .detail-body { padding: 12px 14px 30px; display: grid; gap: 10px; }
+
+    /* ============================================
+       CORE INSIGHT CARD — 浅米黄色
+       ============================================ */
+    .core-insight {
+      background: #fffbef;
+      border: 1px solid #fef0d0;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      position: relative;
+    }
+    .core-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      margin-bottom: 12px;
+      font-size: 10.5px; font-weight: 700; color: var(--accent);
+      border: 1px solid var(--accent); border-radius: 20px;
+    }
+    .core-title {
+      font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .core-desc {
+      font-size: 13px; color: var(--text); line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .core-bottom {
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      padding-top: 10px; border-top: 1px solid #fef0d0;
+    }
+
+    /* ============================================
+       SECTION CARDS — 白色大圆角
+       ============================================ */
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .section-card.muted-bg {
+      background: #f6f7fa;
+      border-color: #eaecf2;
+      box-shadow: none;
+    }
+    .section-title {
+      font-size: 15px; font-weight: 800; color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    /* ===== Numbered items ===== */
+    .num-item {
+      display: flex; gap: 11px; align-items: flex-start;
+    }
+    .num-item + .num-item { margin-top: 18px; }
+    .num-circle {
+      flex: 0 0 22px; width: 22px; height: 22px; display: grid; place-items: center;
+      background: #eef0f5; color: var(--text); border-radius: 50%;
+      font-size: 12px; font-weight: 700; margin-top: 2px;
+    }
+    .num-body { min-width: 0; }
+    .num-label {
+      display: inline-block; font-size: 11px; font-weight: 700; color: #7a4e1f;
+      background: #fff7ed; padding: 3px 8px; border-radius: 4px;
+      margin-bottom: 4px;
+    }
+    .num-text {
+      font-size: 13px; color: var(--text); line-height: 1.55; margin-top: 0;
+    }
+
+    /* ===== Response block: 小李的回应 + 为什么管用 ===== */
+    .response-block {
+      margin-top: 10px;
+      background: #f6f7fa;
+      border-left: 1px solid #dde4f0;
+      border-radius: 8px;
+      padding: 12px 13px 10px;
+    }
+    .response-block .num-label {
+      margin-bottom: 5px;
+    }
+    .response-block .why-line {
+      margin-top: 8px; padding-top: 8px;
+      border-top: 1px solid #e8ecf2;
+      font-size: 12px; color: #596579; line-height: 1.55;
+    }
+    .why-line b { color: var(--ink); }
+
+    /* ============================================
+       LEARNING SECTION — 浅灰卡片
+       ============================================ */
+    .learn-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; color: var(--text); line-height: 1.6;
+    }
+    .learn-item + .learn-item { margin-top: 14px; }
+    .learn-num {
+      flex: 0 0 20px; width: 20px; height: 20px; display: grid; place-items: center;
+      background: var(--accent); color: #fff; border-radius: 50%;
+      font-size: 11px; font-weight: 700; margin-top: 2px;
+    }
+    .learn-body b { color: var(--ink); font-weight: 700; }
+
+    /* ===== Practice CTA inside learning card ===== */
+    .practice-cta {
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid #e8ecf2;
+    }
+    .practice-cta-title {
+      font-size: 14px; font-weight: 800; color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .practice-scene {
+      padding: 12px 13px;
+      background: #fff;
+      border: 1px solid #e8ecf2;
+      border-radius: 8px;
+      font-size: 13px; color: var(--text); line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .practice-scene-label {
+      font-size: 10px; font-weight: 700; color: var(--muted);
+      margin-bottom: 5px; letter-spacing: 0.03em;
+    }
+    .practice-btn {
+      width: 100%; min-height: 44px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      background: var(--accent); color: #fff; border-radius: 10px;
+      font-size: 14px; font-weight: 700;
+      box-shadow: 0 3px 12px rgba(194,65,12,.18);
+      transition: background 0.15s, transform 0.12s;
+    }
+    .practice-btn:active { background: #b03a0b; transform: scale(.98); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 430px) {
+      .stage { padding: 0; }
+      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="phone" role="application" aria-label="销冠成交案例详情">
+
+      <div class="scroll">
+
+        <!-- ===== NAV ===== -->
+        <nav class="detail-nav">
+          <button class="detail-back" onclick="window.history.length>1?history.back():location.href='成交教练.html'" aria-label="返回">‹</button>
+          <h1 class="detail-nav-title">小李・带娃客户成交案例</h1>
+        </nav>
+
+        <!-- ===== BODY ===== -->
+        <div class="detail-body">
+
+          <!-- ============ 核心结论卡片 ============ -->
+          <section class="core-insight">
+            <span class="core-tag">本单核心赢在：需求挖掘 + 场景化产品讲解</span>
+            <h2 class="core-title">不讲参数讲场景，客户问空间时直接给画面</h2>
+            <p class="core-desc">先摸清客户家里带老人、带孩子的真实用车场景，再把参数翻译成日常使用画面</p>
+            <p class="core-bottom">到店 18 分钟成交</p>
+          </section>
+
+          <!-- ============ 问题 → 解法 ============ -->
+          <section class="section-card">
+            <h3 class="section-title">问题 → 解法</h3>
+
+            <div class="num-item">
+              <span class="num-circle">1</span>
+              <div class="num-body">
+                <span class="num-label">客户信号</span>
+                <p class="num-text">年轻女性声音，对话中多次提到孩子、老人、周末出行。全程没主动问价格，最关心的是空间够不够用。</p>
+                <div class="response-block">
+                  <span class="num-label" style="background:#f3f4f6;color:#5f6c80;">小李怎么接</span>
+                  <p class="num-text">「姐，平时是不是经常带小朋友出门？」</p>
+                  <p class="why-line"><b>为什么管用</b>：她没问预算，没问"今天能定吗"。客户最在意空间，就先从空间聊起。一句反问让客户自己说出真实需求，比她推销十句都有用。</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="num-item">
+              <span class="num-circle">2</span>
+              <div class="num-body">
+                <span class="num-label">客户信号</span>
+                <p class="num-text">客户主动问了两次后排和后备厢空间。</p>
+                <div class="response-block">
+                  <span class="num-label" style="background:#f3f4f6;color:#5f6c80;">小李怎么接</span>
+                  <p class="num-text">客户问「后备厢多大」，不说升数：「儿童座椅装右边，左边坐两个大人。婴儿车折起来立着放，旁边还能塞三袋超市的东西。」</p>
+                  <p class="why-line"><b>为什么管用</b>：客户要的不是一个数字，是她带孩子出门的那个画面。把参数翻译成生活场景，她能想象到自己用这车的样子。想象到了，就想要了。</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="num-item">
+              <span class="num-circle">3</span>
+              <div class="num-body">
+                <span class="num-label">客户信号</span>
+                <p class="num-text">从她反复追问空间可以推断——她真正想确认的是后排能不能装儿童座椅+坐人，后备厢能不能塞婴儿车。这些话没直说，但每一次追问都指向同一个方向。</p>
+                <div class="response-block">
+                  <span class="num-label" style="background:#f3f4f6;color:#5f6c80;">小李怎么接</span>
+                  <p class="num-text">客户说「预算还是有点超」，没报优惠：「姐，你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？」</p>
+                  <p class="why-line"><b>为什么管用</b>：没替客户还价，而是帮客户自己算账。把前面所有解决了的问题摆出来，让客户自己得出「值」的结论。她自己觉得值，比销售说一百句都管用。</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 学习 + 练一下 ============ -->
+          <section class="section-card muted-bg">
+            <h3 class="section-title">学习重点</h3>
+
+            <div class="learn-item">
+              <span class="learn-num">1</span>
+              <div class="learn-body"><b>客户追问同一个方向超过两次</b>——她不是要你报数据，她是要你理解她的场景。小李问那句「是不是经常带小朋友出门」，不是在寒暄，是在帮客户把没说出口的真实需求摆到台面上。下次你也这样：别抢答，先反问一句，把真实需求引出来。</div>
+            </div>
+
+            <div class="learn-item">
+              <span class="learn-num">2</span>
+              <div class="learn-body"><b>客户问一个规格</b>——她不是在关心数字，她是在判断「这能不能装下我的生活」。小李把升数翻译成婴儿车+超市袋，客户听完直接问价。所有产品数据，能翻译成生活画面的，就别只报数字。</div>
+            </div>
+
+            <div class="practice-cta">
+              <h4 class="practice-cta-title">🎧 还原场景，练一下</h4>
+              <div class="practice-scene">
+                <div class="practice-scene-label">客户原话</div>
+                「车我挺喜欢的，但价格还是有点超预算，我先回去再考虑一下。」
+              </div>
+              <button class="practice-btn" onclick="this.textContent='AI 正在聆听，请说出你的回应…';this.style.background='#e65b5b';setTimeout(()=>{this.textContent='戴上耳机，练这一次';this.style.background='';},3000);" aria-label="开始场景对练">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 10v1a7 7 0 0014 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                戴上耳机，练这一次
+              </button>
+            </div>
+          </section>
+
+        </div><!-- /detail-body -->
+
+      </div><!-- /scroll -->
+    </div><!-- /phone -->
+  </main>
+</body>
+</html>

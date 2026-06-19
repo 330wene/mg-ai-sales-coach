@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="导购AI耳机陪练 — MG零售教练，每日基于真实接待录音归因未成交原因，提供实景对练">
+  <meta name="theme-color" content="#071327">
+  <title>导购AI耳机陪练</title>
+  <meta property="og:title" content="导购AI耳机陪练 — AI驱动导购能力提升">
+  <meta property="og:description" content="每日基于真实接待录音归因未成交原因，提供实景对练">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="./首页.png">
+  <style>
+    /* ===== Design Tokens ===== */
+    :root {
+      --blue-950: #071327;
+      --blue-900: #0b234a;
+      --blue-800: #153a78;
+      --blue-600: #2f6de5;
+      --blue-500: #4b84f5;
+      --blue-100: #eaf2ff;
+      --orange: #f27a2b;
+      --orange-soft: #fff3e8;
+      --red: #ec4e55;
+      --green: #2eac68;
+      --green-soft: #edfaf3;
+      --ink: #172033;
+      --text: #3f4a5e;
+      --muted: #8c96a8;
+      --line: #e7ebf1;
+      --page: #f3f5f8;
+      --card: #fff;
+      --shadow: 0 5px 18px rgba(19, 42, 77, .09);
+      --shadow-lg: 0 24px 64px rgba(20, 32, 52, .2);
+      --radius-sm: 7px;
+      --radius-md: 9px;
+      --radius-lg: 14px;
+      --radius-xl: 28px;
+      --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --transition-page: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; min-height: 100%; background: #dfe4ec;
+      font-family: var(--font); color: var(--ink);
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+    }
+    button { font: inherit; color: inherit; border: 0; padding: 0; background: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
+    button:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; border-radius: 4px; }
+    svg { display: block; }
+
+    /* ===== Phone Container ===== */
+    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
+    .phone {
+      position: relative; width: min(390px, 100vw); height: min(844px, calc(100vh - 36px));
+      min-height: 700px; overflow: hidden; background: var(--page);
+      border: 1px solid #cfd6e1; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);
+    }
+
+    /* ===== Page Stack ===== */
+    .page { position: absolute; inset: 0; display: block; opacity: 0; transform: translateX(24px); pointer-events: none; transition: opacity var(--transition-page), transform var(--transition-page); background: var(--page); overflow: hidden; }
+    .page.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .page.exit-left { opacity: 0; transform: translateX(-24px); }
+    .page.enter-right { transform: translateX(24px); }
+    .scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* ===== Home Page (kept as-is) ===== */
+    .home-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+    .home-shot.is-fallback { object-fit: contain; background: linear-gradient(180deg, #0b234a 0%, #153a78 40%, #f2f3f5 64.4%); padding: 20px; }
+    .todo-layer { position: absolute; z-index: 2; left: 0; right: 0; top: 64.4%; bottom: 0; padding: 9px 14px 6px; background: #f2f3f5; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+    .todo-layer::-webkit-scrollbar { display: none; }
+    .todo-head { min-height: 29px; display: flex; align-items: flex-start; justify-content: space-between; padding: 0 2px 8px; }
+    .todo-title { font-size: 18px; line-height: 21px; font-weight: 800; }
+    .todo-time { padding-top: 4px; color: #929aa7; font-size: 10px; }
+    .entry-card { width: 100%; height: 120px; display: grid; grid-template-columns: 1fr 18px; align-items: stretch; gap: 8px; margin-bottom: 8px; padding: 11px 12px 11px 14px; text-align: left; background: var(--card); border: 1px solid #e1e6ef; border-radius: 10px; box-shadow: 0 3px 12px rgba(26, 50, 86, .065); transition: transform 0.12s ease, border-color 0.12s ease; }
+    .entry-card:active { transform: scale(.99); border-color: #9bbaf1; }
+    .entry-copy { min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+    .entry-kicker { display: block; color: var(--blue-600); font-size: 11px; line-height: 1.25; font-weight: 700; margin-bottom: 5px; }
+    .entry-kicker.orange { color: #d95f15; }
+    .entry-name { display: block; font-size: 16px; line-height: 1.35; font-weight: 800; }
+    .entry-desc { display: block; margin-top: 7px; color: #6f7a8c; font-size: 10.5px; line-height: 1.45; }
+    .entry-arrow { width: 18px; display: grid; place-items: center; color: #8793a6; font-size: 20px; transition: transform 0.15s ease; }
+    .entry-card:active .entry-arrow { transform: translateX(2px); }
+
+    /* ================================================================
+       DIAGNOSIS PAGE — COMPLETE REDESIGN
+       ================================================================ */
+
+    /* ---- Hero: AI speaks directly, not a report header ---- */
+    .diagnosis { background: #fff; }
+    .diag-hero {
+      position: relative;
+      padding: 18px 18px 28px;
+      color: #fff;
+      background: linear-gradient(155deg, #060f22 0%, #0c2248 40%, #13386f 100%);
+      overflow: hidden;
+    }
+    .diag-hero::before {
+      content: ""; position: absolute; top: -80px; right: -60px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(75,132,245,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .diag-hero::after {
+      content: ""; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.08) 30%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.08) 70%, transparent);
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .topbar { height: 32px; display: flex; align-items: center; justify-content: space-between; }
+    .back {
+      width: 30px; height: 30px; display: grid; place-items: center; color: #fff;
+      border: 1px solid rgba(255,255,255,.2); border-radius: 50%; font-size: 18px;
+      transition: background 0.15s ease;
+    }
+    .back:active { background: rgba(255,255,255,.1); }
+    .top-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.5); letter-spacing: 0.02em; }
+    .top-date { color: rgba(255,255,255,.45); font-size: 10px; }
+
+    /* -- Hero greeting: warm, personal -- */
+    .hero-greet { margin-top: 24px; font-size: 17px; line-height: 1.55; color: rgba(255,255,255,.92); font-weight: 600; }
+    .hero-greet em { font-style: normal; color: #fff; }
+
+    /* -- Hero stat strip: the data punchline -- */
+    .hero-stat-strip {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 14px 0;
+    }
+    .stat-item { text-align: center; flex: 1; position: relative; }
+    .stat-num { display: block; font-size: 36px; font-weight: 800; line-height: 1; color: #fff; }
+    .stat-num.highlight { color: var(--orange); }
+    .stat-label { display: block; margin-top: 4px; font-size: 10px; color: rgba(255,255,255,.55); font-weight: 500; }
+    .stat-arrow { flex: 0 0 28px; display: grid; place-items: center; color: rgba(255,255,255,.25); font-size: 16px; padding-bottom: 12px; }
+
+    /* -- Hero comfort line -- */
+    .hero-comfort { margin-top: 6px; color: rgba(255,255,255,.6); font-size: 12px; line-height: 1.55; }
+
+    /* ---- Body: iOS-sheet style, rounded top ---- */
+    .diag-body {
+      position: relative; z-index: 2; margin-top: -14px;
+      padding: 0 14px 30px; background: #fff; border-radius: 16px 16px 0 0;
+    }
+
+    /* ============================================
+       CARD 1 — "就是这句话"
+       Chat-bubble discovery of the critical moment
+       ============================================ */
+    .moment-card {
+      margin-top: 16px;
+      padding: 16px 14px 14px;
+      background: #fff;
+      border: 1px solid #e8ecf2;
+      border-radius: 12px;
+      box-shadow: 0 3px 16px rgba(19,42,77,.06);
+    }
+    .moment-card-header { display: flex; align-items: center; gap: 7px; margin-bottom: 14px; }
+    .moment-icon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; background: #fff2e8; color: var(--orange); font-size: 13px; }
+    .moment-card-title { font-size: 15px; font-weight: 800; color: var(--ink); }
+    .moment-card-sub { font-size: 9px; color: var(--muted); margin-left: auto; }
+
+    /* Chat messages */
+    .chat-msg {
+      max-width: 88%;
+      padding: 11px 13px;
+      border-radius: 14px;
+      font-size: 12.5px;
+      line-height: 1.55;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .chat-msg.customer {
+      background: #f2f3f5;
+      border-bottom-left-radius: 4px;
+      margin-right: auto;
+      color: #3b4458;
+    }
+    .chat-msg.guide {
+      background: #e8effb;
+      border-bottom-right-radius: 4px;
+      margin-left: auto;
+      color: #2d3d5c;
+      text-align: right;
+    }
+    .chat-label { display: block; font-size: 8.5px; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .chat-msg.customer .chat-label { color: #8c96a8; }
+    .chat-msg.guide .chat-label { color: var(--blue-600); }
+
+    /* Gap callout: problem indicator between messages */
+    .gap-callout {
+      margin: 10px 0 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 10px 12px;
+      background: #fff8f2;
+      border-radius: 8px;
+      border: 1px solid #ffe8d4;
+    }
+    .gap-icon { flex-shrink: 0; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; background: #fff0e0; color: var(--orange); font-size: 11px; font-weight: 800; }
+    .gap-text { font-size: 11px; line-height: 1.45; color: #7a4e1f; }
+    .gap-text b { color: #b85e15; }
+
+    /* Data evidence: 10 dot indicator */
+    .data-strip { margin-top: 12px; display: flex; align-items: center; gap: 8px; }
+    .data-dots { display: flex; gap: 3px; }
+    .data-dot { width: 7px; height: 7px; border-radius: 50%; background: #dce2eb; }
+    .data-dot.hit { background: var(--orange); }
+    .data-label { font-size: 10px; color: var(--muted); }
+    .data-label b { color: var(--orange); font-weight: 800; }
+
+    /* ============================================
+       CARD 2 — "同样的话，销冠是这么说的"
+       Side-by-side comparison
+       ============================================ */
+    .compare-section { margin-top: 14px; }
+    .compare-section-title {
+      display: flex; align-items: center; gap: 7px; margin-bottom: 10px; padding: 0 2px;
+      font-size: 14px; font-weight: 800;
+    }
+    .compare-section-title .icon { font-size: 16px; }
+
+    .compare-dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .compare-col {
+      padding: 13px 11px 11px;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .compare-col.you {
+      background: #fef9f6;
+      border: 1px solid #fce4d2;
+    }
+    .compare-col.champion {
+      background: #f6fbf8;
+      border: 1px solid #d2edde;
+    }
+    .compare-col-tag {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+    }
+    .compare-col.you .compare-col-tag { background: #fef0e4; color: #c2651a; }
+    .compare-col.champion .compare-col-tag { background: #def0e4; color: #1d7a45; }
+
+    .compare-name { font-size: 9px; color: var(--muted); margin-bottom: 5px; }
+    .compare-quote {
+      font-size: 11.5px; line-height: 1.5; color: #3b4458;
+      margin-bottom: 8px; min-height: 52px;
+    }
+    .compare-quote::before { content: "「"; }
+    .compare-quote::after { content: "」"; }
+
+    .compare-play {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; color: var(--blue-600); font-weight: 700;
+      padding: 3px 0;
+    }
+    .compare-play-dot {
+      width: 18px; height: 18px; display: grid; place-items: center;
+      border-radius: 50%; border: 1px solid #b9cef6; font-size: 7px;
+    }
+    .compare-col.champion .compare-play-dot { border-color: #a3d9b8; }
+
+    .compare-insight {
+      margin-top: 9px; padding: 9px 11px;
+      background: #f8fafb; border-radius: 7px;
+      font-size: 10px; line-height: 1.5; color: #5a687c;
+    }
+    .compare-insight b { color: var(--ink); }
+
+    /* ============================================
+       CARD 3 — "今晚，把它练会"
+       Practice CTA — the most prominent action
+       ============================================ */
+    .practice-section { margin-top: 16px; }
+    .practice-card-new {
+      padding: 16px 14px;
+      border: 1.5px solid var(--blue-500);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 6px 22px rgba(47,109,229,.12);
+    }
+    .practice-header {
+      display: flex; align-items: center; gap: 7px; margin-bottom: 4px;
+    }
+    .practice-num {
+      font-size: 9px; font-weight: 800; color: var(--blue-600);
+      letter-spacing: 0.04em;
+    }
+    .practice-title-new { font-size: 16px; font-weight: 800; }
+    .practice-sub {
+      margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.45;
+    }
+
+    .scene-box-new {
+      margin-top: 12px; padding: 12px; background: #f6f9fe; border-radius: 8px;
+      border-left: 3px solid var(--blue-500);
+    }
+    .scene-label-new { color: var(--blue-600); font-size: 9px; font-weight: 700; margin-bottom: 5px; }
+    .scene-quote { font-size: 13px; line-height: 1.55; color: var(--text); font-weight: 600; }
+
+    .coach-hint {
+      margin-top: 10px; padding: 10px 11px; background: #fffbef;
+      border-radius: 7px; border: 1px solid #fef0d0;
+      font-size: 11px; line-height: 1.5; color: #6b5530;
+    }
+    .coach-hint b { color: #c2651a; font-size: 9px; display: block; margin-bottom: 3px; }
+
+    .primary-btn {
+      width: 100%; height: 46px; margin-top: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      color: #fff; background: var(--blue-600); border-radius: 8px;
+      font-size: 14px; font-weight: 800;
+      box-shadow: 0 4px 14px rgba(47,109,229,.25);
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
+    }
+    .primary-btn:active { transform: scale(.98); box-shadow: 0 2px 6px rgba(47,109,229,.15); }
+    .primary-btn.listening {
+      background: #e65b5b;
+      box-shadow: 0 4px 18px rgba(230,91,91,.32);
+      animation: pulse-red 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 4px 18px rgba(230,91,91,.32); }
+      50% { box-shadow: 0 4px 30px rgba(230,91,91,.5); }
+    }
+
+    /* ============================================
+       ABILITY GAUGE — compact 5-dimension strip
+       Supporting data, not the main story
+       ============================================ */
+    .ability-strip {
+      margin-top: 18px;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fafbfc;
+    }
+    .ability-strip-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .ability-strip-title { font-size: 11px; font-weight: 700; color: var(--text); }
+    .ability-strip-sub { font-size: 8.5px; color: var(--muted); }
+    .ability-rows { display: grid; gap: 6px; }
+    .ability-row { display: flex; align-items: center; gap: 8px; }
+    .ability-name { flex: 0 0 56px; font-size: 9px; color: var(--text); text-align: right; font-weight: 500; }
+    .ability-track { flex: 1; height: 6px; background: #e8ecf2; border-radius: 3px; overflow: hidden; }
+    .ability-fill { height: 100%; border-radius: 3px; background: #c5d0e0; transition: width 0.6s ease; }
+    .ability-fill.weak { background: var(--orange); }
+    .ability-fill.ok { background: #87b8f5; }
+    .ability-score { flex: 0 0 24px; font-size: 9px; font-weight: 700; color: var(--muted); text-align: right; }
+    .ability-score.low { color: var(--orange); }
+
+    .ability-verdict {
+      margin-top: 9px; padding-top: 8px; border-top: 1px solid #edf0f4;
+      font-size: 9.5px; color: #6f7a8b; line-height: 1.45;
+    }
+    .ability-verdict b { color: var(--orange); }
+
+    /* ============================================
+       MORE MATERIALS — expandable accordion
+       ============================================ */
+    details.more-materials {
+      margin-top: 10px; border: 1px solid var(--line); border-radius: 9px;
+      background: #fff; overflow: hidden;
+    }
+    details.more-materials summary {
+      list-style: none; min-height: 46px; display: flex; align-items: center;
+      padding: 0 12px; cursor: pointer; font-size: 12px; font-weight: 700;
+      transition: background 0.12s ease;
+    }
+    details.more-materials summary:active { background: #f7f9fc; }
+    details.more-materials summary::-webkit-details-marker { display: none; }
+    details.more-materials .chevron { color: #7f8a9c; transition: transform 0.22s ease; font-size: 14px; margin-left: auto; }
+    details.more-materials[open] > summary .chevron { transform: rotate(90deg); }
+    details.more-materials[open] > summary { border-bottom: 1px solid var(--line); }
+    .materials-body { padding: 10px; display: grid; gap: 6px; }
+    .material-row {
+      width: 100%; min-height: 43px; display: flex; align-items: center; gap: 9px;
+      padding: 8px 9px; text-align: left; background: #f8fafc; border-radius: 6px;
+      transition: background 0.12s ease;
+    }
+    .material-row:active { background: #edf1f8; }
+    .material-time { flex: 0 0 auto; color: var(--blue-600); font-size: 9px; font-weight: 800; }
+    .material-title { color: var(--text); font-size: 10px; font-weight: 700; }
+    .material-type { margin-left: auto; color: var(--muted); font-size: 9px; }
+
+    /* ===== Sub Pages (kept as-is) ===== */
+    .subpage { background: #f4f6f9; }
+    .sub-head { padding: 17px 16px 20px; color: #fff; background: linear-gradient(145deg, var(--blue-950), var(--blue-800)); }
+    .sub-nav { display: flex; align-items: center; gap: 12px; }
+    .sub-nav h1 { margin: 0; font-size: 17px; }
+    .sub-nav .back { flex-shrink: 0; }
+    .sub-copy { margin: 20px 2px 0; color: #c4d5f4; font-size: 11px; }
+    .sub-body { padding: 14px; }
+    .record-card, .library-card { margin-bottom: 9px; padding: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 3px 12px rgba(19,42,77,.05); transition: transform 0.12s ease; }
+    .record-card:active, .library-card:active { transform: scale(.99); }
+    .record-date { color: var(--muted); font-size: 10px; }
+    .record-title { margin: 5px 0 8px; font-size: 14px; font-weight: 800; }
+    .record-meta { display: flex; gap: 14px; color: var(--text); font-size: 10px; }
+    .record-meta b { color: var(--blue-600); }
+    .library-card { display: grid; grid-template-columns: 38px 1fr auto; gap: 10px; align-items: center; cursor: pointer; }
+    .library-icon { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 8px; color: var(--blue-600); background: var(--blue-100); font-weight: 800; }
+    .library-title { font-size: 13px; font-weight: 800; }
+    .library-desc { margin-top: 3px; color: var(--muted); font-size: 9px; }
+
+    .light-links { display: flex; justify-content: center; gap: 24px; margin: 22px 0 6px; }
+    .light-link { color: #9ba4b3; font-size: 11px; padding: 4px 8px; border-radius: 4px; transition: color 0.12s ease; }
+    .light-link:active { color: var(--blue-600); }
+    .light-link + .light-link { position: relative; }
+    .light-link + .light-link::before { content: ""; position: absolute; width: 1px; height: 11px; left: -12px; top: 2px; background: #d9dee6; }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: absolute; z-index: 10; left: 50%; bottom: 90px; max-width: 82%;
+      padding: 10px 16px; color: #fff; background: rgba(14,24,41,.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 22px; font-size: 11px; line-height: 1.4; white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transform: translate(-50%, 12px);
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 430px) {
+      .stage { padding: 0; }
+      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+    }
+
+    /* ===== Reduced Motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .page { transition: none; }
+      .primary-btn.listening { animation: none; }
+      .ability-fill { transition: none; }
+    }
+
+    /* ===== Animation ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .anim-1 { animation: fadeInUp 0.35s ease both; }
+    .anim-2 { animation: fadeInUp 0.35s ease 0.08s both; }
+    .anim-3 { animation: fadeInUp 0.35s ease 0.16s both; }
+    .anim-4 { animation: fadeInUp 0.35s ease 0.22s both; }
+    .anim-5 { animation: fadeInUp 0.35s ease 0.28s both; }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="phone" role="application" aria-label="导购AI耳机陪练产品原型">
+
+      <!-- ===== Home Page ===== -->
+      <section class="page active" id="home" aria-label="零售导购大师首页">
+        <img class="home-shot" src="./首页.png" alt="零售导购大师首页" loading="eager"
+          onerror="this.classList.add('is-fallback');this.alt='首页加载失败，请使用文字入口'">
+
+        <!-- 图片上的四宫格透明点击层（4个格子） -->
+        <!-- 图片上的四宫格透明点击层 → 全部跳转成交教练 -->
+        <a href="成交教练.html" aria-label="进入成交教练"
+          style="position:absolute;z-index:3;left:4%;top:50%;width:92%;height:18%;"></a>
+        <div class="todo-layer">
+          <div class="todo-head">
+            <div class="todo-title">待办任务</div>
+            <span class="todo-time">最近更新：18:42</span>
+          </div>
+          <button class="entry-card" data-href="成交教练.html" aria-label="今日未成交复盘：进入成交教练">
+            <span class="entry-copy">
+              <span class="entry-kicker">今日未成交复盘</span>
+              <span class="entry-name">别灰心，今天未成交的问题我们帮你找到了</span>
+              <span class="entry-desc">成交教练已听完全天接待对话，找到了根本原因，来看一看吧</span>
+            </span>
+            <span class="entry-arrow" aria-hidden="true">›</span>
+          </button>
+          <button class="entry-card" data-href="成交教练.html" aria-label="本店销冠对标：同店李晨今日成交3台MG7">
+            <span class="entry-copy">
+              <span class="entry-kicker orange">销冠经验分享</span>
+              <span class="entry-name">同店李晨今日成交了 3 台 MG7</span>
+              <span class="entry-desc">来看他是怎么打消客户顾虑、当场锁单的</span>
+            </span>
+            <span class="entry-arrow" aria-hidden="true">›</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           DIAGNOSIS PAGE — COMPLETE REDESIGN
+           Emotional journey: 共情 → 发现 → 对比 → 行动 → 延伸
+           ================================================================== -->
+      <section class="page diagnosis" id="diagnosis" aria-label="今日AI归因诊断">
+        <div class="scroll">
+
+          <!-- ===== HERO ===== -->
+          <header class="diag-hero">
+            <div class="hero-content">
+              <div class="topbar">
+                <button class="back" data-back aria-label="返回首页">‹</button>
+                <span class="top-label">AI 诊断报告</span>
+                <span class="top-date">6月19日</span>
+              </div>
+
+              <!-- 第一句话：我听了，我懂了 -->
+              <p class="hero-greet">
+                李娜，我把你今天<em>全部 10 组接待</em>都听完了。
+              </p>
+
+              <!-- 数据 punchline：10→6→1 -->
+              <div class="hero-stat-strip">
+                <div class="stat-item">
+                  <span class="stat-num">10</span>
+                  <span class="stat-label">组接待</span>
+                </div>
+                <span class="stat-arrow" aria-hidden="true">→</span>
+                <div class="stat-item">
+                  <span class="stat-num highlight">6</span>
+                  <span class="stat-label">组卡在同一个地方</span>
+                </div>
+                <span class="stat-arrow" aria-hidden="true">→</span>
+                <div class="stat-item">
+                  <span class="stat-num highlight" style="color:#f27a2b">1</span>
+                  <span class="stat-label">个共同根因</span>
+                </div>
+              </div>
+
+              <!-- 安抚：不是你不行 -->
+              <p class="hero-comfort">
+                不是产品知识的问题，也不是你不努力。<br>是你缺了<em style="color:#fff;font-style:normal;">一句关键的回应</em>。
+              </p>
+            </div>
+          </header>
+
+          <!-- ===== BODY ===== -->
+          <div class="diag-body">
+
+            <!-- ===== CARD 1: 就是这句话 ===== -->
+            <article class="moment-card anim-1">
+              <div class="moment-card-header">
+                <span class="moment-icon">🎯</span>
+                <span class="moment-card-title">就是这句话</span>
+                <span class="moment-card-sub">今天出现了 6 次</span>
+              </div>
+
+              <!-- 客户说的话 -->
+              <div class="chat-msg customer">
+                <span class="chat-label">客户原话</span>
+                车我挺喜欢的，但价格还是有点超预算，我先回去再考虑一下。
+              </div>
+
+              <!-- 你的回应 -->
+              <div class="chat-msg guide">
+                <span class="chat-label">你的回应</span>
+                现在正好有个活动，价格我可以帮您再申请一下，今天定下来肯定是最划算的。
+              </div>
+
+              <!-- 问题标注 -->
+              <div class="gap-callout">
+                <span class="gap-icon">!</span>
+                <span class="gap-text">
+                  <b>客户说「考虑一下」时</b>，他没有说"贵"，他是还有别的担心没说出来。你直接报了优惠，等于<em style="color:#b85e15;font-style:normal;">跳过了他最想被理解的部分</em>。
+                </span>
+              </div>
+
+              <!-- 数据点：10个点，6个橙色 -->
+              <div class="data-strip">
+                <div class="data-dots">
+                  <span class="data-dot hit"></span><span class="data-dot hit"></span>
+                  <span class="data-dot hit"></span><span class="data-dot hit"></span>
+                  <span class="data-dot hit"></span><span class="data-dot hit"></span>
+                  <span class="data-dot"></span><span class="data-dot"></span>
+                  <span class="data-dot"></span><span class="data-dot"></span>
+                </div>
+                <span class="data-label">10组接待中 <b>6组</b> 在这里卡住</span>
+              </div>
+            </article>
+
+            <!-- ===== CARD 2: 同样的话，销冠怎么说的 ===== -->
+            <section class="compare-section anim-2">
+              <div class="compare-section-title">
+                <span class="icon">👑</span> 同样的话，李晨是这么说的
+              </div>
+
+              <div class="compare-dual">
+                <!-- 你的版本 -->
+                <div class="compare-col you">
+                  <span class="compare-col-tag">你的回应</span>
+                  <div class="compare-name">今天 6 组客户都这样结束</div>
+                  <div class="compare-quote" style="min-height:68px;">现在正好有个活动，价格我可以帮您再申请一下</div>
+                  <button class="compare-play" data-toast="正在播放你的15秒关键录音">
+                    <span class="compare-play-dot">▶</span> 听录音
+                  </button>
+                </div>
+
+                <!-- 销冠的版本 -->
+                <div class="compare-col champion">
+                  <span class="compare-col-tag">李晨的回应</span>
+                  <div class="compare-name">同店今日销冠 · MG7 成交 3 台</div>
+                  <div class="compare-quote">您说回去考虑，主要是价格还没想好，还是家里人对车型有别的顾虑？</div>
+                  <button class="compare-play" data-toast="正在播放李晨40秒真实录音">
+                    <span class="compare-play-dot">▶</span> 听录音
+                  </button>
+                </div>
+              </div>
+
+              <div class="compare-insight anim-2">
+                <b>就差一句话。</b>李晨没有报优惠，他先<em style="color:var(--ink);font-style:normal;">问出了客户「考虑」背后真正的原因</em>。客户要的不是便宜，是有人懂他在担心什么。
+              </div>
+            </section>
+
+            <!-- ===== CARD 3: 今晚，把它练会 ===== -->
+            <section class="practice-section anim-3">
+              <article class="practice-card-new">
+                <div class="practice-header">
+                  <span class="practice-num">今晚练习</span>
+                </div>
+                <div class="practice-title-new">把今天最遗憾的场景，重来一次</div>
+                <div class="practice-sub">AI 扮演今天的 MG7 客户，你戴上现有耳机直接回应。说到你满意为止。</div>
+
+                <!-- 客户场景 -->
+                <div class="scene-box-new">
+                  <div class="scene-label-new">客户原话</div>
+                  <div class="scene-quote">"车我挺喜欢的，但价格还是有点超预算，我回去再考虑一下。"</div>
+                </div>
+
+                <!-- 教练提示 -->
+                <div class="coach-hint">
+                  <b>💡 卡住了就说这一句</b>
+                  "您说回去考虑，主要是价格还没想好，还是家里人对车型还有顾虑？"
+                </div>
+
+                <!-- 语音按钮 -->
+                <button class="primary-btn voice-btn" aria-live="polite">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M5 10v1a7 7 0 0014 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <span>戴上耳机，练这一次</span>
+                </button>
+              </article>
+            </section>
+
+            <!-- ===== 五维能力画像（辅助，不抢戏） ===== -->
+            <section class="ability-strip anim-4" aria-label="今日五维能力画像">
+              <div class="ability-strip-head">
+                <span class="ability-strip-title">今日能力画像</span>
+                <span class="ability-strip-sub">MG 五维能力模型</span>
+              </div>
+              <div class="ability-rows">
+                <div class="ability-row">
+                  <span class="ability-name">需求分析</span>
+                  <span class="ability-track"><span class="ability-fill weak" style="width:42%"></span></span>
+                  <span class="ability-score low">42</span>
+                </div>
+                <div class="ability-row">
+                  <span class="ability-name">产品知识</span>
+                  <span class="ability-track"><span class="ability-fill ok" style="width:78%"></span></span>
+                  <span class="ability-score">78</span>
+                </div>
+                <div class="ability-row">
+                  <span class="ability-name">竞品应对</span>
+                  <span class="ability-track"><span class="ability-fill" style="width:55%"></span></span>
+                  <span class="ability-score">55</span>
+                </div>
+                <div class="ability-row">
+                  <span class="ability-name">客户跟进</span>
+                  <span class="ability-track"><span class="ability-fill" style="width:50%"></span></span>
+                  <span class="ability-score">50</span>
+                </div>
+                <div class="ability-row">
+                  <span class="ability-name">成交推进</span>
+                  <span class="ability-track"><span class="ability-fill ok" style="width:70%"></span></span>
+                  <span class="ability-score">70</span>
+                </div>
+              </div>
+              <div class="ability-verdict">
+                <b>需求分析</b>是今天的核心卡点——客户说出顾虑时没有继续追问。另外竞品应对和客户跟进也需要关注。
+              </div>
+            </section>
+
+            <!-- ===== 更多素材 ===== -->
+            <details class="more-materials anim-5">
+              <summary>
+                <span>📚 还想继续提升？今天专门给你挑了 3 段素材</span>
+                <span class="chevron" aria-hidden="true">›</span>
+              </summary>
+              <div class="materials-body">
+                <button class="material-row" data-toast="开始播放30秒示范">
+                  <span class="material-time">00:30</span>
+                  <span class="material-title">客户说"贵"，先问哪一句？</span>
+                  <span class="material-type">短视频</span>
+                </button>
+                <button class="material-row" data-toast="话术卡已展开">
+                  <span class="material-time">20秒</span>
+                  <span class="material-title">把"贵"拆成3种真实顾虑</span>
+                  <span class="material-type">话术卡</span>
+                </button>
+                <button class="material-row" data-toast="异议案例已展开">
+                  <span class="material-time">45秒</span>
+                  <span class="material-title">不降价也能推进下一步</span>
+                  <span class="material-type">案例</span>
+                </button>
+              </div>
+            </details>
+
+            <!-- 底部入口 -->
+            <nav class="light-links" aria-label="完整产品能力入口">
+              <button class="light-link" data-go="records">我的练习记录</button>
+              <button class="light-link" data-go="library">总部资料库</button>
+            </nav>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Records Page ===== -->
+      <section class="page subpage" id="records" aria-label="我的练习和学习记录">
+        <div class="scroll">
+          <header class="sub-head">
+            <div class="sub-nav"><button class="back" data-back aria-label="返回诊断页">‹</button><h1>我的练习/学习记录</h1></div>
+            <p class="sub-copy">把每天修复过的问题留下来，看见自己真实的变化。</p>
+          </header>
+          <div class="sub-body">
+            <article class="record-card"><div class="record-date">6月19日 · 今日</div><div class="record-title">预算异议背后的需求追问</div><div class="record-meta"><span>AI对练 <b>2次</b></span><span>学习素材 <b>3条</b></span><span>最佳表现 <b>82</b></span></div></article>
+            <article class="record-card"><div class="record-date">6月18日</div><div class="record-title">竞品配置比较转向场景价值</div><div class="record-meta"><span>AI对练 <b>1次</b></span><span>学习素材 <b>2条</b></span><span>最佳表现 <b>78</b></span></div></article>
+            <article class="record-card"><div class="record-date">6月17日</div><div class="record-title">试驾后推进留资与二次邀约</div><div class="record-meta"><span>AI对练 <b>3次</b></span><span>学习素材 <b>1条</b></span><span>最佳表现 <b>85</b></span></div></article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Library Page ===== -->
+      <section class="page subpage" id="library" aria-label="完整总部资料库">
+        <div class="scroll">
+          <header class="sub-head">
+            <div class="sub-nav"><button class="back" data-back aria-label="返回诊断页">‹</button><h1>完整总部资料库</h1></div>
+            <p class="sub-copy">MG官方全量培训素材，供需要系统自学时使用。</p>
+          </header>
+          <div class="sub-body">
+            <article class="library-card"><span class="library-icon">车</span><span><span class="library-title">车型与产品知识</span><span class="library-desc">MG全系车型参数、卖点、适配人群</span></span><span aria-hidden="true">›</span></article>
+            <article class="library-card"><span class="library-icon">需</span><span><span class="library-title">需求分析方法</span><span class="library-desc">预算、意向、隐藏顾虑识别</span></span><span aria-hidden="true">›</span></article>
+            <article class="library-card"><span class="library-icon">竞</span><span><span class="library-title">竞品应对手册</span><span class="library-desc">主流竞品对比与合规应对话术</span></span><span aria-hidden="true">›</span></article>
+            <article class="library-card"><span class="library-icon">服</span><span><span class="library-title">服务体验与接待SOP</span><span class="library-desc">接待节奏、礼仪、共情与临场应变</span></span><span aria-hidden="true">›</span></article>
+            <article class="library-card"><span class="library-icon">跟</span><span><span class="library-title">客户跟进与私域</span><span class="library-desc">留资、回访、二次触达、意向激活</span></span><span aria-hidden="true">›</span></article>
+          </div>
+        </div>
+      </section>
+
+      <div class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+      const pages = [...document.querySelectorAll('.page')];
+      const toast = document.querySelector('.toast');
+      const phone = document.querySelector('.phone');
+      let toastTimer = 0;
+      let navHistory = ['home'];
+
+      function showPage(id, pushHistory = true) {
+        const current = pages.find(p => p.classList.contains('active'));
+        const target = pages.find(p => p.id === id);
+        if (!target || current === target) return;
+        if (current) { current.classList.add('exit-left'); current.classList.remove('active'); }
+        target.classList.add('active', 'enter-right'); target.classList.remove('exit-left');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            target.classList.remove('enter-right');
+            if (current) current.classList.remove('exit-left');
+          });
+        });
+        if (pushHistory) navHistory.push(id);
+        const scrollEl = target.querySelector('.scroll');
+        if (scrollEl) scrollEl.scrollTop = 0;
+      }
+
+      function goBack() {
+        if (navHistory.length <= 1) return;
+        navHistory.pop();
+        showPage(navHistory[navHistory.length - 1], false);
+      }
+
+      function showToast(message, duration = 1800) {
+        clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.classList.add('show');
+        toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+      }
+
+      phone.addEventListener('click', function (event) {
+        const hrefBtn = event.target.closest('[data-href]');
+        if (hrefBtn) { location.href = hrefBtn.dataset.href; return; }
+        const navBtn = event.target.closest('[data-go]');
+        if (navBtn) { showPage(navBtn.dataset.go); return; }
+        const backBtn = event.target.closest('[data-back]');
+        if (backBtn) { goBack(); return; }
+        const toastTrigger = event.target.closest('[data-toast]');
+        if (toastTrigger) { event.preventDefault(); showToast(toastTrigger.dataset.toast); return; }
+      });
+
+      const voiceBtn = document.querySelector('.voice-btn');
+      if (voiceBtn) {
+        voiceBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const listening = this.classList.toggle('listening');
+          const label = this.querySelector('span');
+          if (listening) {
+            label.textContent = '正在聆听，请回应客户...';
+            showToast('AI 正在聆听，说出你的回应', 2500);
+          } else {
+            label.textContent = '戴上耳机，练这一次';
+            showToast('练习已结束，可以查看回放', 1500);
+          }
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') goBack();
+      });
+
+      document.querySelectorAll('.scroll, .todo-layer').forEach(function (el) {
+        el.addEventListener('touchstart', function () {}, { passive: true });
+      });
+    })();
+  </script>
+</body>
+</html>
