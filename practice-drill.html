@@ -4,189 +4,440 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="description" content="成交教练 · 对练">
-  <meta name="theme-color" content="#09172c">
+  <meta name="theme-color" content="#080d17">
   <title>对练 · 产品讲解</title>
   <style>
     :root {
-      --navy: #09172c;
-      --navy-2: #0d2342;
-      --blue: #2869df;
-      --blue-light: #eef5ff;
-      --ink: #172033;
-      --text: #465268;
-      --muted: #8e98a9;
-      --line: #e3e8f0;
-      --page: #f3f5f8;
-      --white: #fff;
+      --bg-deep:    #080d17;
+      --bg-page:    #0b1121;
+      --bg-card:    #111827;
+      --bg-card-alt:#161f32;
+      --bg-input:   #1a2540;
+
+      --accent:        #4a8cff;
+      --accent-strong: #3b7eef;
+      --accent-glow:   rgba(74,140,255,0.35);
+      --accent-soft:   rgba(74,140,255,0.08);
+
+      --gold:          #f5a623;
+      --gold-soft:     rgba(245,166,35,0.12);
+      --green:         #10b981;
+      --green-soft:    rgba(16,185,129,0.12);
+      --purple:        #8b5cf6;
+      --purple-soft:   rgba(139,92,246,0.12);
+
+      --text-primary:  #e8ecf4;
+      --text-body:     #b4c0d4;
+      --text-muted:    #7d8fa6;
+
+      --border-card:   #1e2a3f;
+      --border-subtle: #162033;
+
+      --shadow-card:  0 2px 8px rgba(0,0,0,0.28);
+      --shadow-btn:   0 4px 20px rgba(74,140,255,0.25);
+
+      --radius:   12px;
+      --radius-lg:16px;
+      --radius-xl:20px;
+      --radius-full:28px;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
+      --ease-breathing: cubic-bezier(0.45, 0, 0.55, 1);
+
       --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { min-height: 100%; background: #dfe4ec; color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+    html, body {
+      min-height: 100%; min-height: 100dvh;
+      background: #050914;
+      color: var(--text-primary);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
     button { appearance: none; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
-    button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
-    .phone { width: min(390px, 100vw); height: min(844px, calc(100vh - 36px)); min-height: 700px; overflow: hidden; background: var(--page); border: 1px solid #cfd6e1; border-radius: 28px; box-shadow: 0 24px 64px rgba(20,32,52,.2); display: flex; flex-direction: column; }
+    .stage { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 18px; }
+    .phone {
+      width: min(390px, 100vw); height: min(844px, calc(100dvh - 36px));
+      min-height: 700px; overflow: hidden;
+      background: var(--bg-page);
+      border: 1px solid #1e2a3f;
+      border-radius: 28px;
+      box-shadow: 0 0 60px rgba(74,140,255,0.04), 0 24px 64px rgba(0,0,0,0.45);
+      display: flex; flex-direction: column;
+    }
 
     .screen { display: none; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
     .screen.active { display: flex; }
 
-    /* ============================================= */
-    /*  OVERVIEW — 干净、专业、有动力感                */
-    /* ============================================= */
+    .hide-scroll { scrollbar-width: none; }
+    .hide-scroll::-webkit-scrollbar { display: none; }
 
-    /* 深蓝顶栏 + 大字标题，延续原页面氛围 */
-    .ov-header { padding: 16px 16px 24px; color: #fff; background: #0d2342; flex-shrink: 0; }
-    .topbar { min-height: 30px; display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; }
-    .back { width: 30px; height: 30px; display: grid; place-items: center; color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.2); border-radius: 50%; font-size: 20px; }
-    .page-name { text-align: center; font-size: 14px; font-weight: 700; }
-    .ov-hero { margin-top: 20px; }
-    .ov-hero-eyebrow { color: #9fc2ff; font-size: 10px; font-weight: 700; letter-spacing: .5px; }
-    .ov-hero h1 { max-width: 300px; margin-top: 6px; font-size: 24px; line-height: 1.4; font-weight: 800; }
-    .ov-hero-meta { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: rgba(255,255,255,.6); font-size: 12px; }
-    .ov-hero-meta b { color: #fff; font-weight: 700; }
-
-    .ov-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
-    .ov-scroll::-webkit-scrollbar { display: none; }
-
-    /* 分区标题 */
-    .ov-section { padding: 18px 16px 0; }
-    .ov-section-label { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .ov-section-label span { font-size: 13px; font-weight: 800; color: var(--ink); }
-    .ov-section-label .count { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--muted); }
-
-    /* 对练卡片 — 白底简洁，靠内容和层次打动导购 */
-    .ov-card { margin: 0 16px 8px; padding: 14px 16px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 10px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 4px rgba(20,40,72,.03); }
-    .ov-card-num { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 7px; font-size: 11px; font-weight: 800; flex-shrink: 0; color: var(--blue); background: var(--blue-light); }
-    .ov-card-info { flex: 1; min-width: 0; }
-    .ov-card-scene { font-size: 13px; font-weight: 700; line-height: 1.35; }
-    .ov-card-sub { margin-top: 2px; font-size: 11px; color: var(--muted); }
-
-    /* 底部按钮 — 深色按钮更有分量感，导购看了想点 */
-    .ov-bottom { padding: 20px 16px 28px; display: flex; flex-direction: column; align-items: center; }
-    .btn-start { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; color: #fff; background: #172033; border-radius: 12px; font-size: 16px; font-weight: 800; transition: transform .15s, box-shadow .15s; }
-    .btn-start:active { transform: scale(.98); }
-    .btn-start .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: dotBlink 1.2s ease-in-out infinite; }
-    @keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
-    .ov-bottom-hint { margin-top: 10px; color: var(--muted); font-size: 11px; }
-
-    /* ============================================= */
-    /*  COUNTDOWN                                     */
-    /* ============================================= */
-    .countdown-overlay { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; background: rgba(9,23,44,.92); }
-    .countdown-overlay.show { display: grid; }
-    .countdown-num { font-size: 96px; font-weight: 900; color: #fff; animation: countPop .6s ease-out; }
-    @keyframes countPop {
-      0% { transform: scale(1.6); opacity: 0; }
-      60% { transform: scale(.95); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
+    /* ============================================================
+       KEYFRAMES
+       ============================================================ */
+    @keyframes voiceWave {
+      0%,100% { transform: scaleY(0.35); opacity: 0.35; }
+      50%     { transform: scaleY(1);    opacity: 1; }
+    }
+    @keyframes coachWave {
+      0%,100% { height: 4px;  opacity: 0.3; }
+      30%     { height: 14px; opacity: 0.8; }
+      60%     { height: 6px;  opacity: 0.5; }
+    }
+    @keyframes speakBtnBreathe {
+      0%,100% { box-shadow: 0 4px 24px rgba(74,140,255,0.25); transform: scale(1); }
+      50%     { box-shadow: 0 4px 36px rgba(74,140,255,0.45); transform: scale(1.012); }
+    }
+    @keyframes speakShimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes streamIn {
+      0%   { opacity: 0; transform: translateY(6px); max-height: 0; }
+      60%  { opacity: 0.7; }
+      100% { opacity: 1; transform: translateY(0); max-height: 200px; }
+    }
+    @keyframes breatheGlow {
+      0%,100% { box-shadow: 0 0 4px rgba(74,140,255,0.08), 0 0 8px rgba(74,140,255,0.04); }
+      50%     { box-shadow: 0 0 12px rgba(74,140,255,0.18), 0 0 24px rgba(74,140,255,0.08); }
+    }
+    @keyframes trophyBreathe {
+      0%,100% { box-shadow: 0 0 20px rgba(245,166,35,0.06); }
+      50%     { box-shadow: 0 0 50px rgba(245,166,35,0.18); }
     }
 
-    /* ============================================= */
-    /*  PRACTICE — 对练中                             */
-    /* ============================================= */
-    .pr-header { padding: 14px 16px 0; flex-shrink: 0; }
+    /* ============================================================
+       HEADER — topbar + 6-step dot indicator
+       ============================================================ */
+    .pr-header { padding: 12px 16px 0; flex-shrink: 0; }
     .pr-topbar { display: flex; align-items: center; gap: 10px; }
-    .pr-back { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #d5dbe5; border-radius: 50%; font-size: 18px; color: var(--text); }
-    .pr-path { display: flex; align-items: center; gap: 4px; margin: 8px 0 0; font-size: 10px; color: var(--muted); }
-    .pr-path .pdot { width: 6px; height: 6px; border-radius: 50%; background: #d0d7e2; flex-shrink: 0; }
-    .pr-path .pdot.active { background: var(--blue); }
-    .pr-path .pdot.done { background: #4ade80; }
-    .pr-progress-wrap { flex: 1; display: flex; align-items: center; gap: 8px; }
-    .pr-progress-bar { flex: 1; height: 5px; background: #e3e8f0; border-radius: 3px; overflow: hidden; }
-    .pr-progress-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width .35s ease; }
-    .pr-progress-label { font-size: 11px; font-weight: 700; color: var(--text); white-space: nowrap; }
+    .pr-back {
+      width: 30px; height: 30px; display: grid; place-items: center;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
+      font-size: 18px; color: var(--text-muted); flex-shrink: 0;
+    }
+    .pr-topbar-title { font-size: 14px; font-weight: 700; color: var(--text-primary); flex: 1; }
 
-    .pr-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 16px 16px 0; }
+    /* Step dots — two rows, 3 per row. Full names, real vs AI clearly labeled */
+    .pr-steps { padding: 10px 16px 4px; }
+    .pr-step-row { display: flex; align-items: flex-start; gap: 0; margin-bottom: 6px; }
+    .pr-step-row:last-child { margin-bottom: 0; }
+    .pr-step-row-label {
+      font-size: 8px; font-weight: 700; letter-spacing: 0.3px;
+      margin-bottom: 2px; padding-left: 2px;
+    }
+    .pr-step-row-label.real  { color: var(--green); }
+    .pr-step-row-label.ai    { color: var(--purple); }
+    .pr-step-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      flex: 1; min-width: 0;
+    }
+    .pr-step-dot {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: grid; place-items: center; flex-shrink: 0;
+      font-size: 10px; font-weight: 800;
+      background: var(--bg-input); border: 2px solid var(--border-subtle);
+      color: var(--text-muted);
+      transition: all 0.35s var(--ease-out-expo);
+      cursor: pointer; position: relative; z-index: 1;
+    }
+    .pr-step-dot.active {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+      box-shadow: 0 0 14px rgba(74,140,255,0.3);
+    }
+    .pr-step-dot.done {
+      background: var(--green); border-color: var(--green); color: #fff;
+    }
+    .pr-step-label {
+      font-size: 10px; font-weight: 600; text-align: center;
+      line-height: 1.3; word-break: keep-all;
+    }
+    .pr-step-label.real { color: var(--green); }
+    .pr-step-label.ai   { color: var(--purple); }
+    .pr-step-line {
+      width: 20px; height: 2px; background: var(--border-subtle);
+      margin-top: 12px; flex-shrink: 0;
+      transition: background 0.4s var(--ease-out-expo);
+    }
+    .pr-step-line.done { background: var(--green); }
+
+    /* ============================================================
+       CHAT AREA — premium conversation feel
+       ============================================================ */
+    .pr-scroll {
+      flex: 1; overflow-y: auto; overscroll-behavior: contain;
+      padding: 8px 16px 0; scrollbar-width: none;
+    }
     .pr-scroll::-webkit-scrollbar { display: none; }
 
-    /* 场景标签 */
-    .pr-tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; margin-bottom: 12px; color: var(--blue); background: var(--blue-light); }
+    /* Coach message bubble */
+    .msg-coach {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 18px;
+      animation: fadeInDown 0.4s var(--ease-out-expo) both;
+    }
+    .msg-coach-sender {
+      font-size: 10px; font-weight: 700; color: var(--gold);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .msg-coach-sender .avatar-mini {
+      width: 18px; height: 18px; display: grid; place-items: center;
+      background: rgba(245,166,35,0.15); border-radius: 50%; font-size: 10px;
+    }
+    .msg-bubble {
+      padding: 12px 14px; border-radius: var(--radius); border-top-left-radius: 4px;
+      font-size: 13px; line-height: 1.6;
+    }
+    .msg-bubble.coach {
+      background: rgba(40,55,85,0.5);
+      border: 1px solid rgba(255,255,255,0.05);
+      color: var(--text-body);
+    }
 
-    /* 客户气泡 */
-    .pr-customer { margin-bottom: 14px; }
-    .pr-customer-label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-    .pr-customer-avatar { width: 28px; height: 28px; display: grid; place-items: center; color: #fff; background: #6b7d99; border-radius: 50%; font-size: 10px; font-weight: 700; }
-    .pr-customer-name { font-size: 12px; font-weight: 700; color: var(--text); }
-    .pr-customer-msg { padding: 14px 16px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 12px; border-top-left-radius: 4px; font-size: 14px; line-height: 1.6; box-shadow: 0 1px 4px rgba(20,40,72,.04); }
+    /* Customer message — appears with stream-delay */
+    .msg-customer {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-bottom: 10px;
+      animation: streamIn 0.6s var(--ease-out-expo) both;
+    }
+    .msg-customer-sender {
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .msg-customer-sender .avatar-mini {
+      width: 18px; height: 18px; display: grid; place-items: center;
+      color: #fff; background: #3d4f6a; border-radius: 50%; font-size: 9px;
+    }
+    .msg-bubble.customer {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      color: var(--text-body);
+      box-shadow: var(--shadow-card);
+    }
 
-    /* 播放语音按钮 — 统一蓝色系 */
-    .pr-play-wrap { margin-bottom: 18px; }
-    .btn-play { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background: #f0f4fb; border: 1px solid #d5e0f2; border-radius: 10px; color: var(--blue); font-size: 13px; font-weight: 700; transition: background .2s; }
-    .btn-play:active { background: #e3ebf8; }
-    .btn-play.played { background: #f4f9f6; border-color: #c3e0d2; color: #2d7a4a; }
-    .voice-waves { display: flex; align-items: center; gap: 2px; height: 16px; }
-    .voice-waves .bar { width: 3px; background: currentColor; border-radius: 2px; opacity: .35; }
-    .voice-waves.anim .bar { animation: waveAnim .6s ease-in-out infinite; }
-    .voice-waves.anim .bar:nth-child(1) { animation-delay: 0s; height: 8px; }
-    .voice-waves.anim .bar:nth-child(2) { animation-delay: .15s; height: 14px; }
-    .voice-waves.anim .bar:nth-child(3) { animation-delay: .3s; height: 10px; }
-    .voice-waves.anim .bar:nth-child(4) { animation-delay: .45s; height: 16px; }
-    @keyframes waveAnim { 0%,100%{opacity:.35;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.5)} }
+    /* Breathing playback indicator below customer message */
+    .playback-indicator {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0; margin-bottom: 14px;
+      animation: fadeInUp 0.4s var(--ease-out-expo) 0.3s both;
+    }
+    .playback-waves {
+      display: flex; align-items: flex-end; gap: 3px; height: 16px;
+    }
+    .playback-waves .pw {
+      width: 3px; background: var(--accent); border-radius: 2px;
+      animation: voiceWave 0.65s ease-in-out infinite;
+    }
+    .playback-waves .pw:nth-child(1) { animation-delay: 0s; height: 6px; }
+    .playback-waves .pw:nth-child(2) { animation-delay: 0.1s; height: 14px; }
+    .playback-waves .pw:nth-child(3) { animation-delay: 0.2s; height: 9px; }
+    .playback-waves .pw:nth-child(4) { animation-delay: 0.3s; height: 16px; }
+    .playback-waves .pw:nth-child(5) { animation-delay: 0.4s; height: 7px; }
+    .playback-label {
+      font-size: 10px; font-weight: 600; color: var(--accent);
+      animation: breatheGlow 2s var(--ease-breathing) infinite;
+    }
 
-    /* 引导话术 — 用淡蓝底，与品牌一致 */
-    .pr-guide { margin-bottom: 14px; padding: 14px 16px; background: var(--blue-light); border: 1px solid #d5e0f2; border-radius: 10px; }
-    .pr-guide-label { display: flex; align-items: center; gap: 4px; color: var(--blue); font-size: 9px; font-weight: 800; margin-bottom: 6px; }
-    .pr-guide-text { font-size: 13px; line-height: 1.6; font-weight: 700; color: var(--ink); }
+    /* Tag badge */
+    .pr-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 9px; font-weight: 700; margin-bottom: 14px;
+      color: var(--accent); background: rgba(74,140,255,0.1);
+      border: 1px solid rgba(74,140,255,0.12);
+    }
 
-    /* 说话区域 */
-    .pr-speaking { margin-bottom: 18px; padding: 24px 16px; background: var(--white); border: 2px solid #dfe5ed; border-radius: 12px; text-align: center; transition: border-color .3s, box-shadow .3s; }
-    .pr-speaking.listening { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(40,105,223,.08); }
-    .pr-speaking.done { border-color: #c3e0d2; background: #f9fdfb; }
-    .pr-mic { width: 56px; height: 56px; margin: 0 auto 10px; border-radius: 50%; background: #f0f4fb; display: grid; place-items: center; font-size: 22px; transition: background .3s; }
-    .pr-speaking.listening .pr-mic { background: var(--blue); color: #fff; animation: pulseRing 1.5s ease-in-out infinite; }
-    .pr-speaking.done .pr-mic { background: #e6f4ed; }
-    @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(40,105,223,.35)} 100%{box-shadow:0 0 0 18px rgba(40,105,223,0)} }
-    .pr-speaking-label { font-size: 12px; font-weight: 700; color: var(--text); }
-    .pr-speaking.listening .pr-speaking-label { color: var(--blue); }
-    .pr-speaking.done .pr-speaking-label { color: #2d7a4a; }
-    .pr-speaking-hint { margin-top: 4px; color: var(--muted); font-size: 10px; }
+    /* Guide hint */
+    .pr-guide { margin-bottom: 14px; animation: streamIn 0.5s var(--ease-out-expo) both; }
+    .pr-guide-card {
+      padding: 14px 16px;
+      background: rgba(74,140,255,0.04);
+      border: 1px solid rgba(74,140,255,0.1);
+      border-radius: var(--radius);
+    }
+    .pr-guide-label {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--accent); font-size: 9px; font-weight: 800; margin-bottom: 6px;
+    }
+    .pr-guide-text { font-size: 13px; line-height: 1.6; font-weight: 600; color: var(--text-primary); }
 
-    /* 底部操作 */
-    .pr-bottom { padding: 12px 16px 24px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
-    .btn-next { width: 100%; min-height: 46px; display: none; align-items: center; justify-content: center; gap: 6px; padding: 12px; color: #fff; background: #172033; border-radius: 10px; font-size: 14px; font-weight: 800; transition: transform .15s; }
-    .btn-next:active { transform: scale(.98); }
+    /* Bottom breathing wave button */
+       BOTTOM BREATHING WAVE BUTTON
+       ============================================================ */
+    .pr-bottom {
+      padding: 8px 16px 20px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .btn-speak-main {
+      width: 100%; min-height: 56px; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; padding: 12px 20px;
+      color: #fff;
+      background: linear-gradient(135deg, #3b7eef 0%, #5b9bff 100%);
+      border-radius: var(--radius-full);
+      font-size: 15px; font-weight: 800;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(74,140,255,0.25);
+      animation: speakBtnBreathe 3s var(--ease-breathing) infinite;
+      transition: transform 0.15s var(--ease-out-expo);
+    }
+    .btn-speak-main:active { transform: scale(0.97); }
+    .btn-speak-main::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+      animation: speakShimmer 3.5s ease-in-out infinite;
+    }
+    .speak-waves {
+      display: flex; align-items: flex-end; gap: 3px; height: 16px;
+      position: relative; z-index: 1;
+    }
+    .speak-waves .sw {
+      width: 3px; background: rgba(255,255,255,0.5); border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .btn-speak-main.idle .speak-waves .sw {
+      animation: voiceWave 2.5s var(--ease-breathing) infinite;
+    }
+    .btn-speak-main.idle .speak-waves .sw:nth-child(1) { animation-delay: 0s; height: 6px; }
+    .btn-speak-main.idle .speak-waves .sw:nth-child(2) { animation-delay: 0.4s; height: 12px; }
+    .btn-speak-main.idle .speak-waves .sw:nth-child(3) { animation-delay: 0.2s; height: 8px; }
+    .btn-speak-main.idle .speak-waves .sw:nth-child(4) { animation-delay: 0.6s; height: 14px; }
+    .btn-speak-main.idle .speak-waves .sw:nth-child(5) { animation-delay: 0.35s; height: 10px; }
+
+    .btn-speak-main.listening {
+      background: linear-gradient(135deg, #f5a623 0%, #f7b84e 100%);
+      box-shadow: 0 4px 36px rgba(245,166,35,0.4);
+      animation: speakBtnBreathe 1.5s var(--ease-breathing) infinite;
+    }
+    .btn-speak-main.listening .speak-waves .sw {
+      background: rgba(255,255,255,0.8);
+      animation: voiceWave 0.5s ease-in-out infinite;
+    }
+    .btn-speak-main.listening .speak-waves .sw:nth-child(1) { animation-delay: 0s; height: 6px; }
+    .btn-speak-main.listening .speak-waves .sw:nth-child(2) { animation-delay: 0.08s; height: 16px; }
+    .btn-speak-main.listening .speak-waves .sw:nth-child(3) { animation-delay: 0.16s; height: 10px; }
+    .btn-speak-main.listening .speak-waves .sw:nth-child(4) { animation-delay: 0.24s; height: 18px; }
+    .btn-speak-main.listening .speak-waves .sw:nth-child(5) { animation-delay: 0.32s; height: 8px; }
+
+    .btn-speak-main.done {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      box-shadow: 0 4px 24px rgba(16,185,129,0.3);
+      animation: none;
+    }
+    .btn-speak-main.done .speak-waves .sw {
+      background: rgba(255,255,255,0.6); animation: none; opacity: 0.7;
+    }
+
+    .speak-label { position: relative; z-index: 1; font-size: 14px; font-weight: 700; }
+
+    /* Next / End */
+    .btn-next {
+      width: 100%; min-height: 46px; display: none;
+      align-items: center; justify-content: center; gap: 6px;
+      padding: 12px; color: #fff;
+      background: linear-gradient(135deg, #3b7eef 0%, #4a8cff 100%);
+      border-radius: var(--radius); font-size: 14px; font-weight: 800;
+      transition: transform 0.15s var(--ease-out-expo);
+    }
+    .btn-next:active { transform: scale(0.97); }
     .btn-next.show { display: flex; }
-    .btn-end { width: 100%; min-height: 38px; display: flex; align-items: center; justify-content: center; padding: 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
-    .btn-end:active { color: var(--text); }
+    .btn-end {
+      width: 100%; min-height: 36px; display: flex;
+      align-items: center; justify-content: center;
+      padding: 8px; color: var(--text-muted); font-size: 12px; font-weight: 600;
+    }
+    .btn-end:active { color: var(--text-body); }
 
-    /* ============================================= */
-    /*  COMPLETION — 鼓励但不油腻                      */
-    /* ============================================= */
-    .cp-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 48px 24px 28px; }
+    /* ============================================================
+       COMPLETION SCREEN
+       ============================================================ */
+    .cp-scroll {
+      flex: 1; overflow-y: auto; overscroll-behavior: contain;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 40px 24px 28px; scrollbar-width: none;
+    }
     .cp-scroll::-webkit-scrollbar { display: none; }
-
-    .cp-icon { width: 80px; height: 80px; display: grid; place-items: center; background: #f0f4fb; border-radius: 50%; font-size: 40px; margin-bottom: 20px; }
-    .cp-title { font-size: 24px; font-weight: 900; color: var(--ink); }
-    .cp-sub { margin-top: 8px; color: var(--text); font-size: 14px; line-height: 1.6; }
-    .cp-sub b { color: var(--ink); }
-
+    .cp-trophy-wrap {
+      width: 100px; height: 100px; position: relative;
+      display: grid; place-items: center; margin-bottom: 20px;
+    }
+    .cp-trophy-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid rgba(245,166,35,0.2);
+      background: rgba(245,166,35,0.04);
+      animation: trophyBreathe 2.5s var(--ease-breathing) infinite;
+    }
+    .cp-trophy-ring-outer {
+      position: absolute; inset: -10px; border-radius: 50%;
+      border: 1px solid rgba(245,166,35,0.08);
+      animation: trophyBreathe 2.5s var(--ease-breathing) infinite 0.6s;
+      pointer-events: none;
+    }
+    .cp-icon { font-size: 42px; position: relative; z-index: 1; }
+    .cp-title { font-size: 26px; font-weight: 900; color: var(--text-primary); }
+    .cp-sub { margin-top: 8px; color: var(--text-body); font-size: 14px; line-height: 1.6; }
+    .cp-sub b { color: var(--text-primary); }
     .cp-stats { width: 100%; margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .cp-stat { padding: 18px 14px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 10px; text-align: center; }
-    .cp-stat-val { font-size: 30px; font-weight: 900; color: var(--blue); }
-    .cp-stat-label { margin-top: 4px; font-size: 11px; color: var(--muted); }
-
-    .cp-store { width: 100%; margin-top: 16px; padding: 18px 16px; background: var(--white); border: 1px solid #dfe5ed; border-radius: 10px; }
-    .cp-store-label { font-size: 13px; font-weight: 700; color: var(--ink); }
-    .cp-store-sub { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .cp-stat {
+      padding: 18px 14px; background: var(--bg-card);
+      border: 1px solid var(--border-card); border-radius: var(--radius); text-align: center;
+    }
+    .cp-stat-val { font-size: 30px; font-weight: 900; color: var(--accent); }
+    .cp-stat-label { margin-top: 4px; font-size: 11px; color: var(--text-muted); }
+    .cp-store {
+      width: 100%; margin-top: 16px; padding: 18px 16px;
+      background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius);
+    }
+    .cp-store-label { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .cp-store-sub { margin-top: 4px; font-size: 11px; color: var(--text-muted); }
     .cp-store-avatars { display: flex; justify-content: center; margin-top: 12px; }
-    .cp-store-avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; border: 2px solid #fff; font-size: 11px; font-weight: 700; color: #fff; margin-left: -8px; }
+    .cp-store-avatar {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 50%; border: 2px solid var(--bg-card); font-size: 11px;
+      font-weight: 700; color: #fff; margin-left: -8px;
+    }
     .cp-store-avatar:first-child { margin-left: 0; }
     .cp-store-avatar:nth-child(1) { background: #4b5563; }
     .cp-store-avatar:nth-child(2) { background: #6b7280; }
     .cp-store-avatar:nth-child(3) { background: #9ca3af; }
     .cp-store-avatar:nth-child(4) { background: #4b5563; }
     .cp-store-avatar:nth-child(5) { background: #6b7280; }
-    .cp-store-more { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; border: 2px solid #fff; background: #e5e7eb; font-size: 9px; font-weight: 700; color: var(--muted); margin-left: -8px; }
-
+    .cp-store-more {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 50%; border: 2px solid var(--bg-card);
+      background: #1f2937; font-size: 9px; font-weight: 700;
+      color: var(--text-muted); margin-left: -8px;
+    }
     .cp-actions { width: 100%; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
-    .btn-again { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; color: #fff; background: #172033; border-radius: 10px; font-size: 14px; font-weight: 800; }
-    .btn-goback { width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; padding: 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .btn-again {
+      width: 100%; min-height: 46px; display: flex; align-items: center;
+      justify-content: center; gap: 6px; padding: 12px;
+      color: #fff; background: linear-gradient(135deg, #3b7eef 0%, #4a8cff 100%);
+      border-radius: var(--radius); font-size: 14px; font-weight: 800;
+      transition: transform 0.15s var(--ease-out-expo);
+    }
+    .btn-again:active { transform: scale(0.97); }
+    .btn-goback {
+      width: 100%; min-height: 40px; display: flex; align-items: center;
+      justify-content: center; padding: 10px; color: var(--text-muted);
+      font-size: 12px; font-weight: 600;
+    }
+    .btn-goback:active { color: var(--text-body); }
 
     @media (max-width: 430px) {
       .stage { padding: 0; }
-      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+      .phone { width: 100vw; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
     }
   </style>
 </head>
@@ -194,87 +445,63 @@
   <main class="stage">
     <div class="phone" role="application" aria-label="产品讲解对练">
 
-      <!-- ==================== OVERVIEW ==================== -->
-      <div class="screen active" id="overviewScreen">
-        <div class="ov-header">
-          <div class="topbar">
-            <button class="back" onclick="history.back()" aria-label="返回">‹</button>
-            <span class="page-name">产品讲解 · 对练</span>
-            <span></span>
-          </div>
-          <div class="ov-hero">
-            <div class="ov-hero-eyebrow">成交教练已为你准备好今天的对练</div>
-            <h1>把产品讲解练到脱口而出</h1>
-            <div class="ov-hero-meta">共 <b>6 组</b> 对练 <span style="margin:0 4px;">·</span> 约 <b>8 分钟</b></div>
-          </div>
-        </div>
-
-        <div class="ov-scroll">
-          <div class="ov-section">
-            <div class="ov-section-label"><span>还原今天的客户</span><span class="count">3 组</span></div>
-          </div>
-          <div id="reviewList"></div>
-
-          <div class="ov-section" style="padding-top:6px;">
-            <div class="ov-section-label"><span>举一反三</span><span class="count">3 组</span></div>
-          </div>
-          <div id="extendList"></div>
-
-          <div class="ov-bottom">
-            <button class="btn-start" id="btnStartDrill" type="button">
-              <span class="dot"></span>
-              开始练习
-            </button>
-            <span class="ov-bottom-hint">戴上耳机，效果更好</span>
-          </div>
-        </div>
-      </div>
-
       <!-- ==================== PRACTICE ==================== -->
-      <div class="screen" id="practiceScreen">
+      <div class="screen active" id="practiceScreen">
         <div class="pr-header">
           <div class="pr-topbar">
             <button class="pr-back" onclick="confirmEndPractice()" aria-label="返回">‹</button>
-            <div class="pr-progress-wrap">
-              <div class="pr-progress-bar"><div class="pr-progress-fill" id="progressFill" style="width:0%"></div></div>
-              <span class="pr-progress-label" id="progressLabel">0 / 6</span>
-            </div>
+            <span class="pr-topbar-title">场景对练</span>
           </div>
-          <div class="pr-path" id="prPath" style="display:none;">
-            <span>学习路径</span>
-            <span class="pdot active"></span><span>练</span>
-            <span style="margin:0 2px;">→</span>
-            <span class="pdot"></span><span>看</span>
-            <span style="margin:0 2px;">→</span>
-            <span class="pdot"></span><span>学</span>
-          </div>
+          <div class="pr-steps" id="prSteps"></div>
         </div>
+
         <div class="pr-scroll" id="prScroll">
-          <span class="pr-tag" id="prTag">还原产品讲解</span>
-          <div class="pr-customer">
-            <div class="pr-customer-label">
-              <div class="pr-customer-avatar">客</div>
-              <span class="pr-customer-name" id="prCustomerName">客户</span>
+          <!-- Coach message -->
+          <div class="msg-coach" id="msgCoach">
+            <div class="msg-coach-sender">
+              <div class="avatar-mini" style="overflow:hidden;"><img src="零售大师.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt=""></div>
+              <span>成交教练</span>
             </div>
-            <div class="pr-customer-msg" id="prCustomerMsg"></div>
+            <div class="msg-bubble coach" id="msgCoachText"></div>
           </div>
-          <div class="pr-play-wrap">
-            <button class="btn-play" id="btnPlay" type="button">
-              <span class="voice-waves" id="voiceWaves"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
-              <span id="playLabel">播放客户语音</span>
-            </button>
+
+          <!-- Customer message — streams in after delay -->
+          <div class="msg-customer" id="msgCustomer" style="display:none;">
+            <div class="msg-customer-sender">
+              <div class="avatar-mini" id="msgCustAvatar">客</div>
+              <span id="msgCustName">客户</span>
+            </div>
+            <div class="msg-bubble customer" id="msgCustText"></div>
           </div>
+
+          <!-- Breathing playback indicator below customer message -->
+          <div class="playback-indicator" id="playbackIndicator" style="display:none;">
+            <div class="playback-waves">
+              <span class="pw"></span><span class="pw"></span><span class="pw"></span><span class="pw"></span><span class="pw"></span>
+            </div>
+            <span class="playback-label">正在播放</span>
+          </div>
+
+          <!-- Tag -->
+          <span class="pr-tag" id="prTag">还原产品讲解</span>
+
+          <!-- Guide hint -->
           <div class="pr-guide" id="prGuide" style="display:none;">
-            <div class="pr-guide-label">💡 你应该这样回应</div>
-            <div class="pr-guide-text" id="prGuideText"></div>
+            <div class="pr-guide-card">
+              <div class="pr-guide-label">💡 你应该这样回应</div>
+              <div class="pr-guide-text" id="prGuideText"></div>
+            </div>
           </div>
-          <div class="pr-speaking" id="prSpeaking">
-            <div class="pr-mic">🎤</div>
-            <div class="pr-speaking-label" id="prSpeakingLabel">听完客户语音后开始回答</div>
-            <div class="pr-speaking-hint" id="prSpeakingHint">请大声说出你的回应</div>
-          </div>
+
         </div>
+
         <div class="pr-bottom">
+          <button class="btn-speak-main idle" id="btnSpeakMain" type="button">
+            <span class="speak-waves">
+              <span class="sw"></span><span class="sw"></span><span class="sw"></span><span class="sw"></span><span class="sw"></span>
+            </span>
+            <span class="speak-label" id="speakLabel">点击开始回答</span>
+          </button>
           <button class="btn-next" id="btnNext" type="button"><span id="btnNextLabel">下一组 ›</span></button>
           <button class="btn-end" id="btnEndPractice" type="button">结束练习</button>
         </div>
@@ -283,10 +510,13 @@
       <!-- ==================== COMPLETION ==================== -->
       <div class="screen" id="completionScreen">
         <div class="cp-scroll">
-          <div class="cp-icon">🏆</div>
+          <div class="cp-trophy-wrap">
+            <div class="cp-trophy-ring-outer"></div>
+            <div class="cp-trophy-ring"></div>
+            <div class="cp-icon">🏆</div>
+          </div>
           <div class="cp-title">太棒了</div>
           <div class="cp-sub">你今天完成了一次完整的对练，<br>每多练一次，面对客户就<b>多一分底气</b>。</div>
-
           <div class="cp-stats">
             <div class="cp-stat">
               <div class="cp-stat-val">6<small style="font-size:15px;font-weight:600;"> 组</small></div>
@@ -297,20 +527,14 @@
               <div class="cp-stat-label">练习时长</div>
             </div>
           </div>
-
           <div class="cp-store">
             <div class="cp-store-label">张江门店</div>
             <div class="cp-store-sub">今日已有 12 位同事完成对练</div>
             <div class="cp-store-avatars">
-              <div class="cp-store-avatar">李</div>
-              <div class="cp-store-avatar">王</div>
-              <div class="cp-store-avatar">张</div>
-              <div class="cp-store-avatar">赵</div>
-              <div class="cp-store-avatar">陈</div>
+              <div class="cp-store-avatar">李</div><div class="cp-store-avatar">王</div><div class="cp-store-avatar">张</div><div class="cp-store-avatar">赵</div><div class="cp-store-avatar">陈</div>
               <div class="cp-store-more">+7</div>
             </div>
           </div>
-
           <div class="cp-actions">
             <button class="btn-again" onclick="restartPractice()" type="button">再练一次</button>
             <button class="btn-goback" id="btnGoBack" onclick="goBackAfterComplete()" type="button">返回产品讲解</button>
@@ -320,11 +544,6 @@
 
     </div>
   </main>
-
-  <!-- ==================== COUNTDOWN ==================== -->
-  <div class="countdown-overlay" id="countdownOverlay">
-    <div class="countdown-num" id="countdownNum">3</div>
-  </div>
 
   <script>
     var PRACTICE_GROUPS = [
@@ -341,29 +560,83 @@
       return params.get('direct') === 'true';
     })();
 
+    var championCase = (function(){
+      var params = new URLSearchParams(window.location.search);
+      return params.get('case') || null;
+    })();
+
     var currentIndex = 0;
     var total = PRACTICE_GROUPS.length;
-    var hasPlayed = false;
     var isListening = false;
     var completed = false;
+    var streamTimers = [];
     var $ = function(id){ return document.getElementById(id); };
 
-    // ---- Build overview lists ----
-    (function(){
-      var reviewHtml = '', extendHtml = '';
+    // ---- Build step dots with labels ----
+    (function buildSteps(){
+      var realSteps = '', aiSteps = '';
+      var prevReviewIdx = -1, prevAiIdx = -1;
       PRACTICE_GROUPS.forEach(function(g,i){
-        var card = '<div class="ov-card">'
-          + '<span class="ov-card-num">' + (i+1) + '</span>'
-          + '<div class="ov-card-info">'
-          + '<div class="ov-card-scene">' + g.title + '</div>'
-          + '<div class="ov-card-sub">' + g.tag + '</div>'
-          + '</div></div>';
-        if (g.type === 'review') reviewHtml += card;
-        else extendHtml += card;
+        var typeClass = g.type === 'review' ? 'real' : 'ai';
+        var item = '<div class="pr-step-item">'
+          + '<div class="pr-step-dot" data-index="' + i + '">' + (i+1) + '</div>'
+          + '<div class="pr-step-label ' + typeClass + '">' + g.customerName + '</div>'
+          + '</div>';
+        if (g.type === 'review') {
+          if (prevReviewIdx >= 0) realSteps += '<div class="pr-step-line" data-left="' + prevReviewIdx + '"></div>';
+          realSteps += item;
+          prevReviewIdx = i;
+        } else {
+          if (prevAiIdx >= 0) aiSteps += '<div class="pr-step-line" data-left="' + prevAiIdx + '"></div>';
+          aiSteps += item;
+          prevAiIdx = i;
+        }
       });
-      $('reviewList').innerHTML = reviewHtml;
-      $('extendList').innerHTML = extendHtml;
+
+      $('prSteps').innerHTML =
+        '<div class="pr-step-row-label real">● 真实场景</div>'
+        + '<div class="pr-step-row">' + realSteps + '</div>'
+        + '<div class="pr-step-row-label ai" style="margin-top:6px;">● AI 模拟</div>'
+        + '<div class="pr-step-row">' + aiSteps + '</div>';
+
+      $('prSteps').addEventListener('click', function(e){
+        var dot = e.target.closest('.pr-step-dot');
+        if (!dot) return;
+        var idx = parseInt(dot.getAttribute('data-index'));
+        if (idx === currentIndex) return;
+        clearStreamTimers();
+        currentIndex = idx;
+        loadGroup(currentIndex);
+      });
     })();
+
+    function clearStreamTimers(){
+      streamTimers.forEach(function(t){ clearTimeout(t); });
+      streamTimers = [];
+    }
+
+    function updateStepDots(current){
+      var dots = document.querySelectorAll('#prSteps .pr-step-dot');
+      var lines = document.querySelectorAll('#prSteps .pr-step-line');
+      dots.forEach(function(dot,i){
+        dot.classList.remove('active','done');
+        if (i < current) { dot.classList.add('done'); dot.textContent = '✓'; }
+        else if (i === current) { dot.classList.add('active'); dot.textContent = (i+1); }
+        else { dot.textContent = (i+1); }
+      });
+      lines.forEach(function(line){
+        var left = parseInt(line.getAttribute('data-left'));
+        line.classList.toggle('done', left < current);
+      });
+    }
+
+    function buildCoachIntro(g){
+      if (g.type === 'review') {
+        return '先为你还原「' + g.customerName + '」的真实场景';
+      } else {
+        return '为你生成「' + g.customerName + '」的举一反三练习';
+      }
+    }
 
     // ---- Screen switching ----
     function showScreen(id){
@@ -372,98 +645,71 @@
       if (el) el.classList.add('active');
     }
 
-    // ---- Countdown ----
-    function countdown(cb){
-      var overlay = $('countdownOverlay');
-      var num = $('countdownNum');
-      overlay.classList.add('show');
-      var n = 3;
-      (function tick(){
-        if (n <= 0) { overlay.classList.remove('show'); cb(); return; }
-        num.textContent = n;
-        num.style.animation = 'none'; num.offsetHeight;
-        num.style.animation = 'countPop .6s ease-out';
-        n--; setTimeout(tick, 800);
-      })();
-    }
-
-    // ---- Start ----
-    $('btnStartDrill').addEventListener('click', function(){
-      startDrill();
-    });
-
-    function startDrill() {
-      countdown(function(){
-        currentIndex = 0; completed = false;
-        showScreen('practiceScreen');
-        // 学习路径指示器只在从产品讲解直通时显示
-        if (isDirect) $('prPath').style.display = 'flex';
-        loadGroup(0);
-      });
-    }
-
-    // 从产品讲解页直通：跳过总览，直接开始
-    if (isDirect) startDrill();
-
-    // ---- Load a group ----
+    // ---- Load a group — show everything immediately ----
     function loadGroup(i){
       var g = PRACTICE_GROUPS[i];
-      hasPlayed = false; isListening = false;
-      $('progressFill').style.width = Math.round((i/total)*100) + '%';
-      $('progressLabel').textContent = i + ' / ' + total;
-      $('prTag').textContent = g.tag;
-      $('prCustomerName').textContent = g.customerName;
-      $('prCustomerMsg').textContent = g.customerMsg;
-      $('prGuideText').textContent = g.guide;
-      $('prGuide').style.display = 'none';
-      var btn = $('btnPlay');
-      btn.classList.remove('played');
-      $('playLabel').textContent = '播放客户语音';
-      $('voiceWaves').classList.remove('anim');
-      $('prSpeaking').classList.remove('listening','done');
-      $('prSpeakingLabel').textContent = '听完客户语音后开始回答';
-      $('prSpeakingHint').textContent = '请大声说出你的回应';
+      isListening = false;
+      clearStreamTimers();
+
+      // Step dots
+      updateStepDots(i);
+
+      // Show everything immediately — no streaming delays
+      $('msgCustomer').style.display = 'flex';
+      $('playbackIndicator').style.display = 'flex';
+      $('prGuide').style.display = 'block';
       $('btnNext').classList.remove('show');
+
+      var speakBtn = $('btnSpeakMain');
+      speakBtn.classList.remove('listening','done');
+      speakBtn.classList.add('idle');
+      $('speakLabel').textContent = '点击开始回答';
+
+      // Set coach / customer / guide text
+      $('msgCoachText').textContent = buildCoachIntro(g);
+      $('msgCustName').textContent = g.customerName;
+      $('msgCustText').textContent = g.customerMsg;
+      $('prTag').textContent = g.tag;
+      $('prGuideText').textContent = g.guide;
+
+      // Re-trigger coach fade-in
+      var coachEl = $('msgCoach');
+      coachEl.style.animation = 'none'; coachEl.offsetHeight;
+      coachEl.style.animation = 'fadeInDown 0.4s cubic-bezier(0.16,1,0.3,1) both';
+
+      // Customer stream-in
+      var cust = $('msgCustomer');
+      cust.style.animation = 'none'; cust.offsetHeight;
+      cust.style.animation = 'streamIn 0.5s cubic-bezier(0.16,1,0.3,1) both';
+
+      // Scroll to top
       $('prScroll').scrollTop = 0;
     }
 
-    // ---- Play voice ----
-    $('btnPlay').addEventListener('click', function(){
+    // ---- Speaking ----
+    $('btnSpeakMain').addEventListener('click', function(){
       var btn = this;
-      if (btn.classList.contains('played')) return;
-      btn.classList.add('played');
-      $('playLabel').textContent = '正在播放...';
-      $('voiceWaves').classList.add('anim');
-      setTimeout(function(){
-        $('playLabel').textContent = '已播放';
-        $('voiceWaves').classList.remove('anim');
-        hasPlayed = true;
-        $('prGuide').style.display = 'block';
-        setTimeout(startListening, 600);
-      }, 2500);
+      if (btn.classList.contains('done')) return;
+      if (!isListening) startListening();
     });
 
-    // ---- Listening ----
     function startListening(){
-      if (!hasPlayed) return;
       isListening = true;
-      $('prSpeaking').classList.add('listening');
-      $('prSpeaking').classList.remove('done');
-      $('prSpeakingLabel').textContent = '正在聆听...';
-      $('prSpeakingHint').textContent = '请对着麦克风说出你的回应';
-      setTimeout(function(){ if (isListening) completeSpeaking(); }, 4500);
-    }
+      var btn = $('btnSpeakMain');
+      btn.classList.remove('idle');
+      btn.classList.add('listening');
+      $('speakLabel').textContent = '正在聆听...';
 
-    $('prSpeaking').addEventListener('click', function(){
-      if (hasPlayed && isListening) completeSpeaking();
-    });
+      streamTimers.push(setTimeout(function(){ if (isListening) completeSpeaking(); }, 4500));
+    }
 
     function completeSpeaking(){
       isListening = false;
-      $('prSpeaking').classList.remove('listening');
-      $('prSpeaking').classList.add('done');
-      $('prSpeakingLabel').textContent = '已收到你的回答';
-      $('prSpeakingHint').textContent = '很好，继续保持';
+
+      var btn = $('btnSpeakMain');
+      btn.classList.remove('idle','listening');
+      btn.classList.add('done');
+      $('speakLabel').textContent = '已收到回答 ✓';
       $('btnNext').classList.add('show');
       $('btnNextLabel').textContent = currentIndex >= total - 1 ? '完成练习' : '下一组 ›';
     }
@@ -475,49 +721,56 @@
       loadGroup(currentIndex);
     });
 
-    // ---- End practice ----
+    // ---- End ----
     function confirmEndPractice(){
       if (completed) { goBack(); return; }
-      if (currentIndex > 0 || hasPlayed) {
+      if (currentIndex > 0 || isListening) {
         if (confirm('确定要结束本次练习吗？已完成的进度不会丢失。')) showCompletion();
       } else {
         goBack();
       }
     }
     function goBack(){
-      if (isDirect) { window.location.href = 'product-explanation.html'; }
-      else { showScreen('overviewScreen'); }
+      if (championCase) { window.location.href = 'champion-case-detail.html?case=' + championCase; }
+      else if (isDirect) { window.location.href = 'product-explanation.html'; }
+      else { history.back(); }
     }
     $('btnEndPractice').addEventListener('click', confirmEndPractice);
 
     // ---- Completion ----
     function showCompletion(){
       completed = true; isListening = false;
-      $('progressFill').style.width = '100%';
-      $('progressLabel').textContent = total + ' / ' + total;
-      // 从产品讲解直通过来的，引导去下一步
-      if (isDirect) {
+      clearStreamTimers();
+      updateStepDots(total);
+      if (championCase) {
+        $('btnGoBack').textContent = '回去看看销冠怎么做 →';
+        $('btnGoBack').style.fontWeight = '700';
+        $('btnGoBack').style.color = 'var(--accent)';
+      } else if (isDirect) {
         $('btnGoBack').textContent = '回去看看销冠怎么做的 →';
         $('btnGoBack').style.fontWeight = '700';
-        $('btnGoBack').style.color = 'var(--blue)';
+        $('btnGoBack').style.color = 'var(--accent)';
       }
       showScreen('completionScreen');
     }
 
     function goBackAfterComplete(){
-      if (isDirect) {
-        window.location.href = 'product-explanation.html?step=2';
-      } else {
-        history.back();
-      }
+      if (championCase) { window.location.href = 'champion-case-detail.html?case=' + championCase; }
+      else if (isDirect) { window.location.href = 'product-explanation.html?step=2'; }
+      else { history.back(); }
     }
 
     function restartPractice(){
-      if (isDirect) {
-        window.location.href = 'practice-drill.html?direct=true';
-      } else {
-        showScreen('overviewScreen');
-      }
+      var qs = championCase ? '?direct=true&case=' + championCase : '?direct=true';
+      if (isDirect || championCase) { window.location.href = 'practice-drill.html' + qs; }
+      else { window.location.href = 'practice-drill.html'; }
+    }
+
+    // ---- Init: start immediately ----
+    if (isDirect) {
+      loadGroup(0);
+    } else {
+      loadGroup(0);
     }
   </script>
 </body>

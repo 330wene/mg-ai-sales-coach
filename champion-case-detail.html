@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-  <meta name="description" content="销冠成交案例详情 — 小李・带娃客户成交案例">
+  <meta name="description" content="销冠成交案例详情">
   <meta name="theme-color" content="#08172b">
   <title>销冠案例详情</title>
   <style>
@@ -70,6 +70,7 @@
       color: #fff; font-size: 18px;
       border: 1px solid rgba(255,255,255,.18); border-radius: 50%;
       transition: background 0.15s;
+      text-decoration: none;
     }
     .detail-back:active { background: rgba(255,255,255,.1); }
     .detail-nav-title {
@@ -150,7 +151,7 @@
       font-size: 13px; color: var(--text); line-height: 1.55; margin-top: 0;
     }
 
-    /* ===== Response block: 小李的回应 + 为什么管用 ===== */
+    /* ===== Response block: 回应 + 为什么管用 ===== */
     .response-block {
       margin-top: 10px;
       background: #f6f7fa;
@@ -167,6 +168,30 @@
       font-size: 12px; color: #596579; line-height: 1.55;
     }
     .why-line b { color: var(--ink); }
+
+    /* ============================================
+       WHAT HAPPENED STRIP — 客户说了什么 → 通常回应 → 他这样接
+       ============================================ */
+    .what-happened-strip {
+      margin-top: 10px;
+      padding: 12px 13px;
+      background: #fafbfc;
+      border-radius: 8px;
+      border: 1px solid #edf0f4;
+    }
+    .what-happened-row {
+      display: flex; gap: 8px; align-items: flex-start;
+      font-size: 12px; line-height: 1.55;
+    }
+    .what-happened-row + .what-happened-row { margin-top: 10px; }
+    .what-happened-label {
+      flex: 0 0 auto; font-size: 9px; font-weight: 700; letter-spacing: 0.03em;
+      padding: 2px 7px; border-radius: 3px; margin-top: 1px;
+    }
+    .what-happened-label.customer { color: #7a4e1f; background: #fff7ed; }
+    .what-happened-label.typical { color: #6b7280; background: #f3f4f6; }
+    .what-happened-label.champion { color: #1d7a45; background: #def0e4; }
+    .what-happened-text { color: var(--text); min-width: 0; }
 
     /* ============================================
        LEARNING SECTION — 浅灰卡片
@@ -214,6 +239,13 @@
     }
     .practice-btn:active { background: #b03a0b; transform: scale(.98); }
 
+    /* Deep blue variant for practice queue */
+    .practice-btn-blue {
+      background: #0b234a;
+      box-shadow: 0 3px 12px rgba(11,35,74,.25);
+    }
+    .practice-btn-blue:active { background: #081b38; }
+
     /* ===== Responsive ===== */
     @media (max-width: 430px) {
       .stage { padding: 0; }
@@ -229,96 +261,209 @@
 
         <!-- ===== NAV ===== -->
         <nav class="detail-nav">
-          <button class="detail-back" onclick="window.history.length>1?history.back():location.href='成交教练.html'" aria-label="返回">‹</button>
-          <h1 class="detail-nav-title">小李・带娃客户成交案例</h1>
+          <a class="detail-back" href="成交教练.html?tab=B" aria-label="返回销冠话术列表">‹</a>
+          <h1 class="detail-nav-title" id="navTitle">销冠案例详情</h1>
         </nav>
 
         <!-- ===== BODY ===== -->
-        <div class="detail-body">
-
-          <!-- ============ 核心结论卡片 ============ -->
-          <section class="core-insight">
-            <span class="core-tag">本单核心赢在：需求挖掘 + 场景化产品讲解</span>
-            <h2 class="core-title">不讲参数讲场景，客户问空间时直接给画面</h2>
-            <p class="core-desc">先摸清客户家里带老人、带孩子的真实用车场景，再把参数翻译成日常使用画面</p>
-            <p class="core-bottom">到店 18 分钟成交</p>
-          </section>
-
-          <!-- ============ 问题 → 解法 ============ -->
-          <section class="section-card">
-            <h3 class="section-title">问题 → 解法</h3>
-
-            <div class="num-item">
-              <span class="num-circle">1</span>
-              <div class="num-body">
-                <span class="num-label">客户信号</span>
-                <p class="num-text">年轻女性声音，对话中多次提到孩子、老人、周末出行。全程没主动问价格，最关心的是空间够不够用。</p>
-                <div class="response-block">
-                  <span class="num-label" style="background:#f3f4f6;color:#5f6c80;">小李怎么接</span>
-                  <p class="num-text">「姐，平时是不是经常带小朋友出门？」</p>
-                  <p class="why-line"><b>为什么管用</b>：她没问预算，没问"今天能定吗"。客户最在意空间，就先从空间聊起。一句反问让客户自己说出真实需求，比她推销十句都有用。</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="num-item">
-              <span class="num-circle">2</span>
-              <div class="num-body">
-                <span class="num-label">客户信号</span>
-                <p class="num-text">客户主动问了两次后排和后备厢空间。</p>
-                <div class="response-block">
-                  <span class="num-label" style="background:#f3f4f6;color:#5f6c80;">小李怎么接</span>
-                  <p class="num-text">客户问「后备厢多大」，不说升数：「儿童座椅装右边，左边坐两个大人。婴儿车折起来立着放，旁边还能塞三袋超市的东西。」</p>
-                  <p class="why-line"><b>为什么管用</b>：客户要的不是一个数字，是她带孩子出门的那个画面。把参数翻译成生活场景，她能想象到自己用这车的样子。想象到了，就想要了。</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="num-item">
-              <span class="num-circle">3</span>
-              <div class="num-body">
-                <span class="num-label">客户信号</span>
-                <p class="num-text">从她反复追问空间可以推断——她真正想确认的是后排能不能装儿童座椅+坐人，后备厢能不能塞婴儿车。这些话没直说，但每一次追问都指向同一个方向。</p>
-                <div class="response-block">
-                  <span class="num-label" style="background:#f3f4f6;color:#5f6c80;">小李怎么接</span>
-                  <p class="num-text">客户说「预算还是有点超」，没报优惠：「姐，你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？」</p>
-                  <p class="why-line"><b>为什么管用</b>：没替客户还价，而是帮客户自己算账。把前面所有解决了的问题摆出来，让客户自己得出「值」的结论。她自己觉得值，比销售说一百句都管用。</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ============ 学习 + 练一下 ============ -->
-          <section class="section-card muted-bg">
-            <h3 class="section-title">学习重点</h3>
-
-            <div class="learn-item">
-              <span class="learn-num">1</span>
-              <div class="learn-body"><b>客户追问同一个方向超过两次</b>——她不是要你报数据，她是要你理解她的场景。小李问那句「是不是经常带小朋友出门」，不是在寒暄，是在帮客户把没说出口的真实需求摆到台面上。下次你也这样：别抢答，先反问一句，把真实需求引出来。</div>
-            </div>
-
-            <div class="learn-item">
-              <span class="learn-num">2</span>
-              <div class="learn-body"><b>客户问一个规格</b>——她不是在关心数字，她是在判断「这能不能装下我的生活」。小李把升数翻译成婴儿车+超市袋，客户听完直接问价。所有产品数据，能翻译成生活画面的，就别只报数字。</div>
-            </div>
-
-            <div class="practice-cta">
-              <h4 class="practice-cta-title">🎧 还原场景，练一下</h4>
-              <div class="practice-scene">
-                <div class="practice-scene-label">客户原话</div>
-                「车我挺喜欢的，但价格还是有点超预算，我先回去再考虑一下。」
-              </div>
-              <button class="practice-btn" onclick="this.textContent='AI 正在聆听，请说出你的回应…';this.style.background='#e65b5b';setTimeout(()=>{this.textContent='戴上耳机，练这一次';this.style.background='';},3000);" aria-label="开始场景对练">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 10v1a7 7 0 0014 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                戴上耳机，练这一次
-              </button>
-            </div>
-          </section>
-
-        </div><!-- /detail-body -->
+        <div class="detail-body" id="detailBody">
+          <!-- Content rendered by JS -->
+        </div>
 
       </div><!-- /scroll -->
     </div><!-- /phone -->
   </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ====== 案例数据 ======
+      var CASES = {
+        '1': {
+          navTitle: '小李 · 场景化讲解案例',
+          core: {
+            tag: '本单核心赢在：场景化产品讲解',
+            title: '不讲参数讲场景，客户问空间时直接给画面',
+            desc: '客户要的不是后备厢多少升，是她带孩子出门的那个画面。小李把数字翻译成生活场景，她能想象到就想要了。',
+            bottom: '到店 18 分钟成交'
+          },
+          steps: [
+            {
+              signal: '年轻女性声音，对话中多次提到孩子、老人、周末出行。全程没主动问价格，最关心的是空间够不够用。',
+              responseLabel: '小李怎么接',
+              response: '「姐，平时是不是经常带小朋友出门？」',
+              why: '她没问预算，没问"今天能定吗"。客户最在意空间，就先从空间聊起。一句反问让客户自己说出真实需求，比她推销十句都有用。'
+            },
+            {
+              signal: '客户主动问了两次后排和后备厢空间。',
+              responseLabel: '小李怎么接',
+              response: '客户问「后备厢多大」，不说升数：「儿童座椅装右边，左边坐两个大人。婴儿车折起来立着放，旁边还能塞三袋超市的东西。」',
+              why: '客户要的不是一个数字，是她带孩子出门的那个画面。把参数翻译成生活场景，她能想象到自己用这车的样子。想象到了，就想要了。'
+            },
+            {
+              signal: '从她反复追问空间可以推断——她真正想确认的是后排能不能装儿童座椅+坐人，后备厢能不能塞婴儿车。这些话没直说，但每一次追问都指向同一个方向。',
+              responseLabel: '小李怎么接',
+              response: '客户说「预算还是有点超」，没报优惠：「姐，你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？」',
+              why: '没替客户还价，而是帮客户自己算账。把前面所有解决了的问题摆出来，让客户自己得出「值」的结论。她自己觉得值，比销售说一百句都管用。'
+            }
+          ],
+          learn: [
+            '<b>客户追问同一个方向超过两次</b>——她不是要你报数据，她是要你理解她的场景。小李问那句「是不是经常带小朋友出门」，不是在寒暄，是在帮客户把没说出口的真实需求摆到台面上。下次你也这样：别抢答，先反问一句，把真实需求引出来。',
+            '<b>客户问一个规格</b>——她不是在关心数字，她是在判断「这能不能装下我的生活」。小李把升数翻译成婴儿车+超市袋，客户听完直接问价。所有产品数据，能翻译成生活画面的，就别只报数字。'
+          ],
+          practice: {
+            scene: '「车我挺喜欢的，但价格还是有点超预算，我先回去再考虑一下。」'
+          }
+        },
+
+        '2': {
+          navTitle: '李晨 · 需求挖掘案例',
+          core: {
+            tag: '本单核心赢在：需求挖掘',
+            title: '两句家常问出真实需求，后面推荐的每一台都戳中',
+            desc: '不急着推配置，先用日常聊天摸清客户到底怎么用车，再精准匹配。全程不瞎推，客户越听越对味。',
+            bottom: '到店 22 分钟成交'
+          },
+          steps: [
+            {
+              signal: '客户进店说「随便看看」，逛了一圈没在任何车前面停下来，也一直没明确说想看什么车型。',
+              responseLabel: '李晨怎么接',
+              response: '「哥，平时主要是自己开还是带家人多？」',
+              why: '不问「预算多少」，不问「看哪款」。用一句谁都能答的家常话，让客户自然说出用车场景。一旦他说出「带家人」，你就知道空间和舒适性是重点。'
+            },
+            {
+              signal: '客户提到偶尔要跑长途回老家。',
+              responseLabel: '李晨怎么接',
+              response: '「那动力和高速稳不稳就很重要了。你之前那车跑高速感觉咋样？」',
+              why: '从客户自己的经历出发，让他自己说出对旧车的不满。痛点是他自己说的，比销售说一百句都有说服力。而且这段话自然引出了"你需要一台高速更稳的车"。'
+            },
+            {
+              signal: '客户对推荐车型点头但还在犹豫，没主动问价也没说去别家比。',
+              responseLabel: '李晨怎么接',
+              response: '「哥，你刚才说跑长途、带家人，这三点 MG7 都刚好对上。你要不要试一下，感受一下高速上那个稳劲？」',
+              why: '把前面聊出来的需求串起来——「跑长途」「带家人」都是客户自己说的，推荐的不是"最好的车"，而是"最对的车"。客户觉得你懂他，信任就有了，后面的推荐他全接了。'
+            }
+          ],
+          learn: [
+            '<b>客户说「随便看看」</b>——不是拒绝，是还没找到能聊起来的人。李晨不问车、不问预算，先问一句「平时怎么用车」。把对话从"你要什么车"变成"你怎么过日子"，客户自然就聊开了。下次遇到说随便看看的，别急着介绍配置，先聊一句家常。',
+            '<b>客户提到一个场景</b>——比如「跑长途」，他不是在闲聊，他是在告诉你他的决策标准。李晨听到「跑长途」立刻接「动力和高速」，推荐逻辑完全跟着客户的需求走，不是跟着参数表走。全程客户觉得是自己在选，其实是李晨在帮他梳理。'
+          ],
+          practice: {
+            scene: '「我就随便看看，还没想好买什么车。」'
+          }
+        },
+
+        '3': {
+          navTitle: '阿强 · 逼单成交案例',
+          core: {
+            tag: '本单核心赢在：逼单节奏',
+            title: '先给安全感再锁优惠，客户不反感当场就定',
+            desc: '不硬逼、不套路，先用「可退」卸下防备，再让客户自己觉得现在不定就亏了。全程客户没觉得被逼单。',
+            bottom: '到店 30 分钟成交'
+          },
+          steps: [
+            {
+              signal: '客户看了两圈，试驾完回来，嘴里说「再考虑考虑」，但人没走，还在店里转。',
+              responseLabel: '阿强怎么接',
+              response: '「哥，定不定没关系。今天这个活动名额我先帮你占着，不想要了随时退，一分不少。」',
+              why: '客户说「考虑」的时候，最怕被逼着现在做决定。阿强反着来——先给退路。客户没压力了，反而愿意坐下来认真聊。这句「随时退」不是在让步，是在把客户留下来。'
+            },
+            {
+              signal: '客户开始认真算价格，问月供多少、首付多少。',
+              responseLabel: '阿强怎么接',
+              response: '「这个优惠今天能锁，明天我不敢保证。但你现在不定也没关系，我把方案发你，你晚上跟家里商量一下。」',
+              why: '制造了稀缺感，但没有逼迫感。「跟家里商量」这句话让客户觉得阿强站在他这边，不是只想成交。但「今天能锁明天不敢保证」已经把紧迫感种下了——客户回去商量的时候，脑子里会一直想这句话。'
+            },
+            {
+              signal: '客户还在犹豫颜色，白色和灰色之间拿不定主意。',
+              responseLabel: '阿强怎么接',
+              response: '「白色这周能提，灰色要多等两周。你先定白色，提车的时候想换灰色也行。关键是先把优惠锁住，颜色后面能改。」',
+              why: '把大决策（买不买）拆成小决策（选颜色），再把小决策变成可逆的。客户觉得「没什么损失」，当场就定了。阿强没逼他「现在就买」，而是给他一个「现在定了也没风险」的理由。'
+            }
+          ],
+          learn: [
+            '<b>客户说「考虑考虑」但人没走</b>——他不是不想买，是怕现在做决定会后悔。阿强不追"考虑什么"，而是先给一个「定了也能退」的安全网。客户从"要不要买"变成"先占个名额又没损失"，决策门槛一下就低了。下次客户说再考虑，先给他一条退路，别急着逼他往前走。',
+            '<b>客户拿不定一个小决定</b>——比如颜色、配置，这时候别让他卡住。阿强把颜色说成"后面能改"，把客户的注意力从"选颜色"拉回到"锁优惠"。关键时刻帮客户把大决策和小决策分开，小决策给灵活性，大决策自然就过了。'
+          ],
+          practice: {
+            scene: '「车还不错，但我想再考虑考虑，不急这一两天。」'
+          }
+        }
+      };
+
+      // ====== 读取 URL 参数 ======
+      var params = new URLSearchParams(window.location.search);
+      var caseId = params.get('case') || '1';
+      if (!CASES[caseId]) caseId = '1';
+
+      var data = CASES[caseId];
+
+      // ====== 渲染 ======
+      document.getElementById('navTitle').textContent = data.navTitle;
+
+      var html = '';
+
+      // 核心结论卡片
+      html += '<section class="core-insight">';
+      html += '<span class="core-tag">' + data.core.tag + '</span>';
+      html += '<h2 class="core-title">' + data.core.title + '</h2>';
+      html += '<p class="core-desc">' + data.core.desc + '</p>';
+      html += '<p class="core-bottom">' + data.core.bottom + '</p>';
+      html += '</section>';
+
+      // 问题 → 解法
+      html += '<section class="section-card">';
+      html += '<h3 class="section-title">问题 → 解法</h3>';
+
+      for (var i = 0; i < data.steps.length; i++) {
+        var step = data.steps[i];
+        html += '<div class="num-item">';
+        html += '<span class="num-circle">' + (i + 1) + '</span>';
+        html += '<div class="num-body">';
+        html += '<span class="num-label">客户信号</span>';
+        html += '<p class="num-text">' + step.signal + '</p>';
+        html += '<div class="response-block">';
+        html += '<span class="num-label" style="background:#f3f4f6;color:#5f6c80;">' + step.responseLabel + '</span>';
+        html += '<p class="num-text">' + step.response + '</p>';
+        html += '<p class="why-line"><b>为什么管用</b>：' + step.why + '</p>';
+        html += '</div></div></div>';
+      }
+
+      html += '</section>';
+
+      // 学习重点 + 练习
+      html += '<section class="section-card muted-bg">';
+      html += '<h3 class="section-title">学习重点</h3>';
+
+      for (var j = 0; j < data.learn.length; j++) {
+        html += '<div class="learn-item">';
+        html += '<span class="learn-num">' + (j + 1) + '</span>';
+        html += '<div class="learn-body">' + data.learn[j] + '</div>';
+        html += '</div>';
+      }
+
+      html += '<div class="practice-cta">';
+      html += '<h4 class="practice-cta-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px;margin-right:4px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>还原场景，练一下</h4>';
+      html += '<div class="practice-scene">';
+      html += '<div class="practice-scene-label">客户原话</div>';
+      html += data.practice.scene;
+      html += '</div>';
+      html += '<button class="practice-btn practice-btn-blue" id="practiceBtn" aria-label="进入练习队列">';
+      html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 10v1a7 7 0 0014 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+      html += '戴上耳机，练这一次';
+      html += '</button>';
+      html += '</div>';
+
+      html += '</section>';
+
+      document.getElementById('detailBody').innerHTML = html;
+
+      // ====== 按钮交互 — 跳转对练页面 ======
+      document.getElementById('practiceBtn').addEventListener('click', function () {
+        location.href = 'practice-drill.html?direct=true&case=' + caseId;
+      });
+    })();
+  </script>
 </body>
 </html>
