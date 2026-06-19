@@ -10,8 +10,8 @@
     :root {
       --navy: #09172c;
       --navy-2: #153765;
-      --blue: #2869df;
-      --blue-soft: #eef5ff;
+      --blue: #0d2342;
+      --blue-soft: #e8ecf2;
       --orange: #c95018;
       --orange-soft: #fff3ea;
       --ink: #172033;
@@ -66,12 +66,15 @@
     .card-badge.champion { color: var(--orange); background: var(--orange-soft); }
     .card-title { margin-top: 8px; font-size: 17px; line-height: 1.35; font-weight: 800; }
     .card-sub { margin-top: 4px; color: var(--muted); font-size: 10px; }
+	    .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+	    .card-head .card-badge { flex: 0 0 auto; }
+	    .card-head .card-title { margin-top: 0; }
 
     /* Step 1 specific */
-    .scenario-box { margin-top: 12px; padding: 12px 14px; background: #f8f9fc; border-radius: 8px; }
+    .scenario-box { margin-top: 12px; padding: 14px; background: #f8f9fc; border: 1px solid #edf0f5; border-radius: 10px; }
     .scenario-label { color: var(--text); font-size: 9px; font-weight: 700; }
     .scenario-title { margin-top: 4px; font-size: 14px; font-weight: 800; }
-    .quote-block { margin-top: 10px; padding: 12px 14px; color: var(--text); background: #f6f8fb; border-left: 3px solid var(--blue); border-radius: 6px; font-size: 13px; line-height: 1.55; }
+    .quote-block { margin-top: 10px; padding: 12px 14px; color: var(--text); background: #f6f8fb; border-radius: 8px; font-size: 13px; line-height: 1.55; }
     .quote-block b { display: block; margin-bottom: 3px; color: var(--blue); font-size: 9px; }
     .miss-note { margin-top: 9px; color: #7b8595; font-size: 10px; line-height: 1.5; }
     .miss-note strong { color: var(--ink); }
@@ -89,7 +92,7 @@
     .method-box { margin-top: 12px; padding: 12px 14px; color: #687487; background: #f5f7fa; border-radius: 8px; font-size: 10px; line-height: 1.55; }
     .method-box b { display: block; margin-bottom: 3px; color: var(--blue); font-size: 10px; }
     .video-row { display: grid; grid-template-columns: 88px 1fr; gap: 10px; align-items: center; margin-top: 12px; }
-    .video-thumb { position: relative; height: 56px; display: grid; place-items: center; color: #fff; background: #285a9f; border-radius: 7px; }
+    .video-thumb { position: relative; height: 56px; display: grid; place-items: center; color: #fff; background: #153765; border-radius: 7px; }
     .play-dot { width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.5); border-radius: 50%; background: rgba(255,255,255,.14); font-size: 10px; }
     .video-dur { position: absolute; right: 4px; bottom: 3px; font-size: 7px; opacity: .8; }
     .video-title { font-size: 12px; line-height: 1.4; font-weight: 800; }
@@ -115,8 +118,8 @@
     .more-item span { display: block; margin-top: 1px; color: var(--muted); font-size: 9px; }
 
     /* Buttons */
-    .btn-primary { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 14px; padding: 10px 14px; color: #fff; background: var(--blue); border-radius: 8px; font-size: 13px; font-weight: 800; box-shadow: 0 3px 12px rgba(40,105,223,.18); transition: .15s; }
-    .btn-primary:active { background: #1f5fcf; transform: scale(.98); }
+    .btn-primary { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 14px; padding: 10px 14px; color: #fff; background: var(--blue); border-radius: 8px; font-size: 13px; font-weight: 800; box-shadow: 0 3px 12px rgba(13,35,66,.25); transition: .15s; }
+    .btn-primary:active { background: #09172c; transform: scale(.98); }
     .btn-ghost { display: block; width: 100%; margin-top: 8px; padding: 8px; text-align: center; color: var(--muted); font-size: 11px; font-weight: 600; }
     .btn-ghost:active { color: var(--blue); }
 
@@ -126,10 +129,10 @@
     .step-nav button:active { color: var(--blue); background: var(--blue-soft); }
     .step-nav button:disabled { opacity: .35; pointer-events: none; }
 
-    /* Footer */
-    .footer-links { display: flex; justify-content: center; gap: 24px; margin: 16px 0 8px; }
-    .footer-link { color: #9ba4b3; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
-    .footer-link:active { color: var(--blue); }
+    /* Footer — 参考成交教练底部 */
+    .footer-bar { display: flex; gap: 10px; padding: 14px 16px 20px; }
+    .footer-btn { flex: 1; padding: 11px; color: var(--muted); background: var(--white); border: 1px solid #dfe5ed; border-radius: 20px; font-size: 12px; font-weight: 600; text-align: center; transition: .15s; }
+    .footer-btn:active { background: #f8fafc; border-color: #cbd5e1; color: var(--blue); }
 
     /* Toast */
     .toast { position: fixed; z-index: 10; left: 50%; bottom: 70px; max-width: 82%; padding: 10px 15px; color: #fff; background: rgba(14,24,41,.92); border-radius: 7px; font-size: 11px; opacity: 0; pointer-events: none; transform: translate(-50%,10px); transition: .2s ease; }
@@ -148,7 +151,7 @@
 
         <header class="header">
           <div class="topbar">
-            <button class="back" onclick="history.back()" aria-label="返回">‹</button>
+            <button class="back" onclick="location.href='成交教练.html'" aria-label="返回">‹</button>
             <span class="page-name">产品讲解专项提升</span>
             <span></span>
           </div>
@@ -181,9 +184,10 @@
           <section class="step-panel active" data-step="1" aria-labelledby="step1-title">
             <div class="card">
               <div class="card-top">
-                <span class="card-badge primary">推荐先做</span>
-                <h2 class="card-title" id="step1-title">把今天没接住的客户重新接一次</h2>
-                <p class="card-sub">今天最可惜的一组客户</p>
+                <div class="card-head">
+                  <span class="card-badge primary">推荐先做</span>
+                  <h2 class="card-title" id="step1-title">重新练习今天没接住的客户</h2>
+                </div>
 
                 <div class="scenario-box">
                   <div class="scenario-label">带娃的姐姐 · MG7空间讲解</div>
@@ -193,7 +197,7 @@
 
                 <a class="btn-primary" href="practice-drill.html?direct=true" style="text-decoration:none;display:flex;">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zM5 10v1a7 7 0 0014 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span>还原这组客户，重新说一次</span>
+                  <span>还原这组客户，重新接待一次</span>
                 </a>
                 <button class="btn-ghost" onclick="goToStep(2)">不想练了，直接看销冠怎么做 →</button>
               </div>
@@ -212,8 +216,10 @@
           <section class="step-panel" data-step="2" aria-labelledby="step2-title">
             <div class="card">
               <div class="card-top">
-                <span class="card-badge champion">销冠做法</span>
-                <h2 class="card-title" id="step2-title">同样的问题，李晨是这样接住的</h2>
+                <div class="card-head">
+                  <span class="card-badge champion">销冠做法</span>
+                  <h2 class="card-title" id="step2-title">同样的问题，李晨是这样接住的</h2>
+                </div>
 
                 <div class="champion-head">
                   <div class="champion-avatar">李</div>
@@ -243,8 +249,10 @@
           <section class="step-panel" data-step="3" aria-labelledby="step3-title">
             <div class="card">
               <div class="card-top">
-                <span class="card-badge primary">总部方法</span>
-                <h2 class="card-title" id="step3-title">总部资料已按你今天的问题切好</h2>
+                <div class="card-head">
+                  <span class="card-badge primary">总部方法</span>
+                  <h2 class="card-title" id="step3-title">总部资料已按你今天的问题切好</h2>
+                </div>
 
                 <div class="method-box"><b>今天最适合你的方法 · 场景代入法</b>先问客户怎么用车，再把参数翻译成他每天会遇到的真实场景。李晨刚才就是这么做的。</div>
 
@@ -285,10 +293,10 @@
           <button id="nextBtn" onclick="goToStep(currentStep + 1)">下一步 →</button>
         </nav>
 
-        <nav class="footer-links" aria-label="更多入口">
-          <button class="footer-link" type="button">我的练习记录</button>
-          <button class="footer-link" type="button">总部资料库</button>
-        </nav>
+        <div class="footer-bar">
+          <button class="footer-btn" type="button">练习记录</button>
+          <button class="footer-btn" type="button">总部资料库</button>
+        </div>
 
       </div>
     </div>
@@ -366,7 +374,7 @@
       showToast('正在播放30秒精准讲解示范');
     });
 
-    document.querySelectorAll('.learn-action, .footer-link').forEach(btn => {
+    document.querySelectorAll('.learn-action, .footer-btn').forEach(btn => {
       btn.addEventListener('click', () => showToast(btn.dataset.message || btn.textContent.trim()));
     });
   </script>

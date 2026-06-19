@@ -96,6 +96,7 @@
     .coach-score-block { margin-top: 16px; }
     .coach-score-num { font-size: 48px; font-weight: 600; color: #f5a623; line-height: 1; }
     .coach-score-unit { font-size: 18px; color: #f5a623; font-weight: 500; }
+    .coach-five-dim-label { font-size: 13px; color: #7e95b5; font-weight: 500; letter-spacing: .04em; }
     .coach-rank { font-size: 12px; color: #7e95b5; margin-top: 6px; }
 
     /* ---- Five-dimension chips ---- */
@@ -165,8 +166,8 @@
     .coach-champ-item:active { transform: scale(.98); }
     .coach-champ-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
     .coach-champ-author { font-size: 12px; color: #5f6c80; font-weight: 600; }
-    .coach-champ-learned { flex: 0 0 auto; font-size: 10.5px; color: var(--accent); background: #fff7ed; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
-    .coach-champ-quote { font-size: 15px; font-weight: 700; color: var(--accent); line-height: 1.45; }
+    .coach-champ-learned { flex: 0 0 auto; font-size: 10.5px; color: #94a3b8; background: #f1f5f9; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+    .coach-champ-quote { font-size: 15px; font-weight: 700; color: #0b234a; line-height: 1.45; }
     .coach-champ-why { font-size: 12px; color: #596579; line-height: 1.6; margin-top: 8px; }
     .coach-champ-why b { color: #7b8797; font-weight: 600; }
     .coach-champ-link { display: inline-flex; align-items: center; min-height: 32px; margin-top: 7px; padding: 0 2px; color: var(--muted); font-size: 12px; font-weight: 500; cursor: pointer; }
@@ -174,17 +175,18 @@
 
     /* CTA area */
     .coach-cta { padding: 16px 0 18px; text-align: center; }
+    .coach-cta-prep {
+      font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 12px;
+    }
+    .coach-cta-prep b { color: var(--ink); font-weight: 600; }
     .coach-cta-btn {
       width: 100%; padding: 14px; font-size: 15px; font-weight: 600;
-      color: #fff; background: var(--accent); border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(194,65,12,.22);
+      color: #fff; background: #0b234a;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(11,35,74,.25);
       transition: background 0.15s, transform 0.12s;
     }
-    .coach-cta-btn:active { background: #b03a0b; transform: scale(.98); }
-    .coach-cta-sub {
-      margin-top: 12px; margin-bottom: 2px; font-size: 12px; color: var(--muted); line-height: 1.6;
-    }
-    .coach-cta-sub b { color: var(--ink); font-weight: 600; }
+    .coach-cta-btn:active { background: #081b38; transform: scale(.98); }
     .coach-more-link {
       display: inline-block; margin-top: 16px; font-size: 12px; font-weight: 500; color: var(--muted);
       text-decoration: none;
@@ -246,10 +248,11 @@
           <div class="coach-hero-core">
             <p class="coach-greet">今天接待了 10 组，辛苦了</p>
             <div class="coach-score-block">
+              <div class="coach-five-dim-label">五维能力得分</div>
               <span class="coach-score-num">76</span>
               <span class="coach-score-unit">分</span>
-              <div class="coach-rank">门店第 7</div>
             </div>
+            <div class="coach-rank">门店第 7 名 · 全店 32 人</div>
           </div>
 
           <div class="coach-dims">
@@ -290,7 +293,7 @@
             <div class="coach-content-card">
 
               <div class="coach-ai-msg">
-                今天三组客户，<b>你其实都差一句话就接住了。</b>
+                今天 10 组客户有 3 组都卡产品讲解这里，这三组本来都有机会的。
               </div>
 
               <div class="coach-case">
@@ -308,15 +311,11 @@
                 <div class="coach-case-desc">媳妇问「能放婴儿车不」，你接着讲安全底盘。<b>那一句，就是她要下单的信号。</b></div>
               </div>
 
-              <div class="coach-ai-msg" style="padding-top:10px; border-top:1px solid #f1f5f9;">
-                这三组，本来都有机会。
-              </div>
-
               <div class="coach-cta">
+                <div class="coach-cta-prep">已帮你整理好了：<b>3 组场景对练</b>、<b>销冠话术</b>、<b>专项学习</b></div>
                 <button class="coach-cta-btn" onclick="location.href='product-explanation.html'">
-                  换个讲法，把这三单重走一遍
+                  重新练一遍，拿下这三单
                 </button>
-                <div class="coach-cta-sub">已帮你整理好了：<b>3 组场景对练</b>、<b>销冠话术</b>、<b>专项学习</b></div>
                 <a class="coach-more-link" href="#" onclick="showToast('正在展开今日更多接待问题…');return false;">看更多今天客户接待的问题</a>
               </div>
 
@@ -325,10 +324,6 @@
 
           <!-- ===== TAB B ===== -->
           <div class="coach-pane" id="paneB" hidden>
-
-              <div class="coach-ai-msg" style="text-align:center;">
-                今日有 5 单优秀成交案例，已为你拆解成交核心
-              </div>
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
@@ -423,7 +418,21 @@
         tabB.classList.add('active');
         tabA.classList.remove('active');
       }
+
+      // Update URL parameter without reloading
+      var url = new URL(window.location);
+      url.searchParams.set('tab', t);
+      window.history.replaceState({}, '', url);
     }
+
+    // On page load, read ?tab= parameter
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var tab = params.get('tab');
+      if (tab === 'B') {
+        switchTab('B');
+      }
+    })();
 
     function showToast(msg) {
       var toast = document.getElementById('toast');
