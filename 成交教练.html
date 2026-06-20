@@ -173,6 +173,14 @@
     .coach-champ-link { display: inline-flex; align-items: center; min-height: 32px; margin-top: 7px; padding: 0 2px; color: var(--muted); font-size: 12px; font-weight: 500; cursor: pointer; }
     .coach-champ-link:active { color: #7f8a9c; }
 
+    /* Store badge on champion card */
+    .champ-store-tag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle;
+    }
+    .champ-store-tag.baoan { color: #0b5cad; background: #e8f2ff; }
+    .champ-store-tag.xixiang { color: #7c5d1e; background: #fef9ee; }
+
     /* CTA area */
     .coach-cta { padding: 16px 0 18px; text-align: center; }
     .coach-cta-prep {
@@ -230,6 +238,119 @@
       .stage { padding: 0; }
       .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
     }
+
+    /* ===== Tab A — 今日成交洞察 Redesign ===== */
+    .coach-intro {
+      font-size: 14px; color: #64748b; line-height: 1.7; margin-bottom: 16px;
+    }
+
+    .coach-insight-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 16px; margin-bottom: 12px;
+      box-shadow: var(--shadow-sm); overflow: hidden;
+      transition: box-shadow 0.25s ease;
+    }
+    .coach-insight-card.expanded {
+      box-shadow: var(--shadow);
+    }
+
+    .coach-insight-label {
+      display: inline-block; background: #faece7; color: #993c1d;
+      font-size: 12px; font-weight: 600; padding: 3px 10px;
+      border-radius: 6px; margin-bottom: 8px;
+    }
+    .coach-insight-title {
+      font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px;
+    }
+    .coach-insight-subtitle {
+      font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-bottom: 10px;
+    }
+    .coach-insight-entry {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 13px; font-weight: 500; color: var(--primary);
+      cursor: pointer; transition: color 0.15s; user-select: none;
+    }
+    .coach-insight-entry:active { color: #0d5fd9; }
+
+    .coach-insight-expanded {
+      max-height: 0; opacity: 0; overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin-top 0.25s ease;
+      margin-top: 0;
+    }
+    .coach-insight-card.expanded .coach-insight-expanded {
+      max-height: 800px; opacity: 1; margin-top: 12px;
+    }
+
+    .coach-snippet {
+      background: #f1f5f9; border-radius: 8px; padding: 12px;
+    }
+    .coach-snippet-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    }
+    .coach-snippet-customer {
+      font-size: 13px; color: var(--ink); font-weight: 600;
+    }
+    .coach-snippet-audio {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 500;
+      transition: color 0.15s;
+    }
+    .coach-snippet-audio:active { color: #0d5fd9; }
+
+    .coach-snippet-said {
+      font-size: 13px; margin-bottom: 8px; line-height: 1.55;
+    }
+    .coach-snippet-said .label-she {
+      color: #64748b; font-weight: 600; margin-right: 4px;
+    }
+    .coach-snippet-said .label-you {
+      color: #993c1d; font-weight: 600; margin-right: 4px;
+    }
+
+    .coach-snippet-note {
+      font-size: 12px; color: #94a3b8; line-height: 1.5; margin-bottom: 10px;
+    }
+    .coach-snippet-divider {
+      height: 1px; background: #e2e8f0; margin: 10px 0;
+    }
+    .coach-snippet-champion {
+      font-size: 13px; line-height: 1.55; margin-bottom: 2px;
+    }
+    .coach-snippet-champion .label-champion {
+      color: #0f6e56; font-weight: 600; margin-right: 4px;
+    }
+
+    .coach-snippet-more {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 13px; color: var(--primary); font-weight: 500;
+      cursor: pointer; margin-top: 2px; transition: color 0.15s;
+    }
+    .coach-snippet-more:active { color: #0d5fd9; }
+
+    .coach-collapse-toggle {
+      display: block; width: 100%; text-align: center;
+      font-size: 13px; color: #94a3b8; padding: 8px 0 2px;
+      cursor: pointer; transition: color 0.15s; user-select: none;
+    }
+    .coach-collapse-toggle:active { color: #64748b; }
+
+    .coach-brief {
+      font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 10px; text-align: center;
+    }
+
+    .coach-sticky-bar {
+      position: sticky; bottom: 0; z-index: 10;
+      padding: 12px 0 16px;
+      background: linear-gradient(to top, var(--page) 60%, transparent 100%);
+    }
+    .coach-action-btn {
+      display: block; width: 100%; padding: 14px;
+      font-size: 15px; font-weight: 700; color: #fff;
+      background: #16233d; border: none; border-radius: 8px;
+      cursor: pointer; text-align: center;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .coach-action-btn:active { background: #0f1a2e; transform: scale(0.98); }
   </style>
 </head>
 <body>
@@ -246,7 +367,7 @@
           </div>
 
           <div class="coach-hero-core">
-            <p class="coach-greet">今天接待了 10 组，辛苦了</p>
+            <p class="coach-greet">今天接待了 10 组客户，辛苦了</p>
             <div class="coach-score-block">
               <div class="coach-five-dim-label">五维能力得分</div>
               <span class="coach-score-num">76</span>
@@ -284,42 +405,87 @@
 
           <!-- Tabs -->
           <div class="coach-tabs">
-            <button class="coach-tab active" id="tabA" onclick="switchTab('A')">今日成交问题</button>
+            <button class="coach-tab active" id="tabA" onclick="switchTab('A')">今日成交洞察</button>
             <button class="coach-tab" id="tabB" onclick="switchTab('B')">今日销冠话术</button>
           </div>
 
-          <!-- ===== TAB A ===== -->
+          <!-- ===== TAB A — 今日成交洞察 ===== -->
           <div class="coach-pane" id="paneA">
-            <div class="coach-content-card">
 
-              <div class="coach-ai-msg">
-                今天 10 组客户有 3 组都卡产品讲解这里，这三组本来都有机会的。
+            <!-- 引入文案 -->
+            <p class="coach-intro">今天这 10 组接待，有 6 组是有机会的，下面这 3 个地方你反复没接住。放心，全是改得掉的小习惯。</p>
+
+            <!-- 洞察卡片 1 -->
+            <div class="coach-insight-card" id="coach-insight-card-card-1">
+              <span class="coach-insight-label">洞察一</span>
+              <div class="coach-insight-title">客户讲的是生活，你回答的是参数</div>
+              <div class="coach-insight-subtitle">你今天有 4 次，客户主动说出需求，你都用车辆参数回应，完全没接住对方真实诉求</div>
+              <span class="coach-insight-entry" onclick="toggleCard('card-1')">看这 4 组卡在哪 ›</span>
+              <div class="coach-insight-expanded">
+                <div class="coach-snippet">
+                  <div class="coach-snippet-header">
+                    <span class="coach-snippet-customer">带娃的姐姐 · 14:20</span>
+                  </div>
+                  <div class="coach-snippet-said"><span class="label-she">她说：</span>"后排坐得下我们一家人不？"</div>
+                  <div class="coach-snippet-said"><span class="label-you">你说：</span>"后备厢 540 升，同级最大。"</div>
+                  <div class="coach-snippet-note">→ 她问的是装不装得下一家人，你答了个数字</div>
+                  <div class="coach-snippet-divider"></div>
+                  <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"您家几口人？常带老人不？上车坐进去试试。"</div>
+                  <span class="coach-snippet-more" onclick="loadMoreSimilar('card-1')">还有 3 组类似的 ›</span>
+                </div>
+                <span class="coach-collapse-toggle" onclick="toggleCard('card-1')">收起 ▴</span>
               </div>
-
-              <div class="coach-case">
-                <div class="coach-case-title"><span class="coach-case-num">①</span> 带娃的姐姐</div>
-                <div class="coach-case-desc">她问后排坐不坐得下一家人，你报了后备厢多少升。<b>她要的是「装得下你们仨」，你给的是数字。</b></div>
-              </div>
-
-              <div class="coach-case">
-                <div class="coach-case-title"><span class="coach-case-num">②</span> 看半天的小伙子</div>
-                <div class="coach-case-desc">你一口气报了七八个配置，他全程"嗯、哦"。<b>配置没错，错在没一个是说给他听的。</b></div>
-              </div>
-
-              <div class="coach-case">
-                <div class="coach-case-title"><span class="coach-case-num">③</span> 带媳妇那哥</div>
-                <div class="coach-case-desc">媳妇问「能放婴儿车不」，你接着讲安全底盘。<b>那一句，就是她要下单的信号。</b></div>
-              </div>
-
-              <div class="coach-cta">
-                <div class="coach-cta-prep">已帮你整理好了：<b>3 组场景对练</b>、<b>销冠话术</b>、<b>专项学习</b></div>
-                <button class="coach-cta-btn" onclick="location.href='product-explanation.html'">
-                  重新练一遍，拿下这三单
-                </button>
-                <a class="coach-more-link" href="#" onclick="showToast('正在展开今日更多接待问题…');return false;">看更多今天客户接待的问题</a>
-              </div>
-
             </div>
+
+            <!-- 洞察卡片 2 -->
+            <div class="coach-insight-card" id="coach-insight-card-card-2">
+              <span class="coach-insight-label">洞察二</span>
+              <div class="coach-insight-title">成交信号，你当成了普通问题</div>
+              <div class="coach-insight-subtitle">你今天有 3 次，客户已经在问买回家怎么用，你却当成普通提问，还在正面介绍车</div>
+              <span class="coach-insight-entry" onclick="toggleCard('card-2')">看这 3 组卡在哪 ›</span>
+              <div class="coach-insight-expanded">
+                <div class="coach-snippet">
+                  <div class="coach-snippet-header">
+                    <span class="coach-snippet-customer">带媳妇的哥 · 16:05</span>
+                  </div>
+                  <div class="coach-snippet-said"><span class="label-she">她说：</span>"这后备厢，放得下婴儿车不？"</div>
+                  <div class="coach-snippet-said"><span class="label-you">你说：</span>"咱这底盘用的是……"（讲起安全）</div>
+                  <div class="coach-snippet-note">→ 她已经在想买回家怎么用了，你还在介绍车</div>
+                  <div class="coach-snippet-divider"></div>
+                  <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"婴儿车我帮您放进去看看——您娃多大啦？"</div>
+                  <span class="coach-snippet-more" onclick="loadMoreSimilar('card-2')">还有 2 组类似的 ›</span>
+                </div>
+                <span class="coach-collapse-toggle" onclick="toggleCard('card-2')">收起 ▴</span>
+              </div>
+            </div>
+
+            <!-- 洞察卡片 3 -->
+            <div class="coach-insight-card" id="coach-insight-card-card-3">
+              <span class="coach-insight-label">洞察三</span>
+              <div class="coach-insight-title">客户说"再看看"，你就"好的"</div>
+              <div class="coach-insight-subtitle">你今天有 3 次，客户临走留了最后一个回合，你没追问、也没约下次，就把人放走了</div>
+              <span class="coach-insight-entry" onclick="toggleCard('card-3')">看这 3 组卡在哪 ›</span>
+              <div class="coach-insight-expanded">
+                <div class="coach-snippet">
+                  <div class="coach-snippet-header">
+                    <span class="coach-snippet-customer">看半天的小伙子 · 15:10</span>
+                  </div>
+                  <div class="coach-snippet-said"><span class="label-she">他说：</span>"行，我再看看，没什么问题了。"</div>
+                  <div class="coach-snippet-said"><span class="label-you">你说：</span>"好的。"</div>
+                  <div class="coach-snippet-note">→ "再看看"是最后一个回合，一句"好的"就把人送出门了</div>
+                  <div class="coach-snippet-divider"></div>
+                  <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"您要看看肯定的。加个微信，明天试驾车到，我留一台给您？"</div>
+                  <span class="coach-snippet-more" onclick="loadMoreSimilar('card-3')">还有 2 组类似的 ›</span>
+                </div>
+                <span class="coach-collapse-toggle" onclick="toggleCard('card-3')">收起 ▴</span>
+              </div>
+            </div>
+
+            <!-- 行动按钮（悬浮置底） -->
+            <div class="coach-sticky-bar">
+              <button class="coach-action-btn" onclick="location.href='product-explanation.html'">只需 5 分钟，就能把今天丢的接回来</button>
+            </div>
+
           </div>
 
           <!-- ===== TAB B ===== -->
@@ -327,31 +493,31 @@
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
-                  <span class="coach-champ-author">小李・今日成交 2 单</span>
+                  <span class="coach-champ-author">小李 · 今日成交 2 单<span class="champ-store-tag baoan">宝安店</span></span>
                   <span class="coach-champ-learned">本店已有 9 人学过</span>
                 </div>
-                <div class="coach-champ-quote">这单场景化讲解，全店教科书级</div>
-                <div class="coach-champ-why"><b>核心成交原因：</b>不报参数不讲数据，一句话戳中客户没说出口的带娃用车顾虑</div>
+                <div class="coach-champ-quote">不问轴距问宝宝多大，客户聊着聊着就签了</div>
+                <div class="coach-champ-why"><b>核心成交原因：</b>把参数翻译成带娃出门的真实麻烦，客户觉得这销售懂自己，不等报价先问怎么定</div>
                 <a class="coach-champ-link" href="champion-case-detail.html?case=1" aria-label="查看小李带娃客户单完整拆解">看完整拆解 ›</a>
               </div>
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
-                  <span class="coach-champ-author">李晨・今日成交 2 单</span>
+                  <span class="coach-champ-author">李晨 · 今日成交 2 单<span class="champ-store-tag baoan">宝安店</span></span>
                   <span class="coach-champ-learned">本店已有 7 人学过</span>
                 </div>
-                <div class="coach-champ-quote">需求挖得准，后面推车全中</div>
-                <div class="coach-champ-why"><b>核心成交原因：</b>两句家常问出真实用车场景，全程不瞎推配置，客户越听越对味</div>
+                <div class="coach-champ-quote">先唠家常再聊车，客户自己把需求全抖出来了</div>
+                <div class="coach-champ-why"><b>核心成交原因：</b>聊完家里几口人、平时谁开、周末去哪，再推荐车型——客户觉得你在帮他选，不是在推销</div>
                 <a class="coach-champ-link" href="champion-case-detail.html?case=2" aria-label="查看李晨需求挖掘单完整拆解">看完整拆解 ›</a>
               </div>
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
-                  <span class="coach-champ-author">阿强・今日成交 1 单</span>
+                  <span class="coach-champ-author">阿强 · 今日成交 1 单<span class="champ-store-tag xixiang">西乡店</span></span>
                   <span class="coach-champ-learned">本店已有 11 人学过</span>
                 </div>
-                <div class="coach-champ-quote">这手逼单手法，全店没人不服</div>
-                <div class="coach-champ-why"><b>核心成交原因：</b>先给「可退」安全感再锁优惠，客户不反感，当场就定</div>
+                <div class="coach-champ-quote">先把安全感给足，再谈优惠，客户主动说帮我定</div>
+                <div class="coach-champ-why"><b>核心成交原因：</b>开场先讲优惠随时可退、没损失，客户心里没包袱了，才敢当场做决定</div>
                 <a class="coach-champ-link" href="champion-case-detail.html?case=3" aria-label="查看阿强逼单成交单完整拆解">看完整拆解 ›</a>
               </div>
 
@@ -440,6 +606,31 @@
       toast.textContent = msg;
       toast.classList.add('show');
       toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 1800);
+    }
+
+    function toggleCard(id) {
+      var card = document.getElementById('coach-insight-card-' + id);
+      if (!card) return;
+      var expanded = card.classList.contains('expanded');
+      if (expanded) {
+        card.classList.remove('expanded');
+      } else {
+        card.classList.add('expanded');
+        setTimeout(function () {
+          var rect = card.getBoundingClientRect();
+          if (rect.bottom > window.innerHeight - 40) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }, 50);
+      }
+    }
+
+    function loadMoreSimilar(id) {
+      showToast('正在加载更多相似案例…');
+    }
+
+    function playAudio(id) {
+      showToast('正在播放录音…');
     }
   </script>
 </body>
