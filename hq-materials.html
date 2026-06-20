@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>总部学习资料</title>
+  <style>
+    :root {
+      --navy-950: #071327;
+      --ink: #1e293b;
+      --text: #334155;
+      --muted: #94a3b8;
+      --line: #e2e8f0;
+      --page: #F2F6FC;
+      --card: #fff;
+      --card-border: #dde4f0;
+      --primary: #1677FF;
+      --primary-light: #EAF2FF;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.035), 0 2px 8px rgba(0,0,0,.025);
+      --shadow-lg: 0 24px 64px rgba(20,32,52,.2);
+      --radius: 10px;
+      --radius-lg: 14px;
+      --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%; background: #dfe4ec;
+      font-family: var(--font); color: var(--ink);
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+    }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+
+    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
+    .phone {
+      position: relative; width: min(390px, 100vw); height: min(844px, calc(100vh - 36px));
+      min-height: 700px; overflow: hidden; background: var(--page);
+      border: 1px solid #cfd6e1; border-radius: 28px; box-shadow: var(--shadow-lg);
+      display: flex; flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(160deg, #08172b 0%, #0f2342 50%, #132f58 100%);
+      padding: 18px 16px 12px;
+      flex-shrink: 0;
+    }
+    .nav-row { display: flex; align-items: center; gap: 10px; }
+    .back-btn {
+      padding: 6px 14px; font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,.75); background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12); border-radius: 20px;
+      transition: background 0.15s;
+    }
+    .back-btn:active { background: rgba(255,255,255,.14); color: #fff; }
+    .nav-title { font-size: 16px; font-weight: 600; color: #fff; }
+
+    /* Search */
+    .search-wrap { padding: 12px 16px; flex-shrink: 0; }
+    .search-input {
+      width: 100%; padding: 10px 14px; font-size: 13px; color: var(--ink);
+      background: var(--card); border: 1px solid var(--card-border); border-radius: 22px;
+      outline: none; font-family: var(--font);
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--primary); }
+
+    /* Body: sidebar + content */
+    .body { flex: 1; display: flex; overflow: hidden; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 80px; flex-shrink: 0;
+      background: #fff; border-right: 1px solid var(--line);
+      overflow-y: auto; scrollbar-width: none;
+      padding: 4px 0;
+    }
+    .sidebar::-webkit-scrollbar { display: none; }
+    .cat-item {
+      display: block; width: 100%; padding: 13px 8px;
+      font-size: 12px; color: var(--text); text-align: center;
+      line-height: 1.3; transition: background 0.12s;
+      border-left: 3px solid transparent;
+    }
+    .cat-item:active { background: #f8fafc; }
+    .cat-item.active {
+      background: var(--primary-light); color: var(--primary);
+      font-weight: 600; border-left-color: var(--primary);
+    }
+
+    /* Content */
+    .content {
+      flex: 1; overflow-y: auto; scrollbar-width: none;
+      padding: 12px; -webkit-overflow-scrolling: touch;
+    }
+    .content::-webkit-scrollbar { display: none; }
+
+    .cat-title {
+      font-size: 13px; font-weight: 600; color: var(--ink);
+      margin-bottom: 10px; padding-left: 2px;
+    }
+
+    /* Card */
+    .mat-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); padding: 14px;
+      box-shadow: var(--shadow-sm); margin-bottom: 10px;
+      cursor: pointer; transition: box-shadow 0.15s;
+    }
+    .mat-card:active { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .mat-title { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.4; margin-bottom: 6px; }
+    .mat-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mat-tag {
+      font-size: 11px; padding: 2px 8px; border-radius: 10px;
+      background: #f1f5f9; color: var(--text);
+    }
+    .mat-type {
+      font-size: 11px; padding: 2px 8px; border-radius: 10px;
+      background: #eef2ff; color: #6366f1;
+    }
+    .mat-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+    .empty-state { text-align: center; padding: 40px 16px; color: var(--muted); font-size: 14px; }
+
+    /* ===== Detail Overlay ===== */
+    .detail-overlay {
+      position: absolute; inset: 0; z-index: 50;
+      background: var(--page); display: flex; flex-direction: column;
+      transform: translateX(105%);
+      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .detail-overlay.open { transform: translateX(0); }
+
+    .detail-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 18px 16px; background: linear-gradient(160deg, #08172b 0%, #0f2342 50%, #132f58 100%);
+      color: #fff; flex-shrink: 0;
+    }
+    .detail-back {
+      padding: 6px 14px; font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,.75); background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12); border-radius: 20px;
+      transition: background 0.15s;
+    }
+    .detail-back:active { background: rgba(255,255,255,.14); color: #fff; }
+    .detail-title { font-size: 15px; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .detail-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Key points section */
+    .keypoints {
+      background: var(--card); margin: 12px 12px 0; padding: 16px;
+      border: 1px solid var(--card-border); border-radius: var(--radius-lg);
+    }
+    .keypoints-label {
+      font-size: 12px; color: var(--muted); margin-bottom: 10px;
+    }
+    .keypoint-item {
+      display: flex; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f8fafc;
+      font-size: 13px; line-height: 1.6;
+    }
+    .keypoint-item:last-child { border-bottom: none; }
+    .keypoint-num {
+      flex-shrink: 0; width: 18px; height: 18px;
+      background: #eef2ff; color: #6366f1; border-radius: 50%;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .keypoint-text { color: var(--text); }
+
+    /* PDF section */
+    .pdf-section { margin: 12px; }
+    .pdf-section-label {
+      font-size: 12px; color: var(--muted); margin-bottom: 8px; padding-left: 2px;
+    }
+    .pdf-viewer {
+      width: 100%; height: 480px; border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); background: #f8fafc;
+    }
+
+    @media (max-width: 430px) {
+      .stage { padding: 0; }
+      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="phone" id="phone">
+      <div class="header">
+        <div class="nav-row">
+          <button class="back-btn" onclick="goBack()">‹ 返回</button>
+          <span class="nav-title">总部学习资料</span>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <input class="search-input" type="text" placeholder="搜索资料..." oninput="doSearch(this.value)">
+      </div>
+
+      <div class="body">
+        <div class="sidebar" id="sidebar"></div>
+        <div class="content" id="content"></div>
+      </div>
+
+      <!-- Detail Overlay -->
+      <div class="detail-overlay" id="detailOverlay">
+        <div class="detail-head">
+          <button class="detail-back" onclick="closeDetail()">‹ 返回</button>
+          <span class="detail-title" id="detailTitle"></span>
+        </div>
+        <div class="detail-body" id="detailBody"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    var CATEGORIES = [
+      '产品知识', '销售话术', '销售流程', '竞品对比', '活动营销',
+      '金融保险', '门店管理', '客户管理', '新人入职', '合规制度'
+    ];
+
+    var MATERIALS = [
+      { id: 'm1', title: 'MG4 产品核心卖点讲解', category: '产品知识', type: 'PDF', learners: 45, tags: ['MG4'] },
+      { id: 'm2', title: 'MG7 新品上市资料', category: '产品知识', type: 'PDF', learners: 128, tags: ['MG7'] },
+      { id: 'm3', title: 'MG Cyberster 展厅接待攻略', category: '产品知识', type: 'PPT', learners: 36, tags: ['Cyberster'] },
+      { id: 'm4', title: 'MG ES5 家庭用车场景讲解', category: '产品知识', type: '视频', learners: 89, tags: ['MG ES5'] },
+      { id: 'm5', title: '新能源三电技术解读', category: '产品知识', type: 'PPT', learners: 67, tags: ['新能源'] },
+
+      { id: 'm6', title: '留资开口标准话术要点', category: '销售话术', type: 'PDF', learners: 156, tags: ['全系'] },
+      { id: 'm7', title: '试驾后跟进回访话术', category: '销售话术', type: 'Word', learners: 98, tags: ['全系'] },
+      { id: 'm8', title: '砍价型客户应对技巧', category: '销售话术', type: '视频', learners: 134, tags: ['全系'] },
+      { id: 'm9', title: 'MG3 价格异议处理话术', category: '销售话术', type: 'PPT', learners: 72, tags: ['MG3'] },
+      { id: 'm10', title: '成交逼单话术实战', category: '销售话术', type: '视频', learners: 189, tags: ['全系'] },
+
+      { id: 'm11', title: '试驾邀约标准流程', category: '销售流程', type: 'PDF', learners: 112, tags: ['全系'] },
+      { id: 'm12', title: '交车仪式标准流程', category: '销售流程', type: '视频', learners: 87, tags: ['全系'] },
+      { id: 'm13', title: '展厅接待服务规范', category: '销售流程', type: 'PPT', learners: 93, tags: ['全系'] },
+
+      { id: 'm14', title: 'MG7 竞品对比话术实战', category: '竞品对比', type: '视频', learners: 105, tags: ['MG7'] },
+      { id: 'm15', title: '新能源 vs 燃油车深度对比', category: '竞品对比', type: 'PPT', learners: 78, tags: ['新能源'] },
+      { id: 'm16', title: 'MG4 vs 比亚迪秦 PLUS 对比', category: '竞品对比', type: 'Word', learners: 143, tags: ['MG4'] },
+
+      { id: 'm17', title: '26年国庆大促活动方案', category: '活动营销', type: 'PDF', learners: 56, tags: ['国庆'] },
+      { id: 'm18', title: '双11购车节促销手册', category: '活动营销', type: 'PPT', learners: 44, tags: ['双11'] },
+      { id: 'm19', title: '春季新品发布执行手册', category: '活动营销', type: 'PDF', learners: 31, tags: ['春季'] },
+
+      { id: 'm20', title: '金融方案推荐技巧', category: '金融保险', type: 'PPT', learners: 68, tags: ['金融'] },
+      { id: 'm21', title: '置换补贴政策解读', category: '金融保险', type: 'Word', learners: 55, tags: ['置换'] },
+      { id: 'm22', title: '分期计算与贷款方案介绍', category: '金融保险', type: '视频', learners: 72, tags: ['金融'] },
+
+      { id: 'm23', title: '展厅陈列规范与5S标准', category: '门店管理', type: 'PDF', learners: 41, tags: ['展厅'] },
+      { id: 'm24', title: '客户接待流程管理规定', category: '门店管理', type: 'Word', learners: 38, tags: ['接待'] },
+      { id: 'm25', title: '数据报表分析指南', category: '门店管理', type: 'PPT', learners: 29, tags: ['数据'] },
+
+      { id: 'm26', title: '客户分级与跟进策略', category: '客户管理', type: 'PDF', learners: 84, tags: ['客户'] },
+      { id: 'm27', title: '售后回访与客户维系', category: '客户管理', type: '视频', learners: 76, tags: ['售后'] },
+
+      { id: 'm28', title: '品牌文化与基础产品知识', category: '新人入职', type: 'PDF', learners: 320, tags: ['新人'] },
+      { id: 'm29', title: '门店管理制度学习手册', category: '新人入职', type: 'Word', learners: 280, tags: ['新人'] },
+
+      { id: 'm30', title: '个人信息保护合规要点', category: '合规制度', type: 'PDF', learners: 52, tags: ['合规'] },
+      { id: 'm31', title: '广告法合规宣传规范', category: '合规制度', type: 'Word', learners: 48, tags: ['合规'] },
+    ];
+
+    // 每个资料对应的重点提炼
+    var KEYPOINTS_MAP = {
+      'm1': ['MG4 搭载第二代半固态电池，CLTC 续航 537km，化解客户续航焦虑最硬的一张牌', 'XDS 弯道动态控制系统为同级独有配置，弯道极限提升 12%，客户提操控时直接演示', '后排纯平地板 + 540° 全景影像，面对家庭客户时从安全与空间两个维度切入'],
+      'm2': ['MG7 采用参数化主动进气格栅 + 无框车门 + 溜背造型，风阻系数 0.24Cd，外观辨识度极高', '车机芯片为高通骁龙 8155，支持无线 CarPlay 与 Android Auto，对比同级竞品优势明显', '半固态电池版续航 537km，CTB 电池车身一体化结构，兼顾安全与操控'],
+      'm6': ['留资开口的核心时机在试驾后 3 分钟内，趁客户体验感最强时自然过渡', '开口话术避免「你留个电话吧」的生硬表达，改用「我把今天的试驾对比数据发您」作为钩子', '针对不同客户类型准备差异化开口：价格敏感型强调优惠、体验型强调后续活动'],
+      'm7': ['回访时机：试驾后 24 小时内最佳，超过 48 小时客户热度下降 60%', '回访内容个性化：结合试驾时客户的关注点针对性跟进，而非发标准模板', '每次回访必须约定下一次联系时间，形成闭环，这是成交转化的关键一步'],
+      'm10': ['识别成交信号：客户开始讨论颜色、提车时间、上牌细节时，已经进入购买状态', '逼单不是施压而是帮客户做决定：总结客户关注点 → 确认需求 → 给出行动建议', '二选一法则最有效：「您是选白色还是灰色？」比「您买不买？」成交率高 3 倍'],
+      'm11': ['试驾前 3 件事必须到位：车辆提前备好、空调温度调好、试驾路线规划好', '试驾邀约的关键不是讲参数，而是让客户想象拥有后的生活场景', '抗拒试驾的客户用「体验式邀约」：不说「您试驾一下」，说「我带您感受一下弯道的操控」'],
+      'm15': ['半固态电池安全性与循环寿命优于传统锂电池，是应对「电池不安全」质疑的核心武器', 'MG4 后驱平台对比同级前驱车型，操控质感不是一个级别，试驾体验是最强说服力', '油电使用成本对比：每年 2 万公里计算，MG4 充电费约 2800 元，同级燃油车油费约 12000 元'],
+      'm28': ['MG 品牌始于 1924 年英国牛津，百年运动基因是品牌故事的核心主线', '上汽集团全球研发体系，核心技术自主可控，消除客户「新能源品牌靠不靠谱」的顾虑', '记住 3 个品牌关键词：运动基因、全球品质、智能科技，所有产品介绍围绕这三条展开']
+    };
+
+    var DEFAULT_KEYPOINTS = [
+      '掌握核心卖点与竞品差异，用场景化语言替代参数罗列，让客户听得懂、记得住',
+      '理解客户真实需求后再匹配产品优势，先共情再追问，最后用配置佐证',
+      '每次客户接触都要有明确下一步，约定下次联系时间，形成销售闭环'
+    ];
+
+    var currentCat = CATEGORIES[0];
+    var searchQuery = '';
+
+    function renderSidebar() {
+      var html = '';
+      CATEGORIES.forEach(function(cat) {
+        var cls = cat === currentCat ? ' cat-item active' : 'cat-item';
+        html += '<button class="' + cls + '" onclick="selectCat(\'' + cat + '\')">' + cat + '</button>';
+      });
+      document.getElementById('sidebar').innerHTML = html;
+    }
+
+    function selectCat(cat) {
+      currentCat = cat;
+      renderSidebar();
+      renderContent();
+    }
+
+    function doSearch(q) {
+      searchQuery = q.trim().toLowerCase();
+      renderContent();
+    }
+
+    function renderContent() {
+      var filtered = MATERIALS.filter(function(m) {
+        if (m.category !== currentCat) return false;
+        if (searchQuery) {
+          return m.title.toLowerCase().indexOf(searchQuery) > -1 ||
+                 m.type.toLowerCase().indexOf(searchQuery) > -1 ||
+                 m.tags.some(function(t) { return t.toLowerCase().indexOf(searchQuery) > -1; });
+        }
+        return true;
+      });
+
+      var html = '<div class="cat-title">' + currentCat + '</div>';
+      if (filtered.length === 0) {
+        html += '<div class="empty-state">没有找到相关资料</div>';
+      } else {
+        filtered.forEach(function(m) {
+          html += '<div class="mat-card" onclick="openDetail(\'' + m.id + '\')">';
+          html += '<div class="mat-title">' + m.title + '</div>';
+          html += '<div class="mat-meta">';
+          html += '<span class="mat-tag">' + m.category + '</span>';
+          html += '<span class="mat-type">' + m.type + '</span>';
+          html += '<span class="mat-count">' + m.learners + ' 人已学</span>';
+          html += '</div>';
+          html += '</div>';
+        });
+      }
+      document.getElementById('content').innerHTML = html;
+    }
+
+    function openDetail(id) {
+      var m = MATERIALS.find(function(item) { return item.id === id; });
+      if (!m) return;
+
+      document.getElementById('detailTitle').textContent = m.title;
+
+      var kps = KEYPOINTS_MAP[id] || DEFAULT_KEYPOINTS;
+      var kpHtml = '<div class="keypoints">';
+      kpHtml += '<div class="keypoints-label">成交教练为你提炼以下重点</div>';
+      kps.forEach(function(text, i) {
+        kpHtml += '<div class="keypoint-item">';
+        kpHtml += '<span class="keypoint-num">' + (i + 1) + '</span>';
+        kpHtml += '<span class="keypoint-text">' + text + '</span>';
+        kpHtml += '</div>';
+      });
+      kpHtml += '</div>';
+
+      kpHtml += '<div class="pdf-section">';
+      kpHtml += '<div class="pdf-section-label">原始资料</div>';
+      kpHtml += '<iframe class="pdf-viewer" src="assets/课件：MG7 25款上市培训.pdf#toolbar=0&navpanes=0" frameborder="0"></iframe>';
+      kpHtml += '</div>';
+
+      document.getElementById('detailBody').innerHTML = kpHtml;
+      document.getElementById('detailOverlay').classList.add('open');
+    }
+
+    function closeDetail() {
+      document.getElementById('detailOverlay').classList.remove('open');
+    }
+
+    function goBack() {
+      if (document.referrer && document.referrer.indexOf('成交教练') > -1) {
+        window.history.back();
+      } else {
+        window.location.href = '成交教练.html';
+      }
+    }
+
+    renderSidebar();
+    renderContent();
+  </script>
+</body>
+</html>
