@@ -239,7 +239,7 @@
       .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
     }
 
-    /* ===== Tab A — 今日成交洞察 Redesign ===== */
+    /* ===== Tab A — 今日成交复盘 Redesign ===== */
     .coach-intro {
       font-size: 14px; color: #64748b; line-height: 1.7; margin-bottom: 16px;
     }
@@ -409,20 +409,20 @@
 
           <!-- Tabs -->
           <div class="coach-tabs">
-            <button class="coach-tab active" id="tabA" onclick="switchTab('A')">今日成交洞察</button>
+            <button class="coach-tab active" id="tabA" onclick="switchTab('A')">今日成交复盘</button>
             <button class="coach-tab" id="tabB" onclick="switchTab('B')">今日销冠话术</button>
           </div>
 
-          <!-- ===== TAB A — 今日成交洞察 ===== -->
+          <!-- ===== TAB A — 今日成交复盘 ===== -->
           <div class="coach-pane" id="paneA">
 
             <!-- 引入文案 -->
             <p class="coach-intro">今日 10 组接待，有 6 组是有机会的，3 处高频沟通短板，通过练习就能调整好。</p>
 
-            <!-- 洞察卡片 1 -->
+            <!-- 复盘卡片 1 -->
             <div class="coach-insight-card" id="coach-insight-card-card-1">
               <div class="coach-insight-head">
-                <span class="coach-insight-label">洞察一</span>
+                <span class="coach-insight-label">复盘一</span>
                 <div class="coach-insight-title">客户讲的是生活，你回答的是参数</div>
               </div>
               <div class="coach-insight-subtitle">你今天有 4 次，客户主动说出需求，你都用车辆参数回应，完全没接住对方真实诉求</div>
@@ -443,13 +443,13 @@
               </div>
             </div>
 
-            <!-- 洞察卡片 2 -->
+            <!-- 复盘卡片 2 -->
             <div class="coach-insight-card" id="coach-insight-card-card-2">
               <div class="coach-insight-head">
-                <span class="coach-insight-label">洞察二</span>
+                <span class="coach-insight-label">复盘二</span>
                 <div class="coach-insight-title">成交信号，你当成了普通问题</div>
               </div>
-              <div class="coach-insight-subtitle">你今天有 3 次，客户已经在问买回家怎么用，你却当成普通提问，还在正面介绍车</div>
+              <div class="coach-insight-subtitle">你今天有 3 次，客户已经在想这车适不适合自家用，你却当成普通提问，还在正面介绍车</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-2')">看这 3 组卡在哪 ›</span>
               <div class="coach-insight-expanded">
                 <div class="coach-snippet">
@@ -458,7 +458,7 @@
                   </div>
                   <div class="coach-snippet-said"><span class="label-she">她说：</span>"这后备厢，放得下婴儿车不？"</div>
                   <div class="coach-snippet-said"><span class="label-you">你说：</span>"咱这底盘用的是……"（讲起安全）</div>
-                  <div class="coach-snippet-note">→ 她已经在想买回家怎么用了，你还在介绍车</div>
+                  <div class="coach-snippet-note">→ 她已经在想这车适不适合自家了，你还在介绍车</div>
                   <div class="coach-snippet-divider"></div>
                   <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"婴儿车我帮您放进去看看——您娃多大啦？"</div>
                   <span class="coach-snippet-more" onclick="loadMoreSimilar('card-2')">还有 2 组类似的 ›</span>
@@ -467,10 +467,10 @@
               </div>
             </div>
 
-            <!-- 洞察卡片 3 -->
+            <!-- 复盘卡片 3 -->
             <div class="coach-insight-card" id="coach-insight-card-card-3">
               <div class="coach-insight-head">
-                <span class="coach-insight-label">洞察三</span>
+                <span class="coach-insight-label">复盘三</span>
                 <div class="coach-insight-title">客户说"再看看"，你就"好的"</div>
               </div>
               <div class="coach-insight-subtitle">你今天有 3 次，客户临走留了最后一个回合，你没追问、也没约下次，就把人放走了</div>
@@ -493,7 +493,7 @@
 
             <!-- 行动按钮（悬浮置底） -->
             <div class="coach-sticky-bar">
-              <button class="coach-action-btn" onclick="location.href='product-explanation.html'">只需 10 分钟，就能把今天丢的接回来</button>
+              <button class="coach-action-btn" onclick="location.href='product-explanation.html'">10 分钟练好话术，捡回今天流失的成交机会</button>
             </div>
 
           </div>
@@ -770,7 +770,7 @@
         improvements: [
           { title: '从「报参数」转向「讲场景」', desc: '多组客户在聊生活需求时，你直接跳到车辆数据。先共情、再追问、最后用参数佐证。' },
           { title: '竞品对比要有具体锚点', desc: '不要泛泛说"我们更好"，准备 3 个核心差异点，用数字和场景讲故事。' },
-          { title: '成交信号识别需加强', desc: '客户已经在想买回家怎么用了，这就是最佳逼单时机，别继续介绍车。' }
+          { title: '成交信号识别需加强', desc: '客户已经在想这车适不适合自家了，这就是最佳逼单时机，别继续介绍车。' }
         ],
         weaknesses: [
           { title: '产品专业知识（48 分）', desc: '车辆参数知识和竞品对比能力是最大短板，客户一问深就露怯，需要系统补课。' },
