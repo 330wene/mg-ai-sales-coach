@@ -257,8 +257,12 @@
     .coach-insight-label {
       display: inline-block; background: #faece7; color: #993c1d;
       font-size: 12px; font-weight: 600; padding: 3px 10px;
-      border-radius: 6px; margin-bottom: 8px;
+      border-radius: 6px;
     }
+    .coach-insight-head {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+    }
+    .coach-insight-head .coach-insight-label { flex: 0 0 auto; white-space: nowrap; }
     .coach-insight-title {
       font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px;
     }
@@ -368,7 +372,7 @@
 
           <div class="coach-hero-core">
             <p class="coach-greet">今天接待了 10 组客户，辛苦了</p>
-            <div class="coach-score-block">
+            <div class="coach-score-block" onclick="openDimensionDetail('overview')" style="cursor:pointer">
               <div class="coach-five-dim-label">五维能力得分</div>
               <span class="coach-score-num">76</span>
               <span class="coach-score-unit">分</span>
@@ -377,23 +381,23 @@
           </div>
 
           <div class="coach-dims">
-            <div class="coach-dim weak">
+            <div class="coach-dim weak" onclick="openDimensionDetail('product')" style="cursor:pointer">
               <div class="coach-dim-score">48</div>
               <div class="coach-dim-label">产品专业</div>
             </div>
-            <div class="coach-dim normal">
+            <div class="coach-dim normal" onclick="openDimensionDetail('needs')" style="cursor:pointer">
               <div class="coach-dim-score">56</div>
               <div class="coach-dim-label">需求分析</div>
             </div>
-            <div class="coach-dim normal">
+            <div class="coach-dim normal" onclick="openDimensionDetail('service')" style="cursor:pointer">
               <div class="coach-dim-score">78</div>
               <div class="coach-dim-label">服务满意</div>
             </div>
-            <div class="coach-dim normal">
+            <div class="coach-dim normal" onclick="openDimensionDetail('compete')" style="cursor:pointer">
               <div class="coach-dim-score">61</div>
               <div class="coach-dim-label">竞品应对</div>
             </div>
-            <div class="coach-dim normal">
+            <div class="coach-dim normal" onclick="openDimensionDetail('followup')" style="cursor:pointer">
               <div class="coach-dim-score">70</div>
               <div class="coach-dim-label">客户跟进</div>
             </div>
@@ -413,12 +417,14 @@
           <div class="coach-pane" id="paneA">
 
             <!-- 引入文案 -->
-            <p class="coach-intro">今天这 10 组接待，有 6 组是有机会的，下面这 3 个地方你反复没接住。放心，全是改得掉的小习惯。</p>
+            <p class="coach-intro">今日 10 组接待，有 6 组是有机会的，3 处高频沟通短板，通过练习就能调整好。</p>
 
             <!-- 洞察卡片 1 -->
             <div class="coach-insight-card" id="coach-insight-card-card-1">
-              <span class="coach-insight-label">洞察一</span>
-              <div class="coach-insight-title">客户讲的是生活，你回答的是参数</div>
+              <div class="coach-insight-head">
+                <span class="coach-insight-label">洞察一</span>
+                <div class="coach-insight-title">客户讲的是生活，你回答的是参数</div>
+              </div>
               <div class="coach-insight-subtitle">你今天有 4 次，客户主动说出需求，你都用车辆参数回应，完全没接住对方真实诉求</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-1')">看这 4 组卡在哪 ›</span>
               <div class="coach-insight-expanded">
@@ -439,8 +445,10 @@
 
             <!-- 洞察卡片 2 -->
             <div class="coach-insight-card" id="coach-insight-card-card-2">
-              <span class="coach-insight-label">洞察二</span>
-              <div class="coach-insight-title">成交信号，你当成了普通问题</div>
+              <div class="coach-insight-head">
+                <span class="coach-insight-label">洞察二</span>
+                <div class="coach-insight-title">成交信号，你当成了普通问题</div>
+              </div>
               <div class="coach-insight-subtitle">你今天有 3 次，客户已经在问买回家怎么用，你却当成普通提问，还在正面介绍车</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-2')">看这 3 组卡在哪 ›</span>
               <div class="coach-insight-expanded">
@@ -461,8 +469,10 @@
 
             <!-- 洞察卡片 3 -->
             <div class="coach-insight-card" id="coach-insight-card-card-3">
-              <span class="coach-insight-label">洞察三</span>
-              <div class="coach-insight-title">客户说"再看看"，你就"好的"</div>
+              <div class="coach-insight-head">
+                <span class="coach-insight-label">洞察三</span>
+                <div class="coach-insight-title">客户说"再看看"，你就"好的"</div>
+              </div>
               <div class="coach-insight-subtitle">你今天有 3 次，客户临走留了最后一个回合，你没追问、也没约下次，就把人放走了</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-3')">看这 3 组卡在哪 ›</span>
               <div class="coach-insight-expanded">
@@ -483,7 +493,7 @@
 
             <!-- 行动按钮（悬浮置底） -->
             <div class="coach-sticky-bar">
-              <button class="coach-action-btn" onclick="location.href='product-explanation.html'">只需 5 分钟，就能把今天丢的接回来</button>
+              <button class="coach-action-btn" onclick="location.href='product-explanation.html'">只需 10 分钟，就能把今天丢的接回来</button>
             </div>
 
           </div>
@@ -539,11 +549,21 @@
 
         <!-- ===== 底部按钮 ===== -->
         <div class="coach-bottom-bar">
-          <button class="coach-bottom-btn" onclick="showToast('正在打开学习记录…')">学习记录</button>
-          <button class="coach-bottom-btn" onclick="showToast('正在打开完整总部资料库…')">完整总部学习资料</button>
+          <button class="coach-bottom-btn" onclick="location.href='learn-record.html'">学习记录</button>
+          <button class="coach-bottom-btn" onclick="location.href='hq-materials.html'">总部学习资料</button>
         </div>
 
       </div><!-- /scroll -->
+
+      <!-- ===== 五维内页 Overlay ===== -->
+      <div class="dimension-overlay" id="dimensionDetail">
+        <header class="dimension-head">
+          <button class="dimension-back" onclick="closeDimensionDetail()" aria-label="返回成交教练首页">‹ 返回</button>
+          <h2 class="dimension-title" id="dimensionTitle">五维能力</h2>
+          <span style="width:44px"></span>
+        </header>
+        <div class="dimension-body" id="dimensionBody"></div>
+      </div>
     </div><!-- /phone -->
   </main>
 
@@ -551,6 +571,170 @@
   <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <style>
+    /* ===== 五维内页 Overlay ===== */
+    .dimension-overlay {
+      position: absolute; inset: 0; z-index: 50;
+      background: var(--page);
+      transform: translateX(105%);
+      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .dimension-overlay.open { transform: translateX(0); }
+
+    .dimension-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 16px;
+      background: linear-gradient(160deg, #08172b 0%, #0f2342 50%, #132f58 100%);
+      color: #fff; flex-shrink: 0;
+    }
+    .dimension-back {
+      width: auto; height: auto; border-radius: 20px;
+      padding: 6px 14px; font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,.75); background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      display: flex; align-items: center; gap: 2px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dimension-back:active { background: rgba(255,255,255,.14); color: #fff; }
+    .dimension-title { font-size: 16px; font-weight: 600; }
+
+    .dimension-body {
+      flex: 1; overflow-y: auto; padding: 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Overview card */
+    .dim-overview-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 18px 16px; margin-bottom: 12px;
+    }
+    .dim-overview-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+    }
+    .dim-overview-header h3 { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .dim-big-score {
+      font-size: 32px; font-weight: 700; padding: 8px 16px; border-radius: 12px;
+    }
+
+    .dim-row {
+      display: flex; align-items: center; gap: 10px; padding: 11px 0;
+      border-bottom: 1px solid #f8fafc; cursor: pointer;
+      transition: background 0.12s;
+    }
+    .dim-row:last-child { border-bottom: none; }
+    .dim-row:active { background: #fafbfc; margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 8px; }
+
+    .dim-row-label { font-size: 13px; font-weight: 500; color: var(--text); min-width: 56px; }
+    .dim-track {
+      flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;
+    }
+    .dim-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+    .dim-row-score { font-size: 13px; font-weight: 700; color: var(--ink); min-width: 28px; text-align: right; }
+    .dim-row-arrow { font-size: 13px; color: var(--muted); min-width: 16px; text-align: right; }
+
+    /* Detail card */
+    .dim-detail-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 18px 16px; margin-bottom: 12px;
+    }
+    .dim-detail-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .dim-detail-head h3 { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .dim-detail-head .dim-big-score { font-size: 28px; }
+
+    .sub-score-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid #f8fafc;
+    }
+    .sub-score-row:last-child { border-bottom: none; }
+    .sub-score-row span:first-child { font-size: 13px; color: var(--text); min-width: 64px; }
+    .sub-score-row strong { font-size: 13px; color: var(--ink); min-width: 26px; text-align: right; }
+
+    .dim-fragment-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 18px 16px; margin-bottom: 12px;
+    }
+    .dim-fragment-card h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .dim-fragment-card .dim-fragment-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+
+    .fragment-line {
+      padding: 8px 10px; margin-bottom: 4px; border-radius: 8px;
+      font-size: 13px; line-height: 1.6; background: #f8fafc;
+    }
+    .fragment-line.issue { background: #fef2f2; border-left: 3px solid #ef4444; }
+    .fragment-line .role { font-weight: 600; color: var(--muted); }
+
+    /* Retail Master suggestion cards */
+    .dim-master-section { margin-bottom: 12px; }
+    .dim-master-section-title {
+      font-size: 13px; font-weight: 700; color: var(--ink);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+
+    .dim-suggestion-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 16px; margin-bottom: 10px;
+    }
+    .dim-suggestion-card h4 {
+      font-size: 13px; font-weight: 700; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dim-suggestion-card h4.strength { color: #10b981; }
+    .dim-suggestion-card h4.improve { color: #f59e0b; }
+    .dim-suggestion-card h4.weakness { color: #ef4444; }
+
+    .dim-suggestion-item {
+      padding: 10px 0; border-bottom: 1px solid #f8fafc;
+    }
+    .dim-suggestion-item:last-child { border-bottom: none; }
+    .dim-suggestion-item .dim-sug-title {
+      font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px;
+    }
+    .dim-suggestion-item .dim-sug-desc {
+      font-size: 12px; color: var(--text); line-height: 1.6;
+    }
+
+    /* Sub-detail improvement list */
+    .dim-improve-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 18px 16px; margin-bottom: 12px;
+    }
+    .dim-improve-card h4 {
+      font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dim-improve-card .dim-improve-sub {
+      font-size: 12px; color: var(--muted); margin-bottom: 14px;
+    }
+    .dim-improve-item {
+      display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f8fafc;
+    }
+    .dim-improve-item:last-child { border-bottom: none; }
+    .dim-improve-num {
+      flex-shrink: 0; width: 22px; height: 22px;
+      background: #eef2ff; color: #6366f1; border-radius: 50%;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dim-improve-item .dim-improve-text {
+      font-size: 13px; color: var(--text); line-height: 1.65; flex: 1;
+    }
+
+    .dim-back-home {
+      display: block; width: 100%; padding: 14px; margin-top: 8px; margin-bottom: 24px;
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 12px; text-align: center;
+      transition: background 0.15s;
+    }
+    .dim-back-home:active { background: #f8fafc; }
+
+    /* Prevent body scroll when overlay is open */
+    .phone.dim-open { overflow: hidden; }
+    .phone.dim-open .scroll { overflow: hidden; }
+
     .toast {
       position: fixed; z-index: 100; left: 50%; bottom: 100px; max-width: 82%;
       padding: 10px 16px; color: #fff; background: rgba(14,24,41,.92);
@@ -565,6 +749,262 @@
   </style>
 
   <script>
+    // ===== 五维数据 =====
+    var DIMENSION_DATA = {
+      overview: {
+        name: '五维能力',
+        score: 76,
+        color: '#f5a623',
+        subs: [
+          { key: 'product', name: '产品专业', score: 48, color: '#ef4444' },
+          { key: 'needs',   name: '需求分析', score: 56, color: '#f97316' },
+          { key: 'service', name: '服务满意', score: 78, color: '#1677FF' },
+          { key: 'compete', name: '竞品应对', score: 61, color: '#1677FF' },
+          { key: 'followup',name: '客户跟进', score: 70, color: '#1677FF' }
+        ],
+        strengths: [
+          { title: '服务意识突出', desc: '接待礼仪和试驾体验均超 75 分，客户到店体验好，具备销冠的服务底色。' },
+          { title: '跟进节奏在线', desc: '知道约定下次联系时间，能主动给出带家人到店的钩子，成交闭环意识强。' },
+          { title: '问题响应及时', desc: '面对客户提问不躲闪，能快速给出回应，不会让客户等或冷场。' }
+        ],
+        improvements: [
+          { title: '从「报参数」转向「讲场景」', desc: '多组客户在聊生活需求时，你直接跳到车辆数据。先共情、再追问、最后用参数佐证。' },
+          { title: '竞品对比要有具体锚点', desc: '不要泛泛说"我们更好"，准备 3 个核心差异点，用数字和场景讲故事。' },
+          { title: '成交信号识别需加强', desc: '客户已经在想买回家怎么用了，这就是最佳逼单时机，别继续介绍车。' }
+        ],
+        weaknesses: [
+          { title: '产品专业知识（48 分）', desc: '车辆参数知识和竞品对比能力是最大短板，客户一问深就露怯，需要系统补课。' },
+          { title: '需求分析偏弱（56 分）', desc: '倾听和提问挖掘低于 60 分，容易答非所问，客户说东你答西。' },
+          { title: '竞品应对模糊（61 分）', desc: '面对比价时回应空泛，没有形成自己的差异化话术体系，容易被客户带节奏。' }
+        ]
+      },
+      product: {
+        name: '产品专业',
+        score: 48,
+        color: '#ef4444',
+        subs: [
+          ['车辆参数知识', 52],
+          ['竞品对比能力', 41],
+          ['技术讲解转化', 38],
+          ['配置适配推荐', 55]
+        ],
+        fragment: [
+          ['客户', '这车油耗多少个？市区开的话。', false],
+          ['你', '我们这款车综合油耗 5.8L，用的是最新的蓝芯发动机，热效率 41%。', true],
+          ['客户', '哦……那和比亚迪秦比呢？', false],
+          ['你', '这个不好直接比，每个品牌技术路线不一样。', true]
+        ],
+        suggestions: [
+          '客户问油耗时，先反问"您每天大概开多少公里？主要走什么路？"再用实际油费帮客户算账，而不是直接报官方数据。',
+          '竞品对比不要回避，可以说"秦确实省油，我们的优势在于底盘质感和智能座舱"，然后自然转到自己车的亮点。',
+          '练习「参数→场景」的转化：每个参数背后对应一个客户利益点，比如"热效率 41%"→"同样一箱油多跑 80 公里"。',
+          '每天花 10 分钟背 3 个核心竞品的 3 个关键差异点，遇到对比时脱口而出。'
+        ]
+      },
+      needs: {
+        name: '需求分析',
+        score: 56,
+        color: '#f97316',
+        subs: [
+          ['倾听理解', 62],
+          ['提问挖掘', 48],
+          ['需求确认', 55],
+          ['家庭决策洞察', 42]
+        ],
+        fragment: [
+          ['客户', '后排坐得下我们一家人不？', false],
+          ['你', '后备厢 540 升，同级最大。', true],
+          ['客户', '我问的是坐人……', false],
+          ['你', '哦，后排空间也很大的，轴距 2710。', true]
+        ],
+        suggestions: [
+          '先回应客户感受再报数据：客户问"坐不坐得下"，先问"您家几口人？常带老人不？"再邀请上车体验。',
+          '培养追问习惯：客户每说一个需求，至少追问一个"为什么"——"您比较看重后排空间，是经常全家出游吗？"',
+          '学会做需求确认：挖掘完后总结一句"李哥我理解您主要关注三点：空间、油耗、保养成本，对吗？"',
+          '观察家庭决策结构：一家人来看车时，留意谁在主导话题，针对性回应决策人的关切。'
+        ]
+      },
+      service: {
+        name: '服务满意',
+        score: 78,
+        color: '#1677FF',
+        subs: [
+          ['接待礼仪', 82],
+          ['试驾体验', 75],
+          ['问题响应', 80],
+          ['交车服务', 72]
+        ],
+        fragment: [
+          ['客户', '我约了试驾，到了找谁？', false],
+          ['你', '李哥您到了！车已经给您准备好了，空调也开了，先喝口水。', false],
+          ['客户', '好嘞，服务挺周到啊。', false],
+          ['你', '应该的，您今天重点想感受哪方面？我提前给您规划路线。', false]
+        ],
+        suggestions: [
+          '保持现有接待水准，这是你的核心优势。继续做到提前准备、主动引导、让客户感到被重视。',
+          '交车后的回访可以更个性化，结合试驾时客户最在意的点做针对性跟进，而不是发标准模板。',
+          '在试驾环节加入「惊喜时刻」：比如提前调好空调温度、座椅位置，准备一瓶水，小细节拉开差距。'
+        ]
+      },
+      compete: {
+        name: '竞品应对',
+        score: 61,
+        color: '#1677FF',
+        subs: [
+          ['竞品知识储备', 65],
+          ['优势转化能力', 55],
+          ['异议化解', 58],
+          ['价值塑造', 68]
+        ],
+        fragment: [
+          ['客户', '比亚迪秦 PLUS 现在降价了，比你们便宜两万呢。', false],
+          ['你', '价格确实有差距，但我们配置更高一些。', true],
+          ['客户', '高在哪？我看配置表差不多啊。', false],
+          ['你', '这个……具体您可以对比一下，我们的底盘调校更好。', true]
+        ],
+        suggestions: [
+          '提前准备 3 个核心竞品（秦 PLUS、宋 Pro、长安 UNI-Z）的 3 个关键差异点：电池质保年限、智能座舱功能、售后保养政策。',
+          '客户提价格优势时，不要泛泛说"我们配置高"，要具体到"我们多了 X、Y、Z 三个配置，算下来其实更划算"。',
+          '学会「先认同再转移」：先说"秦确实省油，这点没得说"，再自然过渡到"不过很多车主最后选我们是因为……"',
+          '每天下班前花 5 分钟回忆今天遇到的竞品对比场景，记下客户实际提的问题，建立自己的应答库。'
+        ]
+      },
+      followup: {
+        name: '客户跟进',
+        score: 70,
+        color: '#1677FF',
+        subs: [
+          ['跟进及时性', 75],
+          ['个性化沟通', 62],
+          ['成交信号捕捉', 68],
+          ['老客户维系', 72]
+        ],
+        fragment: [
+          ['客户', '我和家人商量一下再回复你。', false],
+          ['你', '好的王哥，您先商量。大概什么时候能给我个信？', false],
+          ['客户', '周末吧，家里人都回来了。', false],
+          ['你', '那我周六下午联系您，刚好店里有活动，合适的话带家人一起来。', false]
+        ],
+        suggestions: [
+          '保持「约定下次联系时间」的好习惯，这是成交闭环的第一步，很多销售输在没约定。',
+          '等待期间不要沉默：发一条个性化的信息，比如"王哥，正好看到一篇关于家庭选车的文章，分享给您参考"。',
+          '捕捉成交信号后立即行动：客户说"回去商量"时，当场帮他梳理需要商量的点，甚至约好带家人一起来的时间。'
+        ]
+      }
+    };
+
+    function openDimensionDetail(key) {
+      var d = DIMENSION_DATA[key];
+      if (!d) return;
+
+      document.getElementById('dimensionTitle').textContent = d.name;
+
+      var body = document.getElementById('dimensionBody');
+      if (key === 'overview') {
+        // ===== 总览页：五维得分 + 零售大师建议 =====
+        body.innerHTML =
+          // 1) 五维能力得分卡
+          '<div class="dim-overview-card">' +
+            '<div class="dim-overview-header">' +
+              '<div><h3>五维能力得分</h3><p style="font-size:12px;color:var(--muted);margin-top:2px">点击各维度查看详情</p></div>' +
+              '<div class="dim-big-score" style="background:' + d.color + '20;color:' + d.color + '">' + d.score + '</div>' +
+            '</div>' +
+            d.subs.map(function(s) {
+              return '<div class="dim-row" onclick="openDimensionDetail(\'' + s.key + '\')">' +
+                '<span class="dim-row-label">' + s.name + '</span>' +
+                '<div class="dim-track"><div class="dim-fill" style="width:' + s.score + '%;background:' + s.color + '"></div></div>' +
+                '<span class="dim-row-score" style="color:' + s.color + '">' + s.score + '</span>' +
+                '<span class="dim-row-arrow">›</span>' +
+              '</div>';
+            }).join('') +
+          '</div>' +
+          // 2) 零售大师建议
+          '<div class="dim-master-section">' +
+            '<div class="dim-master-section-title">🧠 零售大师建议</div>' +
+            // 核心优势
+            '<div class="dim-suggestion-card">' +
+              '<h4 class="strength">💪 核心优势</h4>' +
+              d.strengths.map(function(s) {
+                return '<div class="dim-suggestion-item">' +
+                  '<div class="dim-sug-title">' + s.title + '</div>' +
+                  '<div class="dim-sug-desc">' + s.desc + '</div>' +
+                '</div>';
+              }).join('') +
+            '</div>' +
+            // 待提升点
+            '<div class="dim-suggestion-card">' +
+              '<h4 class="improve">📈 待提升点</h4>' +
+              d.improvements.map(function(s) {
+                return '<div class="dim-suggestion-item">' +
+                  '<div class="dim-sug-title">' + s.title + '</div>' +
+                  '<div class="dim-sug-desc">' + s.desc + '</div>' +
+                '</div>';
+              }).join('') +
+            '</div>' +
+            // 核心短板
+            '<div class="dim-suggestion-card">' +
+              '<h4 class="weakness">⚠️ 核心短板</h4>' +
+              d.weaknesses.map(function(s) {
+                return '<div class="dim-suggestion-item">' +
+                  '<div class="dim-sug-title">' + s.title + '</div>' +
+                  '<div class="dim-sug-desc">' + s.desc + '</div>' +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+          '<button class="dim-back-home" onclick="closeDimensionDetail()">← 返回成交教练首页</button>';
+      } else {
+        // ===== 单项详情页：子维度 + 关键片段 + 改进建议列表 =====
+        body.innerHTML =
+          // 1) 子维度得分
+          '<div class="dim-detail-card">' +
+            '<div class="dim-detail-head">' +
+              '<div><h3>' + d.name + '</h3><p style="font-size:12px;color:var(--muted);margin-top:2px">子维度得分</p></div>' +
+              '<div class="dim-big-score" style="background:' + (d.score < 60 ? '#fef2f2' : d.color + '15') + ';color:' + d.color + '">' + d.score + '</div>' +
+            '</div>' +
+            d.subs.map(function(sub) {
+              var s = sub[1];
+              var barColor = s < 60 ? '#ef4444' : d.color;
+              return '<div class="sub-score-row">' +
+                '<span>' + sub[0] + '</span>' +
+                '<div class="dim-track"><div class="dim-fill" style="width:' + s + '%;background:' + barColor + '"></div></div>' +
+                '<strong style="color:' + barColor + '">' + s + '</strong>' +
+              '</div>';
+            }).join('') +
+          '</div>' +
+          // 2) 关键片段
+          '<div class="dim-fragment-card">' +
+            '<h4>🔍 关键片段</h4>' +
+            '<p class="dim-fragment-sub">今天接待中反映' + d.name + '能力的对话</p>' +
+            d.fragment.map(function(line) {
+              return '<div class="fragment-line' + (line[2] ? ' issue' : '') + '"><span class="role">' + line[0] + '：</span>' + line[1] + '</div>';
+            }).join('') +
+          '</div>' +
+          // 3) 改进建议（编号列表）
+          '<div class="dim-improve-card">' +
+            '<h4>💡 改进建议</h4>' +
+            '<p class="dim-improve-sub">针对' + d.name + '短板的可执行提升方案</p>' +
+            d.suggestions.map(function(text, i) {
+              return '<div class="dim-improve-item">' +
+                '<div class="dim-improve-num">' + (i + 1) + '</div>' +
+                '<div class="dim-improve-text">' + text + '</div>' +
+              '</div>';
+            }).join('') +
+          '</div>' +
+          '<button class="dim-back-home" onclick="openDimensionDetail(\'overview\')">← 返回五维总览</button>' +
+          '<button class="dim-back-home" onclick="closeDimensionDetail()">← 返回成交教练首页</button>';
+      }
+
+      document.getElementById('dimensionDetail').classList.add('open');
+      document.querySelector('.phone').classList.add('dim-open');
+    }
+
+    function closeDimensionDetail() {
+      document.getElementById('dimensionDetail').classList.remove('open');
+      document.querySelector('.phone').classList.remove('dim-open');
+    }
+
+    // ===== Toast =====
     let toastTimer;
 
     function switchTab(t) {

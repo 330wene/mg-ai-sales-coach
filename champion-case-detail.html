@@ -251,6 +251,365 @@
       .stage { padding: 0; }
       .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
     }
+
+    /* ================================================================= */
+    /*  COUNTDOWN OVERLAY                                                 */
+    /* ================================================================= */
+    .countdown-overlay {
+      position: fixed; inset: 0; z-index: 35;
+      background: linear-gradient(170deg, #040b18 0%, #08162e 40%, #0d1f44 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .35s ease; overflow: hidden;
+    }
+    .countdown-overlay.show { opacity: 1; pointer-events: auto; }
+    .countdown-overlay::before {
+      content: ""; position: absolute; top: 50%; left: 50%; width: 300px; height: 300px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(59,130,246,.12) 0%, rgba(59,130,246,.03) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .countdown-overlay::after {
+      content: ""; position: absolute; top: 30%; right: 20%; width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(245,166,35,.06) 0%, transparent 70%); pointer-events: none;
+    }
+    .countdown-master { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; margin-bottom: 48px; }
+    .countdown-crown { width: 44px; height: 44px; display: grid; place-items: center; margin-bottom: 8px; }
+    .countdown-crown svg { width: 32px; height: 32px; }
+    .countdown-master-label { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.7); letter-spacing: 2px; }
+    .countdown-master-sub { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 4px; }
+    .countdown-number {
+      position: relative; z-index: 1; font-size: 120px; font-weight: 800; color: #fff; line-height: 1;
+      text-shadow: 0 0 60px rgba(59,130,246,.5), 0 0 120px rgba(59,130,246,.2);
+      transition: transform .1s ease, opacity .1s ease;
+    }
+    .countdown-number.pop { animation: countPop .55s cubic-bezier(0.22, 0.61, 0.36, 1); }
+    @keyframes countPop {
+      0%   { transform: scale(0.3); opacity: .2; }
+      50%  { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .countdown-number.go {
+      font-size: 64px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-shadow: none; animation: goShine .6s ease;
+    }
+    @keyframes goShine {
+      0%   { transform: scale(0.2); opacity: 0; }
+      60%  { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .countdown-ring {
+      position: absolute; top: 50%; left: 50%; width: 200px; height: 200px;
+      transform: translate(-50%, -50%); border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.08); pointer-events: none;
+    }
+    .countdown-ring.pulse { animation: ringPulse 1s ease-out; }
+    @keyframes ringPulse {
+      0%   { width: 180px; height: 180px; opacity: .6; border-color: rgba(59,130,246,.3); }
+      100% { width: 320px; height: 320px; opacity: 0; border-color: transparent; }
+    }
+
+    /* ================================================================= */
+    /*  PRACTICE OVERLAY — 沉浸式深蓝 Drill 模式                           */
+    /* ================================================================= */
+    .practice-overlay {
+      position: fixed; inset: 0; z-index: 30;
+      background: linear-gradient(170deg, #060d1a 0%, #0a1628 35%, #0f1f3d 100%);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none; transition: opacity .35s ease;
+    }
+    .practice-overlay.show { opacity: 1; pointer-events: auto; }
+    .practice-overlay::before {
+      content: ""; position: absolute; top: -80px; right: -60px; width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(59,130,246,.07) 0%, transparent 70%); pointer-events: none;
+    }
+    .practice-overlay::after {
+      content: ""; position: absolute; bottom: 10%; left: -40px; width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(245,166,35,.04) 0%, transparent 70%); pointer-events: none;
+    }
+
+    /* ---- 练习顶栏 ---- */
+    .practice-topbar {
+      position: relative; z-index: 2; display: flex; align-items: center;
+      padding: 12px 14px 10px; gap: 6px;
+      background: rgba(6,13,26,.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .practice-back {
+      width: 28px; height: 28px; display: grid; place-items: center;
+      color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%; font-size: 16px; transition: background .15s, color .15s;
+    }
+    .practice-back:active { background: rgba(255,255,255,.08); color: #fff; }
+    .stepper { flex: 1; display: flex; align-items: flex-start; justify-content: center; gap: 0; padding: 0 4px; }
+    .step-wrap { display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; }
+    .step-dot {
+      width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+      font-size: 11px; font-weight: 700;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.35); transition: all .3s ease;
+    }
+    .step-dot.done { background: rgba(16,185,129,.25); border-color: rgba(16,185,129,.5); color: #10b981; }
+    .step-dot.current {
+      background: rgba(59,130,246,.25); border-color: rgba(59,130,246,.6); color: #60a5fa;
+      box-shadow: 0 0 12px rgba(59,130,246,.3);
+    }
+    .step-label { font-size: 9px; color: rgba(255,255,255,.25); margin-top: 4px; white-space: nowrap; transition: color .3s ease; text-align: center; line-height: 1.2; }
+    .step-label.current { color: rgba(255,255,255,.75); font-weight: 600; }
+    .step-label.done    { color: rgba(255,255,255,.4); }
+    .step-line { width: 18px; height: 1px; background: rgba(255,255,255,.08); margin: 11px 2px 0; flex: 0 0 auto; transition: background .3s ease; }
+    .step-line.done { background: rgba(16,185,129,.35); }
+    .stepper-spacer { width: 32px; flex: 0 0 auto; }
+
+    /* ---- 练习主体 ---- */
+    .practice-body {
+      position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column;
+      padding: 0 20px; overflow-y: auto; overscroll-behavior: contain;
+    }
+    .practice-body::-webkit-scrollbar { display: none; }
+
+    /* ---- 客户聊天气泡 ---- */
+    .chat-area {
+      flex: 0 0 auto; padding: 24px 0 0;
+      animation: chatSlideIn .45s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    @keyframes chatSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .chat-client-label { font-size: 10px; color: rgba(255,255,255,.3); margin-bottom: 6px; margin-left: 46px; letter-spacing: 1px; }
+    .chat-row { display: flex; align-items: flex-end; gap: 8px; }
+    .chat-avatar {
+      width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%;
+      background: linear-gradient(135deg, #374151, #4b5563);
+      border: 1px solid rgba(255,255,255,.1); display: grid; place-items: center; font-size: 16px;
+    }
+    .chat-bubble {
+      flex: 0 1 auto; max-width: 75%;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 6px 14px 14px 14px; padding: 14px 16px;
+      font-size: 15px; color: #e2e8f0; line-height: 1.7; letter-spacing: .3px; position: relative;
+    }
+    .chat-bubble::after {
+      content: ""; position: absolute; left: -6px; bottom: 10px; width: 10px; height: 8px;
+      background: rgba(255,255,255,.07); clip-path: polygon(100% 0, 0 50%, 100% 100%);
+      border-left: 1px solid rgba(255,255,255,.08);
+    }
+
+    /* ---- 场景上下文条 ---- */
+    .context-bar {
+      flex: 0 0 auto; margin: 0 -20px; padding: 8px 20px;
+      background: rgba(255,255,255,.04); border-bottom: 0.5px solid rgba(255,255,255,.05);
+      font-size: 12px; color: rgba(255,255,255,.35); line-height: 1.5;
+      position: sticky; top: 0; z-index: 2;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .context-bar-icon { display: inline-block; margin-right: 4px; font-size: 11px; }
+
+    /* ---- 回合指示器 ---- */
+    .round-indicator {
+      flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 14px 0 6px;
+    }
+    .round-label {
+      font-size: 12px; color: rgba(255,255,255,.35); font-weight: 500;
+      letter-spacing: .5px; min-width: 52px; text-align: right;
+    }
+    .round-dots { display: flex; align-items: center; gap: 6px; }
+    .round-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.1); transition: all .3s ease;
+    }
+    .round-dot.active { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,.35); }
+    .round-dot.done { background: rgba(16,185,129,.5); }
+
+    /* ---- 教练点评卡 ---- */
+    .coach-review-card {
+      flex: 0 0 auto; margin-top: 14px;
+      padding: 14px 16px;
+      background: rgba(245,166,35,.06); border: 0.5px solid rgba(245,166,35,.15);
+      border-radius: 12px;
+      animation: reviewSlideIn .4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+    @keyframes reviewSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .coach-review-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; color: rgba(245,166,35,.7); font-weight: 600;
+      margin-bottom: 8px; letter-spacing: 1px;
+    }
+    .coach-review-badge svg { width: 12px; height: 12px; }
+    .coach-review-text {
+      font-size: 13.5px; color: rgba(255,255,255,.75); line-height: 1.7;
+    }
+
+    /* ---- 参考话术（自动展开） ---- */
+    .reference-content {
+      overflow: hidden; transition: max-height .35s ease, opacity .25s ease, margin .3s ease;
+    }
+    .reference-content.open { max-height: 300px; opacity: 1; }
+    .reference-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: rgba(16,185,129,.7); font-weight: 600;
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .reference-inner {
+      padding: 12px 14px; margin-bottom: 4px;
+      background: rgba(16,185,129,.05); border: 0.5px solid rgba(16,185,129,.12);
+      border-radius: 10px; font-size: 13px; color: rgba(255,255,255,.6);
+      line-height: 1.7;
+    }
+    .reference-inner strong { color: rgba(255,255,255,.8); }
+
+    /* ---- 自动推进提示 ---- */
+    .auto-advance-hint {
+      text-align: center; font-size: 11px; color: rgba(255,255,255,.18);
+      margin-top: 16px; animation: reviewSlideIn .4s .6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+
+    /* ---- 小组小结卡 ---- */
+    .group-summary-card {
+      flex: 0 0 auto; margin-top: 20px;
+      padding: 24px 20px;
+      background: rgba(16,185,129,.06); border: 1px solid rgba(16,185,129,.15);
+      border-radius: 16px;
+      animation: summaryPop .5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      text-align: center;
+    }
+    @keyframes summaryPop {
+      from { opacity: 0; transform: scale(.95) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .summary-check {
+      width: 48px; height: 48px; margin: 0 auto 16px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%; font-size: 24px; color: #fff;
+      box-shadow: 0 0 32px rgba(16,185,129,.2);
+    }
+    .summary-title {
+      font-size: 14px; color: rgba(255,255,255,.5); font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .summary-text {
+      font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.8;
+      text-align: left;
+    }
+    .btn-finish-group {
+      width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff; border-radius: 12px; font-size: 15px; font-weight: 600;
+      box-shadow: 0 4px 18px rgba(16,185,129,.25);
+      transition: background .15s, transform .12s;
+      margin-top: 16px; flex: 0 0 auto;
+    }
+    .btn-finish-group:active { transform: scale(.98); }
+
+    /* ---- 已完成回合的聊天区 ---- */
+    .chat-area.dim { opacity: .5; }
+
+    /* ---- 底部点击区 ---- */
+    .tap-zone {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      padding-bottom: 44px; min-height: 160px;
+    }
+    .tap-circle-wrap {
+      position: relative; width: 104px; height: 104px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tap-circle-wrap::before {
+      content: ""; position: absolute; inset: -10px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.06);
+      animation: tapBreathe 2.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes tapBreathe {
+      0%, 100% { transform: scale(1);   opacity: .35; }
+      50%      { transform: scale(1.13); opacity: .08; }
+    }
+    .tap-circle {
+      width: 104px; height: 104px; position: relative; z-index: 1;
+      border-radius: 50%; background: #0a1424;
+      border: 1.5px solid rgba(255,255,255,.08);
+      display: grid; place-items: center;
+      transition: transform .15s, background .35s, border-color .35s, box-shadow .35s;
+      box-shadow: 0 0 40px rgba(0,0,0,.3);
+    }
+    .tap-circle:active { transform: scale(.94); }
+    .tap-inner {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,.03);
+      display: grid; place-items: center;
+      transition: all .35s;
+    }
+    .tap-inner-icon { color: rgba(255,255,255,.2); transition: color .35s, transform .35s; }
+    .tap-inner-icon svg { width: 18px; height: 18px; }
+    .tap-circle.done {
+      background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.35);
+      box-shadow: 0 0 48px rgba(16,185,129,.15);
+    }
+    .tap-circle.done .tap-inner { background: rgba(16,185,129,.15); }
+    .tap-circle.done .tap-inner-icon { color: #10b981; transform: scale(1.2); }
+    .tap-hint { font-size: 13px; color: rgba(255,255,255,.35); margin-top: 18px; text-align: center; transition: color .3s; }
+    .tap-hint.done { color: rgba(16,185,129,.6); }
+
+    /* ---- 完成页 ---- */
+    .finish-page {
+      display: none; flex: 1; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 30px; animation: fadeIn .3s ease; position: relative; z-index: 1;
+    }
+    .finish-page.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .finish-crown {
+      width: 64px; height: 64px; display: grid; place-items: center; margin-bottom: 16px;
+    }
+    .finish-crown svg { width: 44px; height: 44px; }
+    .finish-icon-check {
+      width: 56px; height: 56px; display: grid; place-items: center;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%; font-size: 28px; color: #fff;
+      margin-bottom: 20px; box-shadow: 0 0 40px rgba(16,185,129,.25);
+    }
+    .finish-count {
+      font-size: 15px; color: rgba(255,255,255,.55);
+      margin-bottom: 4px;
+    }
+    .finish-count strong { color: #fff; font-size: 20px; }
+    .finish-title {
+      font-size: 17px; color: rgba(255,255,255,.8); line-height: 1.7; font-weight: 600; margin-bottom: 6px;
+    }
+    .finish-sub {
+      font-size: 13px; color: rgba(255,255,255,.4);
+      margin-bottom: 32px; line-height: 1.5;
+    }
+    .finish-actions { display: flex; gap: 12px; width: 100%; max-width: 280px; }
+    .finish-actions button { flex: 1; min-height: 46px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+    .btn-ghost-light {
+      border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.55);
+      background: transparent; transition: background .15s, color .15s, border-color .15s;
+    }
+    .btn-ghost-light:active { background: rgba(255,255,255,.06); color: #fff; border-color: rgba(255,255,255,.25); }
+    .btn-solid-gold {
+      background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff;
+      box-shadow: 0 4px 16px rgba(245,158,11,.3);
+      transition: background .15s, transform .12s, box-shadow .15s;
+    }
+    .btn-solid-gold:active { transform: scale(.98); box-shadow: 0 2px 8px rgba(245,158,11,.2); }
+
+    /* Toast */
+    .toast {
+      position: fixed; z-index: 40; left: 50%; bottom: 100px;
+      max-width: 82%; padding: 10px 16px; color: #fff;
+      background: rgba(14,24,41,.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 22px; font-size: 13px; font-weight: 500; text-align: center; font-family: var(--font);
+      opacity: 0; pointer-events: none; transform: translate(-50%, 12px);
+      transition: opacity .25s ease, transform .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
   </style>
 </head>
 <body>
@@ -273,6 +632,36 @@
       </div><!-- /scroll -->
     </div><!-- /phone -->
   </main>
+
+  <!-- ========== 倒计时覆盖层 ========== -->
+  <div class="countdown-overlay" id="countdownOverlay">
+    <div class="countdown-ring" id="countdownRing"></div>
+    <div class="countdown-master">
+      <div class="countdown-crown">
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,166,35,.7)" stroke-width="1.5">
+          <path d="M2 17l2-9 4 4 4-8 4 8 4-4 2 9H2z" stroke-linejoin="round"/>
+          <circle cx="12" cy="17" r="2" fill="rgba(245,166,35,.5)" stroke="none"/>
+        </svg>
+      </div>
+      <div class="countdown-master-label">零售大师</div>
+      <div class="countdown-master-sub">实战练习</div>
+    </div>
+    <div class="countdown-number" id="countdownNumber">3</div>
+  </div>
+
+  <!-- ========== 练习页覆盖层 ========== -->
+  <div class="practice-overlay" id="practiceOverlay">
+    <div class="practice-topbar">
+      <button class="practice-back" onclick="exitPractice()" aria-label="退出练习">‹</button>
+      <div class="stepper" id="stepper"><!-- JS 渲染 --></div>
+      <div class="stepper-spacer"></div>
+    </div>
+    <div class="practice-body" id="practiceBody"><!-- JS 渲染 --></div>
+    <div class="finish-page" id="finishPage"><!-- JS 渲染 --></div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     (function () {
@@ -461,8 +850,474 @@
 
       // ====== 按钮交互 — 跳转对练页面 ======
       document.getElementById('practiceBtn').addEventListener('click', function () {
-        location.href = 'practice-drill.html?direct=true&case=' + caseId;
+        startPractice(caseId);
       });
+      // ====== 案例练习数据（每组 3 回合） ======
+      var PRACTICE_DATA = {
+        // ===== Case 1 · 小李 · 场景化讲解（3 组 × 3 回合） =====
+        '1': [
+          {
+            type: 'real', name: '带娃的姐姐', shortName: '带娃姐',
+            context: '小李 · 场景讲解 · 第 1 组',
+            pain: '年轻女性带俩孩子看车，全程在意空间没问价格',
+            rounds: [
+              {
+                customer: '这车后排空间怎么样？我带孩子出门东西多，平时还要带老人。',
+                coach: '别急着报后排宽度多少毫米——她不是在问数据，她是在确认「一家人能不能舒舒服服坐进去」。先反问一句了解真实场景。',
+                reference: '「姐，平时是不是经常带小朋友出门？」<br><br><strong>为什么这样接——</strong>她没问预算、没问"今天能定吗"。一句反问让客户自己说出真实需求，比你推销十句都有用。'
+              },
+              {
+                customer: '后备厢多大？婴儿车、妈咪包能一起放进去吗？平时还要买菜。',
+                coach: '她又问空间了——别报升数。把后备厢翻译成她家的生活画面：婴儿车怎么放、旁边能塞什么。让她"看到"自己用这车的画面。',
+                reference: '「儿童座椅装右边，左边坐两个大人。婴儿车折起来立着放，旁边还能塞三袋超市的东西。」<br><br><strong>为什么这样接——</strong>客户要的不是一个数字，是她带孩子出门的那个画面。想象到了，就想要了。'
+              },
+              {
+                customer: '车我挺喜欢的，但价格还是有点超预算，我先回去再考虑一下。',
+                coach: '她在算账了！别急着报优惠或降价——帮她把自己认可的点串起来，让她自己得出「值」的结论。',
+                reference: '「姐，你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？」<br><br><strong>为什么这样接——</strong>没替客户还价，而是帮客户自己算账。她自己觉得值，比你说一百句都管用。'
+              }
+            ],
+            summary: '这组练的是——客户要的不是后备厢多少升，是她带孩子出门的那个画面。把数字翻译成生活场景，她能想象到就想要了。3 个回合你都把参数换成了画面，接得漂亮。'
+          },
+          {
+            type: 'real', name: '带父母的女儿', shortName: '带父母',
+            context: '小李 · 场景讲解 · 第 2 组',
+            pain: '客户反复问老人上下车和坐后排舒不舒服，担心爸妈受罪',
+            rounds: [
+              {
+                customer: '我爸妈年纪大了腿脚不太方便，这个车上下车会不会很费劲？',
+                coach: '别报座椅高度多少厘米、车门开合角度多少度——她在确认「爸妈坐这个车会不会受罪」。把参数翻译成爸妈舒舒服服坐进去的画面。',
+                reference: '「姐，您让爸妈到车边来——您看，门一开，这座椅高度刚好，一抬脚就坐进去了。不用弯腰，不用钻，您试试。」<br><br><strong>为什么这样接——</strong>不讲参数讲体验。让她自己坐进去感受"一抬脚就上去"，比报一百个数字都有说服力。'
+              },
+              {
+                customer: '那我妈坐后排，膝盖会不会顶着前面？我爸腰不好，坐久了行不行？',
+                coach: '她又问到具体人了——别报膝部空间多少厘米。把她爸妈的名字带到画面里：让客户自己坐到后排去，用身体感受空间。',
+                reference: '「来，您坐后排感受一下——您看膝盖离前面还有两拳，您爸腿再长也够。这座椅靠背能调角度，您爸腰不好正好可以往后仰一点，长途也不累。」<br><br><strong>为什么这样接——</strong>不说「膝部空间 950mm」，说「您爸腿再长也够」。把每个参数都翻译成她爸妈坐在车里的样子。'
+              },
+              {
+                customer: '听起来是不错，但老人家上下车频率也不高，多花这些钱值得吗？',
+                coach: '她开始算性价比了——别急着推销。把她之前自己说出来的痛点串起来：「您刚才也说了，爸妈腿脚不方便、爸腰不好」。让她自己确认这些是值得花钱解决的问题。',
+                reference: '「姐，您刚才说爸妈腿脚不方便，爸腰也不好——那每次出门，让他们舒舒服服坐进去，不用弯腰不用钻，这个体验值不值？咱买车不就是为了让家人舒服嘛。」<br><br><strong>为什么这样接——</strong>不替客户做决定，帮她把自己在意的点串起来。她自己已经说出了所有需要这辆车的理由。'
+              }
+            ],
+            summary: '这组练的是——客户担心老人上下车，不是在问座椅参数，是在确认"爸妈会不会受罪"。三个回合你都没报数字，而是把她爸妈坐车的画面一步步描清楚。'
+          },
+          {
+            type: 'real', name: '看半天的小伙子', shortName: '小伙子',
+            context: '小李 · 场景讲解 · 第 3 组',
+            pain: '一个人来的，看了一圈没说话就想走，需要快速抓住',
+            rounds: [
+              {
+                customer: '行，我再看看。',
+                coach: '别就这么放他走——他嘴上说「再看看」，心里可能卡着一个你没问到的问题。用一个真诚的追问把他留下来。',
+                reference: '「哥等一下——我看您看了挺久的，是有哪个地方拿不准吗？您直说，我帮您参考参考。」<br><br><strong>为什么这样接——</strong>不放弃，用一个真诚的追问把他留下来，别让他带着疑问走。'
+              },
+              {
+                customer: '也没啥，就是你讲了一堆配置，我还是没搞明白这车跟我每天上下班有什么关系。',
+                coach: '找到了！他在说「你讲的参数我听不懂、跟我没关系」——别继续堆配置。问清他的日常场景，然后把配置翻译成他每天会遇到的具体画面。',
+                reference: '「哥你说得对，我刚才讲太多了。你每天通勤多久？走什么路？」<br><br><strong>为什么这样接——</strong>先认错、再提问。把节奏从"我讲你听"切换成"你聊我帮你想"。'
+              },
+              {
+                customer: '每天来回 40 公里，一半高架一半市区，堵车堵得烦死了。',
+                coach: '场景清晰了！把车的功能翻译成他通勤路上的画面：堵车时自适应巡航跟车、高架上动力随叫随到。别再说任何参数。',
+                reference: '「40 公里不短啊。堵车的时候这车有自适应巡航，自动跟车你脚不用一直踩刹车，轻松一半。上了高架一脚油门就上 80，变道超车特别利索。你每天来回那 40 公里，开车能轻松不少。」<br><br><strong>为什么这样接——</strong>把「ACC 自适应巡航」翻译成「堵车脚不用一直踩刹车」，把「2.0T」翻译成「一脚油门就上 80」。他听懂了，就有兴趣了。'
+              }
+            ],
+            summary: '这组练的是——客户说「再看看」不是拒绝，是你的介绍没跟他发生关系。把功能从参数表里拽出来，放进他每天 40 公里通勤的路上。'
+          }
+        ],
+
+        // ===== Case 2 · 李晨 · 需求挖掘（3 组 × 3 回合） =====
+        '2': [
+          {
+            type: 'real', name: '随便看看的哥', shortName: '随便看',
+            context: '李晨 · 需求挖掘 · 第 1 组',
+            pain: '客户说随便看看，逛了一圈没在任何车前停下来',
+            rounds: [
+              {
+                customer: '我就随便看看，还没想好买什么车。',
+                coach: '别开始介绍车——「随便看看」不是拒绝，是还没找到能聊起来的人。不问车、不问预算，先问一句他怎么过日子。',
+                reference: '「哥，平时主要是自己开还是带家人多？」<br><br><strong>为什么这样接——</strong>不问「预算多少」、不问「看哪款」。一句谁都能答的家常话，让客户自然说出用车场景。'
+              },
+              {
+                customer: '主要自己开，但偶尔要跑长途回老家。',
+                coach: '听到「跑长途」了！这是他在告诉你决策标准。从他的经历出发，让他自己说出对旧车的不满。',
+                reference: '「那动力和高速稳不稳就很重要了。你之前那车跑高速感觉咋样？」<br><br><strong>为什么这样接——</strong>痛点是他自己说的，比销售说一百句都有说服力。自然引出"你需要一台高速更稳的车"。'
+              },
+              {
+                customer: '（对推荐车型点头但还在犹豫，没主动问价也没说去别家比）',
+                coach: '把前面聊出来的需求串起来——「跑长途」「带家人」都是他自己说的。推荐的不是最好的车，而是最对的车。',
+                reference: '「哥，你刚才说跑长途、带家人，这几点 MG7 都刚好对上。你要不要试一下，感受一下高速上那个稳劲？」<br><br><strong>为什么这样接——</strong>客户觉得你懂他，信任就有了。全程客户觉得是自己在选，其实是你帮他在梳理。'
+              }
+            ],
+            summary: '这组练的是——「随便看看」不是拒绝，是还没找到能聊起来的人。不急着介绍配置，先聊一句家常，把对话从「你要什么车」变成「你怎么过日子」。'
+          },
+          {
+            type: 'real', name: '带媳妇来的夫妻', shortName: '夫妻档',
+            context: '李晨 · 需求挖掘 · 第 2 组',
+            pain: '小两口一起来，媳妇怀孕 6 个月，进门后媳妇一直不说话',
+            rounds: [
+              {
+                customer: '（老公在看车，媳妇站在旁边刷手机不说话）',
+                coach: '别光跟老公聊——买车是两个人的事，媳妇不开口不代表没意见。用一个她肯定能接住的问题，把她拉进对话。',
+                reference: '「嫂子，您怀孕几个月啦？平时坐着舒不舒服对您特别重要——您来坐一下副驾，感受感受这座椅。」<br><br><strong>为什么这样接——</strong>不问车，先关心她本人的状态。让媳妇从旁观者变成参与者。她坐舒服了，这车就成功了一半。'
+              },
+              {
+                customer: '（媳妇终于开口）我就是怕生完孩子以后，婴儿车、安全座椅这些东西不好放。',
+                coach: '她开口了！而且直接说出了核心需求——婴儿车和安全座椅。顺着这个问题深入，别跳到别的功能去。',
+                reference: '「嫂子您想得真周到——来，我带您到后备厢，咱实际比划一下。婴儿车折叠后这么大，竖着放这儿，旁边安全座椅盒子放这儿。您看，还有一半空间空着呢。」<br><br><strong>为什么这样接——</strong>用实物比划代替数字，让她亲眼看到空间够用。眼见的画面比嘴上说的靠谱一百倍。'
+              },
+              {
+                customer: '嗯，是挺能装的。老公你觉得呢？',
+                coach: '媳妇认可了！她在问老公意见——别替老公答，也别让老公说「再看看」。帮老公把话接住。',
+                reference: '「嫂子都点头了，哥您呢？嫂子带娃出门要用的东西这车全能装下，您平时上下班开着也舒服——这车你俩都合适。」<br><br><strong>为什么这样接——</strong>分别确认两个人的需求都满足：媳妇要空间带娃、老公开着舒服。两个人都被照顾到了，决策就快了。'
+              }
+            ],
+            summary: '这组练的是——夫妻一起看车，不开口的那个人往往才是关键决策者。你用一个关心她本人的问题把媳妇拉进对话，三回合从沉默到认可。'
+          },
+          {
+            type: 'real', name: '沉默看手机的女士', shortName: '沉默女',
+            context: '李晨 · 需求挖掘 · 第 3 组',
+            pain: '一个人来的，进店后一直看手机不抬头，你说什么都敷衍',
+            rounds: [
+              {
+                customer: '（低头看手机，嗯嗯两声，没抬头）',
+                coach: '别继续介绍了——她看手机可能在看竞品，也可能在回消息。先停下来，用服务而不是推销来破冰。',
+                reference: '「姐，您先慢慢看，不着急。需要我帮您倒杯水吗？」<br><br><strong>为什么这样接——</strong>不追着介绍车。先给空间、给服务。让她觉得你不是急着卖车，是在关心她。'
+              },
+              {
+                customer: '嗯…不用，我就随便看看。',
+                coach: '她接话了！虽然敷衍，但是突破口。别问「您想看什么车」这种能用一个字回答的问题——问她一个关于她生活的问题。',
+                reference: '「没事，随便看挺好的，不买也可以先了解了解。姐您平时是自己开得多，还是带家人多呀？」<br><br><strong>为什么这样接——</strong>不问「买不买」，问「怎么用」。降防备、开话头。用谁都能答的家常问题。'
+              },
+              {
+                customer: '自己开，偶尔周末带闺蜜出去逛逛。',
+                coach: '打开了！她不是没兴趣，是之前你没问到她在意的点。现在顺着「自己开 + 带闺蜜」往下聊操控感和乘坐感受——别又开始报参数。',
+                reference: '「自己开的话这车特别合适——方向盘轻、视野高，开着不累。带闺蜜出去玩后排空间也够，她们坐后面翘个二郎腿都没问题——姐您坐进去感受一下。」<br><br><strong>为什么这样接——</strong>从她自己说出的两个场景切入：自己开 = 好开，带闺蜜 = 空间够。抓住她说的每句话，精准匹配。'
+              }
+            ],
+            summary: '这组练的是——客户不说话不是不想买，是你的话没踩到她的点上。三个回合你用服务破冰、用家常问题开话头、用她自己的场景精准切入。'
+          }
+        ],
+
+        // ===== Case 3 · 阿强 · 逼单节奏（3 组 × 3 回合） =====
+        '3': [
+          {
+            type: 'real', name: '考虑一下的大哥', shortName: '考虑哥',
+            context: '阿强 · 逼单节奏 · 第 1 组',
+            pain: '客户看了两圈试驾回来，嘴里说考虑考虑但人没走',
+            rounds: [
+              {
+                customer: '车还不错，但我想再考虑考虑，不急这一两天。',
+                coach: '他说「考虑」但人没走——不是不想买，是怕现在做决定会后悔。别追「考虑什么」，先给一条退路。',
+                reference: '「哥，定不定没关系。今天这个活动名额我先帮你占着，不想要了随时退，一分不少。」<br><br><strong>为什么这样接——</strong>先给退路，客户没压力了反而愿意坐下来认真聊。这句「随时退」不是在让步，是在把客户留下来。'
+              },
+              {
+                customer: '那行，你帮我算算——月供多少？首付多少？',
+                coach: '他开始认真算价格了！现在制造稀缺感，但不能有逼迫感。「跟家里商量」让他觉得你站在他这边。',
+                reference: '「这个优惠今天能锁，明天我不敢保证。但你现在不定也没关系，我把方案发你，你晚上跟家里商量一下。」<br><br><strong>为什么这样接——</strong>「今天能锁明天不敢保证」已经把紧迫感种下了——他回去商量的时候，脑子里会一直想这句话。'
+              },
+              {
+                customer: '白色和灰色哪个好看？我拿不定主意……',
+                coach: '他在一个小决定上卡住了！别让他卡在这里——把颜色说成「后面能改」，把注意力拉回「锁优惠」这个大决策。',
+                reference: '「白色这周能提，灰色要多等两周。你先定白色，提车的时候想换灰色也行。关键是先把优惠锁住，颜色后面能改。」<br><br><strong>为什么这样接——</strong>把大决策（买不买）拆成小决策（选颜色），再把小决策变成可逆的。客户觉得没什么损失，当场就定了。'
+              }
+            ],
+            summary: '这组练的是——不硬逼、不套路，先用「可退」卸下防备，再让客户自己觉得现在不定就亏了。全程客户没觉得被逼单，但每一步都在往成交走。'
+          },
+          {
+            type: 'real', name: '拿竞品压价的客户', shortName: '比价哥',
+            context: '阿强 · 逼单节奏 · 第 2 组',
+            pain: '拿竞品报价单来的，开口就比价格，全程不谈车只谈钱',
+            rounds: [
+              {
+                customer: '人家隔壁便宜两万呢，你这怎么这么贵？',
+                coach: '别急着一句「我们品质好」怼回去——先问他那边便宜两万的是什么配置，帮他拆开对比。不争对错，先搞清楚对比基准。',
+                reference: '「哥，便宜两万确实不少。我能问下那边给您的是什么配置吗？咱一项项对一下，看看差在哪。」<br><br><strong>为什么这样接——</strong>不争对错，不贬竞品。先搞清楚他拿的是不是同等配置在比。可能低配对高配，他自己都没注意到。'
+              },
+              {
+                customer: '配置差不多啊，人家还送三年保养呢。',
+                coach: '别比配置表了——帮他算三年总账：油费 + 保险 + 保值率。便宜两万的车，三年后可能多亏了五万。把价格战拉到总成本维度。',
+                reference: '「配置看着差不多，咱算个总账——这车油耗低，三年省一万多；保值率高，卖车时多卖两三万。送保养看着划算，三年也就几千块。算下来，您现在多花两万，三年后其实省了。」<br><br><strong>为什么这样接——</strong>不跟他吵「谁便宜」，而是帮他看到「哪个更划算」。买方算的是总账，不只是开票价。'
+              },
+              {
+                customer: '你说的也有道理，但我预算就这么多了，多两万拿不出来。',
+                coach: '他开始松动了！别追着总账说——现在帮他算月供。把大数拆成小数，月供多几百他更容易接受。',
+                reference: '「理解，预算确实重要。咱算算月供——多两万分 36 期，一个月多 500 多块。但这车三年后多卖两三万，相当于每个月多花 500，三年后多拿回两万，不亏的。哥您自己算算。」<br><br><strong>为什么这样接——</strong>把两万的差距拆成每月 500，再告诉他三年后能多卖两万——月供多 500 但总账赚了，他自己会算。'
+              }
+            ],
+            summary: '这组练的是——客户压价不是不认可你，是他需要一个说服自己多花两万的理由。你三个回合都没跟他吵价格，而是一步步帮他算清楚了总账：开票价 ≠ 总成本。'
+          },
+          {
+            type: 'real', name: '说回去商量的女士', shortName: '商量姐',
+            context: '阿强 · 逼单节奏 · 第 3 组',
+            pain: '看了一个多小时各方面都满意，但不敢自己做决定',
+            rounds: [
+              {
+                customer: '我得回去跟老公商量一下，买车这种大事我一个人做不了主。',
+                coach: '别放走就完了——先肯定她商量的必要性，然后约个具体时间把老公一起带来。把模糊的「回去商量」变成具体的下一步。',
+                reference: '「应该的应该的，大件肯定要跟老公商量。姐您老公周末有空吗？周六下午您带他一起来，我把刚才跟您聊的几个重点直接跟他也讲一遍，省得您回去还要复述。」<br><br><strong>为什么这样接——</strong>先肯定、再约具体时间。帮她把「回去怎么跟老公说」这个难题也解决了。'
+              },
+              {
+                customer: '他周末不一定有空，看情况吧。我回去先跟他说说。',
+                coach: '时间不确定了——换个策略。给她老公留一个具体的「钩子」，同时帮她准备好「回去怎么说」的话术。让她成为你的内部销售。',
+                reference: '「没问题，您先回去跟他聊聊。对了姐——您老公最在意的是什么？油耗还是空间？我帮您准备一下，下次他来我重点给他看那个。」<br><br><strong>为什么这样接——</strong>把被动的「等通知」变成主动的「我帮您准备」。同时摸清老公的关切点，提前布好局。'
+              },
+              {
+                customer: '他主要担心油耗。那你帮我算算，一个月大概多少油钱？',
+                coach: '拿到了老公的关键关切点！现在帮她算一笔她回去能直接讲给老公听的账。给她一个简单好记的数字，让她回去有话说。',
+                reference: '「姐您记好——上下班开的话，一公里 5 毛钱。您回去就跟老公说：我去看过了，一公里 5 毛，你算算比咱现在那车省多少。这样他也有个具体的点来考虑。对了，这个优惠我今天先帮您占着，您回去商量完随时找我——不想要了随时退，一分不少。」<br><br><strong>为什么这样接——</strong>给她「回去怎么说」的具体话术，加上「随时退」的安全网。她回去不再是"老公你猜这车怎么样"，而是"老公你算算，一公里 5 毛"。'
+              }
+            ],
+            summary: '这组练的是——「回去商量」不是拒绝，是你没给她足够的素材去商量。三个回合你给了她时间锚、老公关切点、回去怎么说的话术，外加一个随时可退的安全网。'
+          }
+        ]
+      };
+
+      // ====== 练习状态 ======
+      var currentPracticeCase = null;
+      var currentData = [];
+      var currentGroup = 0;
+      var currentRoundInGroup = 0;
+      var groupPhase = 'speaking';   // 'speaking' | 'review' | 'summary'
+      var tapLocked = false;
+      var autoAdvanceTimer = null;
+
+      var countdownOverlay = null;
+      var practiceOverlay = null;
+      var practiceBody = null;
+      var finishPage = null;
+      var stepperEl = null;
+      var countdownNumber = null;
+      var countdownRing = null;
+
+      // ====== 3-2-1 倒计时 ======
+      function runCountdown(callback) {
+        if (!countdownOverlay) countdownOverlay = document.getElementById('countdownOverlay');
+        if (!countdownNumber) countdownNumber = document.getElementById('countdownNumber');
+        if (!countdownRing) countdownRing = document.getElementById('countdownRing');
+        countdownOverlay.classList.add('show');
+        var steps = [
+          { num: '3', cls: '' }, { num: '2', cls: '' }, { num: '1', cls: '' }, { num: '开始', cls: 'go' }
+        ];
+        var i = 0;
+        function tick() {
+          if (i >= steps.length) { setTimeout(function () { countdownOverlay.classList.remove('show'); callback(); }, 200); return; }
+          var s = steps[i];
+          countdownNumber.textContent = s.num;
+          countdownNumber.className = 'countdown-number pop';
+          countdownRing.classList.remove('pulse'); void countdownRing.offsetWidth; countdownRing.classList.add('pulse');
+          if (s.cls) countdownNumber.classList.add(s.cls);
+          i++;
+          setTimeout(tick, i === steps.length ? 600 : 750);
+        }
+        tick();
+      }
+
+      // ====== Stepper ======
+      function buildStepper() {
+        if (!stepperEl) stepperEl = document.getElementById('stepper');
+        var h = '';
+        currentData.forEach(function (d, i) {
+          if (i > 0) h += '<span class="step-line" id="stepLine' + i + '"></span>';
+          h += '<span class="step-wrap"><span class="step-dot" id="stepDot' + i + '">' + (i + 1) + '</span><span class="step-label" id="stepLabel' + i + '">' + d.shortName + '</span></span>';
+        });
+        stepperEl.innerHTML = h;
+      }
+
+      function updateStepper() {
+        currentData.forEach(function (d, i) {
+          var dot = document.getElementById('stepDot' + i);
+          var label = document.getElementById('stepLabel' + i);
+          var line = document.getElementById('stepLine' + i);
+          if (!dot) return;
+          dot.classList.remove('done', 'current');
+          if (label) label.classList.remove('done', 'current');
+          if (i < currentGroup) {
+            dot.classList.add('done'); dot.textContent = '✓'; if (label) label.classList.add('done');
+            if (line) line.classList.add('done');
+          } else if (i === currentGroup) {
+            dot.classList.add('current'); dot.textContent = i + 1; if (label) label.classList.add('current');
+            if (line) line.classList.remove('done');
+          } else {
+            dot.textContent = i + 1;
+            if (line) line.classList.remove('done');
+          }
+        });
+      }
+
+      // ====== 渲染回合圆点 ======
+      function renderRoundDots(current, total) {
+        var dots = '';
+        for (var i = 0; i < total; i++) {
+          var cls = '';
+          if (i < current) cls = 'done';
+          else if (i === current) cls = 'active';
+          dots += '<span class="round-dot ' + cls + '"></span>';
+        }
+        return dots;
+      }
+
+      // ====== 渲染练习内容 ======
+      function renderPracticeGroup() {
+        if (!practiceBody) practiceBody = document.getElementById('practiceBody');
+        tapLocked = false;
+        clearTimeout(autoAdvanceTimer);
+        var group = currentData[currentGroup];
+        updateStepper();
+
+        if (groupPhase === 'summary') {
+          renderGroupSummary(group);
+          return;
+        }
+
+        var round = group.rounds[currentRoundInGroup];
+        var totalRounds = group.rounds.length;
+
+        // 回合指示器
+        var roundIndicator = '<div class="round-indicator"><span class="round-label">回合 ' + (currentRoundInGroup + 1) + '/' + totalRounds + '</span><div class="round-dots">' + renderRoundDots(currentRoundInGroup, totalRounds) + '</div></div>';
+
+        // 客户聊天气泡
+        var chatArea = '<div class="chat-area"><div class="chat-client-label">' + (group.type === 'real' ? '真实客户 · 接待原音' : '模拟场景') + '</div><div class="chat-row"><div class="chat-avatar">' + (group.type === 'real' ? '🧑' : '🤖') + '</div><div class="chat-bubble">' + round.customer + '</div></div></div>';
+
+        if (groupPhase === 'speaking') {
+          var tapZone = '<div class="tap-zone"><div class="tap-circle-wrap" onclick="handleTap()"><div class="tap-circle" id="tapCircle"><span class="tap-inner"><span class="tap-inner-icon" id="tapIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="1" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></span></span></div></div><div class="tap-hint" id="tapHint">按住说话</div></div>';
+
+          practiceBody.innerHTML = '<div class="context-bar"><span class="context-bar-icon">📍</span>' + group.context + '</div>' + roundIndicator + chatArea + tapZone;
+        } else {
+          var isLastRound = currentRoundInGroup >= totalRounds - 1;
+          var reviewSection = '<div class="coach-review-card"><div class="coach-review-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17l2-9 4 4 4-8 4 8 4-4 2 9H2z" stroke-linejoin="round"/><circle cx="12" cy="17" r="2" fill="currentColor" stroke="none"/></svg>教练点评</div><div class="coach-review-text">' + round.coach + '</div></div><div class="reference-content open" id="refContent"><div class="reference-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>销冠话术</div><div class="reference-inner" style="font-size:12.5px; color:rgba(255,255,255,.55);">' + round.reference + '</div></div><div class="auto-advance-hint">' + (isLastRound ? '稍后自动进入本组小结…' : '稍后自动进入下一回合…') + '</div>';
+
+          practiceBody.innerHTML = '<div class="context-bar"><span class="context-bar-icon">📍</span>' + group.context + '</div>' + roundIndicator + chatArea + reviewSection;
+        }
+
+        practiceBody.scrollTop = 0;
+      }
+
+      // ====== 点按「按住说话」→ 自动点评 → 自动下一回合 ======
+      function handleTap() {
+        if (tapLocked) return;
+        tapLocked = true;
+        clearTimeout(autoAdvanceTimer);
+
+        var circle = document.getElementById('tapCircle');
+        var icon = document.getElementById('tapIcon');
+        var hint = document.getElementById('tapHint');
+
+        if (circle) circle.classList.add('done');
+        if (icon) {
+          icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        }
+        if (hint) { hint.classList.add('done'); hint.textContent = '收到了'; }
+
+        setTimeout(function () {
+          groupPhase = 'review';
+          renderPracticeGroup();
+
+          var group = currentData[currentGroup];
+          var isLastRound = currentRoundInGroup >= group.rounds.length - 1;
+          var delay = isLastRound ? 4500 : 5000;
+
+          autoAdvanceTimer = setTimeout(function () {
+            if (isLastRound) {
+              groupPhase = 'summary';
+              renderPracticeGroup();
+            } else {
+              currentRoundInGroup++;
+              groupPhase = 'speaking';
+              renderPracticeGroup();
+            }
+          }, delay);
+        }, 600);
+      }
+
+      // ====== 小组小结 ======
+      function renderGroupSummary(group) {
+        if (!practiceBody) practiceBody = document.getElementById('practiceBody');
+        var totalRounds = group.rounds.length;
+        practiceBody.innerHTML = '<div class="context-bar"><span class="context-bar-icon">📍</span>' + group.context + '</div><div class="round-indicator"><span class="round-label" style="color:rgba(16,185,129,.6)">' + totalRounds + '/' + totalRounds + ' 回合完成</span><div class="round-dots">' + renderRoundDots(totalRounds, totalRounds) + '</div></div><div class="chat-area dim"><div class="chat-client-label">' + (group.type === 'real' ? '真实客户 · 接待原音' : '模拟场景') + '</div><div class="chat-row"><div class="chat-avatar">' + (group.type === 'real' ? '🧑' : '🤖') + '</div><div class="chat-bubble">' + group.rounds[totalRounds - 1].customer + '</div></div></div><div class="group-summary-card"><div class="summary-check">✓</div><div class="summary-title">这一组小结</div><div class="summary-text">' + group.summary + '</div></div><button class="btn-finish-group" onclick="finishGroup()">' + (currentGroup < currentData.length - 1 ? '进入下一组 →' : '完成全部练习 🎉') + '</button>';
+        practiceBody.scrollTop = 0;
+      }
+
+      function finishGroup() {
+        if (currentGroup < currentData.length - 1) {
+          // 还有下一组
+          currentGroup++;
+          currentRoundInGroup = 0;
+          groupPhase = 'speaking';
+          renderPracticeGroup();
+        } else {
+          // 全部完成
+          showFinishPage();
+        }
+      }
+
+      // ====== 完成页 ======
+      function showFinishPage() {
+        if (!practiceBody) practiceBody = document.getElementById('practiceBody');
+        if (!finishPage) finishPage = document.getElementById('finishPage');
+        practiceBody.style.display = 'none';
+
+        // Stepper all done
+        currentData.forEach(function (d, i) {
+          var dot = document.getElementById('stepDot' + i);
+          var label = document.getElementById('stepLabel' + i);
+          var line = document.getElementById('stepLine' + i);
+          if (dot) { dot.classList.add('done'); dot.classList.remove('current'); dot.textContent = '✓'; }
+          if (label) { label.classList.add('done'); label.classList.remove('current'); }
+          if (line) line.classList.add('done');
+        });
+
+        finishPage.innerHTML = '<div class="finish-crown"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,166,35,.6)" stroke-width="1.5"><path d="M2 17l2-9 4 4 4-8 4 8 4-4 2 9H2z" stroke-linejoin="round"/><circle cx="12" cy="17" r="2" fill="rgba(245,166,35,.5)" stroke="none"/></svg></div><div class="finish-count">本轮完成了 <strong>3</strong> 组</div><div class="finish-title">练得不错！</div><div class="finish-sub">3 组 × 3 回合，每多练一次，<br>面对客户就多一分底气。</div><div class="finish-actions"><button class="btn-ghost-light" onclick="exitPractice()">结束练习</button><button class="btn-solid-gold" onclick="restartPractice()">再练一次</button></div>';
+        finishPage.classList.add('active');
+      }
+
+      // ====== 启动练习 ======
+      function startPractice(caseId) {
+        if (!PRACTICE_DATA[caseId]) return;
+        currentPracticeCase = caseId;
+        currentData = PRACTICE_DATA[caseId].map(function (g) { return Object.assign({}, g); });
+        currentGroup = 0;
+        currentRoundInGroup = 0;
+        groupPhase = 'speaking';
+        tapLocked = false;
+        clearTimeout(autoAdvanceTimer);
+
+        if (!practiceOverlay) practiceOverlay = document.getElementById('practiceOverlay');
+        if (!practiceBody) practiceBody = document.getElementById('practiceBody');
+        if (!finishPage) finishPage = document.getElementById('finishPage');
+
+        practiceOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        finishPage.classList.remove('active');
+        practiceBody.style.display = '';
+
+        buildStepper();
+        updateStepper();
+        runCountdown(function () { renderPracticeGroup(); });
+      }
+
+      function exitPractice() {
+        if (!practiceOverlay) practiceOverlay = document.getElementById('practiceOverlay');
+        practiceOverlay.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+
+      function restartPractice() {
+        if (!practiceOverlay) practiceOverlay = document.getElementById('practiceOverlay');
+        if (!practiceBody) practiceBody = document.getElementById('practiceBody');
+        if (!finishPage) finishPage = document.getElementById('finishPage');
+        currentGroup = 0;
+        currentRoundInGroup = 0;
+        groupPhase = 'speaking';
+        tapLocked = false;
+        clearTimeout(autoAdvanceTimer);
+        finishPage.classList.remove('active');
+        practiceBody.style.display = '';
+        buildStepper();
+        updateStepper();
+        runCountdown(function () { renderPracticeGroup(); });
+      }
     })();
   </script>
 </body>
