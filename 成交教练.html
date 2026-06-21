@@ -190,6 +190,15 @@
     .coach-champ-link { display: inline-flex; align-items: center; min-height: 32px; margin-top: 8px; padding: 0 2px; color: #b45309; font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.15s; }
     .coach-champ-link:active { color: #92400e; }
 
+    /* "查看更多" 轻量入口卡片 */
+    .coach-champ-more {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+      padding: 16px; font-size: 14px; font-weight: 600; color: #b45309;
+      cursor: pointer; transition: background 0.15s, transform 0.12s;
+    }
+    .coach-champ-more:active { background: #f8fafc; transform: scale(.98); }
+
     /* Store badge on champion card */
     .champ-store-tag {
       display: inline-block; font-size: 10px; font-weight: 600;
@@ -643,6 +652,8 @@
           <!-- ===== TAB B ===== -->
           <div class="coach-pane" id="paneB" hidden>
 
+              <p class="coach-intro">今日精选 3 段销冠成交话术，看看别人做对了什么</p>
+
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
                   <span class="coach-champ-author">小李<span class="coach-champ-deal-badge">今日成交 2 单</span><span class="champ-store-tag baoan">宝安店</span></span>
@@ -671,6 +682,10 @@
                 <div class="coach-champ-quote">先讲优惠可退打消顾虑，客户心里踏实了，才愿意当场锁单</div>
                 <div class="coach-champ-why"><b>核心成交原因：</b>客户纠结不敢下单时，我先跟他说明订车没有风险、优惠可退，消除他的顾虑后，再讲购车政策，很容易当场成交。</div>
                 <a class="coach-champ-link" href="champion-case-detail.html?case=3" aria-label="查看阿强逼单成交单完整拆解">看完整拆解</a>
+              </div>
+
+              <div class="coach-champ-more" onclick="showToast('待完善')">
+                查看更多销冠话术 →
               </div>
 
 
