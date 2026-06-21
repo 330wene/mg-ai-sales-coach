@@ -90,32 +90,32 @@
     /* ---- Greeting + Score ---- */
     .coach-hero-core {
       position: relative; z-index: 1;
-      text-align: center; padding: 22px 18px 24px;
+      text-align: center; padding: 14px 18px 16px;
     }
     .coach-greet { font-size: 15px; font-weight: 500; color: #bccde4; }
-    .coach-score-block { margin-top: 16px; }
-    .coach-score-num { font-size: 48px; font-weight: 600; color: #f5a623; line-height: 1; }
+    .coach-score-block { margin-top: 12px; }
+    .coach-score-num { font-size: 44px; font-weight: 600; color: #f5a623; line-height: 1; }
     .coach-score-unit { font-size: 18px; color: #f5a623; font-weight: 500; }
-    .coach-five-dim-label { font-size: 13px; color: #7e95b5; font-weight: 500; letter-spacing: .04em; }
-    .coach-rank { font-size: 12px; color: #7e95b5; margin-top: 6px; }
+    .coach-five-dim-label { font-size: 12px; color: #7e95b5; font-weight: 500; letter-spacing: .04em; }
+    .coach-rank { font-size: 12px; color: #7e95b5; margin-top: 4px; }
 
     /* ---- Five-dimension chips ---- */
     .coach-dims {
       position: relative; z-index: 1;
-      display: flex; gap: 8px; padding: 0 14px 18px;
+      display: flex; gap: 8px; padding: 0 12px 12px;
     }
     .coach-dim {
-      flex: 1; padding: 12px 6px 10px; text-align: center;
+      flex: 1; padding: 8px 4px 8px; text-align: center;
       border-radius: 12px;
       transition: transform 0.12s;
     }
     .coach-dim:active { transform: scale(.96); }
-    .coach-dim-score { font-size: 18px; font-weight: 700; line-height: 1.2; }
-    .coach-dim-label { font-size: 10px; margin-top: 4px; line-height: 1.3; }
+    .coach-dim-score { font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .coach-dim-label { font-size: 10px; margin-top: 3px; line-height: 1.3; }
     .coach-dim.weak { background: rgba(220,38,38,.18); }
     .coach-dim.weak .coach-dim-score { color: #f87171; }
     .coach-dim.weak .coach-dim-label { color: #fca5a5; }
-    .coach-dim.normal { background: rgba(255,255,255,.06); }
+    .coach-dim.normal { background: rgba(255,255,255,.09); }
     .coach-dim.normal .coach-dim-score { color: #cdd9e8; }
     .coach-dim.normal .coach-dim-label { color: #7e93b0; }
 
@@ -127,17 +127,29 @@
     /* ===== Segmented Tab ===== */
     .coach-tabs {
       display: flex;
-      margin: 0 16px; padding: 3px;
-      background: var(--card); border: 1px solid var(--card-border);
-      border-radius: 10px;
+      margin: 0 16px; padding: 4px;
+      background: #e8ecf3; border: 1px solid #dde1e8;
+      border-radius: 12px;
     }
     .coach-tab {
-      flex: 1; padding: 9px 0; font-size: 14px; font-weight: 500;
-      text-align: center; color: var(--muted);
-      border-radius: 8px;
+      flex: 1; padding: 10px 0; font-size: 15px; font-weight: 600;
+      text-align: center; color: #475569;
+      border-radius: 10px;
       transition: color .2s, background .2s, box-shadow .2s;
     }
-    .coach-tab.active { color: var(--ink); font-weight: 600; background: var(--page); box-shadow: var(--shadow-sm); }
+    .coach-tab:active:not(.active) { background: rgba(255,255,255,.35); }
+    .coach-tab.active {
+      color: var(--ink); font-weight: 700;
+      background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 3px 10px rgba(0,0,0,.06);
+    }
+
+    /* 销冠 tab — 琥珀金色，始终有温度 */
+    .coach-tab.coach-tab-champion { color: #92400e; }
+    .coach-tab.coach-tab-champion.active {
+      color: #b45309;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(180,83,9,.10), 0 3px 12px rgba(180,83,9,.12);
+    }
 
     /* ===== Tab Panels ===== */
     .coach-pane { padding: 10px 16px 4px; }
@@ -162,16 +174,21 @@
     .coach-case-desc { font-size: 13px; color: var(--text); line-height: 1.6; margin-top: 5px; }
 
     /* Champion case rows */
-    .coach-champ-item { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); transition: transform 0.12s ease; }
+    .coach-champ-item { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); transition: transform 0.12s ease; }
     .coach-champ-item:active { transform: scale(.98); }
-    .coach-champ-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+    .coach-champ-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     .coach-champ-author { font-size: 12px; color: #5f6c80; font-weight: 600; }
-    .coach-champ-learned { flex: 0 0 auto; font-size: 10.5px; color: #94a3b8; background: #f1f5f9; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
-    .coach-champ-quote { font-size: 15px; font-weight: 700; color: #0b234a; line-height: 1.45; }
-    .coach-champ-why { font-size: 12px; color: #596579; line-height: 1.6; margin-top: 8px; }
-    .coach-champ-why b { color: #7b8797; font-weight: 600; }
-    .coach-champ-link { display: inline-flex; align-items: center; min-height: 32px; margin-top: 7px; padding: 0 2px; color: var(--muted); font-size: 12px; font-weight: 500; cursor: pointer; }
-    .coach-champ-link:active { color: #7f8a9c; }
+    .coach-champ-deal-badge {
+      display: inline-block; font-size: 10.5px; font-weight: 700;
+      color: #92400e; background: linear-gradient(135deg, #fef3c7, #fde68a);
+      padding: 2px 8px; border-radius: 12px; margin-left: 4px;
+    }
+    .coach-champ-learned { flex: 0 0 auto; font-size: 11px; color: #64748b; background: #f1f5f9; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .coach-champ-quote { font-size: 16px; font-weight: 700; color: #78350f; line-height: 1.45; }
+    .coach-champ-why { font-size: 12px; color: #64748b; line-height: 1.6; margin-top: 8px; }
+    .coach-champ-why b { color: #475569; font-weight: 600; }
+    .coach-champ-link { display: inline-flex; align-items: center; min-height: 32px; margin-top: 8px; padding: 0 2px; color: #b45309; font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.15s; }
+    .coach-champ-link:active { color: #92400e; }
 
     /* Store badge on champion card */
     .champ-store-tag {
@@ -331,6 +348,50 @@
     }
     .coach-snippet-more:active { color: #0d5fd9; }
 
+    /* ===== 三步推荐话术卡片 ===== */
+    .coach-script-steps {
+      background: #f8fafc; border-radius: 10px; overflow: hidden;
+      margin-top: 2px;
+    }
+    .coach-script-steps-header {
+      font-size: 11px; font-weight: 600; color: #94a3b8;
+      padding: 12px 14px 6px;
+      letter-spacing: .03em;
+    }
+    .coach-script-step {
+      padding: 0 14px;
+    }
+    .coach-script-step + .coach-script-step { padding-top: 10px; }
+    .coach-script-step:last-child { padding-bottom: 14px; }
+
+    .coach-step-head {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+    }
+    .coach-step-num {
+      width: 18px; height: 18px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .coach-step-num.s1 { background: #f59e0b; }
+    .coach-step-num.s2 { background: #1677FF; }
+    .coach-step-num.s3 { background: #10b981; }
+    .coach-step-label {
+      font-size: 12px; font-weight: 700; color: var(--ink);
+    }
+    .coach-step-hint {
+      font-size: 11px; color: #94a3b8; margin-bottom: 6px;
+      margin-left: 24px; line-height: 1.4;
+    }
+    .coach-step-text {
+      font-size: 13px; color: var(--text); line-height: 1.6;
+      margin-left: 24px;
+      background: #fff; border-radius: 8px; padding: 10px 12px;
+      border: 1px solid #eef1f5; border-left: 3px solid #e2e8f0;
+    }
+    .coach-step-text.step-1 { border-left-color: #f59e0b; }
+    .coach-step-text.step-2 { border-left-color: #1677FF; }
+    .coach-step-text.step-3 { border-left-color: #10b981; }
+
     .coach-collapse-toggle {
       display: block; width: 100%; text-align: center;
       font-size: 13px; color: #94a3b8; padding: 8px 0 2px;
@@ -410,7 +471,7 @@
           <!-- Tabs -->
           <div class="coach-tabs">
             <button class="coach-tab active" id="tabA" onclick="switchTab('A')">今日成交复盘</button>
-            <button class="coach-tab" id="tabB" onclick="switchTab('B')">今日销冠话术</button>
+            <button class="coach-tab coach-tab-champion" id="tabB" onclick="switchTab('B')">今日销冠话术</button>
           </div>
 
           <!-- ===== TAB A — 今日成交复盘 ===== -->
@@ -423,7 +484,7 @@
             <div class="coach-insight-card" id="coach-insight-card-card-1">
               <div class="coach-insight-head">
                 <span class="coach-insight-label">复盘一</span>
-                <div class="coach-insight-title">客户讲的是生活，你回答的是参数</div>
+                <div class="coach-insight-title">产品讲解短板</div>
               </div>
               <div class="coach-insight-subtitle">你今天有 4 次，客户主动说出需求，你都用车辆参数回应，完全没接住对方真实诉求</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-1')">看这 4 组卡在哪 ›</span>
@@ -436,7 +497,33 @@
                   <div class="coach-snippet-said"><span class="label-you">你说：</span>"后备厢 540 升，同级最大。"</div>
                   <div class="coach-snippet-note">→ 她问的是装不装得下一家人，你答了个数字</div>
                   <div class="coach-snippet-divider"></div>
-                  <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"您家几口人？常带老人不？上车坐进去试试。"</div>
+                  <div class="coach-script-steps">
+                    <div class="coach-script-steps-header">📋 推荐话术 · 门店三步法</div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s1">1</span>
+                        <span class="coach-step-label">共情赞美铺垫</span>
+                      </div>
+                      <div class="coach-step-hint">先接住客户感受，建立信任</div>
+                      <div class="coach-step-text step-1">"姐，您特意问后排坐不坐得下，一听就是真心为家人着想——买车的初衷不就是让一家老小都舒服嘛。"</div>
+                    </div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s2">2</span>
+                        <span class="coach-step-label">产品卖点 + 场景讲解</span>
+                      </div>
+                      <div class="coach-step-hint">参数翻译成客户生活场景</div>
+                      <div class="coach-step-text step-2">"咱这车轴距2712mm，后排地板几乎纯平，儿童座椅装两边，中间坐大人也不挤。后备厢540升，婴儿车竖着放，旁边还能塞两箱牛奶——这就是您家周末出门的样子。"</div>
+                    </div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s3">3</span>
+                        <span class="coach-step-label">引导客户认同</span>
+                      </div>
+                      <div class="coach-step-hint">用行动/提问收尾，让客户确认</div>
+                      <div class="coach-step-text step-3">"您上车坐进去试试，靠背角度能调，调到您家人最舒服的位置。买车得全家都满意，您说是吧？回头带嫂子也来感受一下。"</div>
+                    </div>
+                  </div>
                   <span class="coach-snippet-more" onclick="loadMoreSimilar('card-1')">还有 3 组类似的 ›</span>
                 </div>
                 <span class="coach-collapse-toggle" onclick="toggleCard('card-1')">收起 ▴</span>
@@ -447,7 +534,7 @@
             <div class="coach-insight-card" id="coach-insight-card-card-2">
               <div class="coach-insight-head">
                 <span class="coach-insight-label">复盘二</span>
-                <div class="coach-insight-title">成交信号，你当成了普通问题</div>
+                <div class="coach-insight-title">成交信号捕捉短板</div>
               </div>
               <div class="coach-insight-subtitle">你今天有 3 次，客户已经在想这车适不适合自家用，你却当成普通提问，还在正面介绍车</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-2')">看这 3 组卡在哪 ›</span>
@@ -460,7 +547,33 @@
                   <div class="coach-snippet-said"><span class="label-you">你说：</span>"咱这底盘用的是……"（讲起安全）</div>
                   <div class="coach-snippet-note">→ 她已经在想这车适不适合自家了，你还在介绍车</div>
                   <div class="coach-snippet-divider"></div>
-                  <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"婴儿车我帮您放进去看看——您娃多大啦？"</div>
+                  <div class="coach-script-steps">
+                    <div class="coach-script-steps-header">📋 推荐话术 · 门店三步法</div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s1">1</span>
+                        <span class="coach-step-label">共情赞美铺垫</span>
+                      </div>
+                      <div class="coach-step-hint">先接住客户感受，建立信任</div>
+                      <div class="coach-step-text step-1">"哥，您问婴儿车放不放得下——家里是有宝宝了吧？这个阶段买车，空间和安全是第一位的，我特别理解。"</div>
+                    </div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s2">2</span>
+                        <span class="coach-step-label">产品卖点 + 场景讲解</span>
+                      </div>
+                      <div class="coach-step-hint">参数翻译成客户生活场景</div>
+                      <div class="coach-step-text step-2">"后备厢开口特别大、地台也低，弯腰抱娃往里放东西不费劲。后排装安全座椅后，嫂子坐旁边照顾也方便——这些细节，带娃出门才知道多重要。"</div>
+                    </div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s3">3</span>
+                        <span class="coach-step-label">引导客户认同</span>
+                      </div>
+                      <div class="coach-step-hint">用行动/提问收尾，让客户确认</div>
+                      <div class="coach-step-text step-3">"婴儿车我帮您拿进来实际放一下？让嫂子一起看，她用着顺手才是真的好——现在试好了，提车那天直接装上就回家了。"</div>
+                    </div>
+                  </div>
                   <span class="coach-snippet-more" onclick="loadMoreSimilar('card-2')">还有 2 组类似的 ›</span>
                 </div>
                 <span class="coach-collapse-toggle" onclick="toggleCard('card-2')">收起 ▴</span>
@@ -471,7 +584,7 @@
             <div class="coach-insight-card" id="coach-insight-card-card-3">
               <div class="coach-insight-head">
                 <span class="coach-insight-label">复盘三</span>
-                <div class="coach-insight-title">客户说"再看看"，你就"好的"</div>
+                <div class="coach-insight-title">离店跟进短板</div>
               </div>
               <div class="coach-insight-subtitle">你今天有 3 次，客户临走留了最后一个回合，你没追问、也没约下次，就把人放走了</div>
               <span class="coach-insight-entry" onclick="toggleCard('card-3')">看这 3 组卡在哪 ›</span>
@@ -484,7 +597,33 @@
                   <div class="coach-snippet-said"><span class="label-you">你说：</span>"好的。"</div>
                   <div class="coach-snippet-note">→ "再看看"是最后一个回合，一句"好的"就把人送出门了</div>
                   <div class="coach-snippet-divider"></div>
-                  <div class="coach-snippet-champion"><span class="label-champion">销冠会这么接：</span>"您要看看肯定的。加个微信，明天试驾车到，我留一台给您？"</div>
+                  <div class="coach-script-steps">
+                    <div class="coach-script-steps-header">📋 推荐话术 · 门店三步法</div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s1">1</span>
+                        <span class="coach-step-label">共情赞美铺垫</span>
+                      </div>
+                      <div class="coach-step-hint">先接住客户感受，建立信任</div>
+                      <div class="coach-step-text step-1">"哥您看了这么久，说明是真心想买——买大件就该多看看，这是对自己负责，我特别理解。"</div>
+                    </div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s2">2</span>
+                        <span class="coach-step-label">产品卖点 + 场景讲解</span>
+                      </div>
+                      <div class="coach-step-hint">参数翻译成客户生活场景</div>
+                      <div class="coach-step-text step-2">"我帮您把刚才看的几个配置和落地价都理出来，您回去慢慢对比。咱店明天有台同配置试驾车回来——开一圈比看十遍都管用，试完心里更有底。"</div>
+                    </div>
+                    <div class="coach-script-step">
+                      <div class="coach-step-head">
+                        <span class="coach-step-num s3">3</span>
+                        <span class="coach-step-label">引导客户认同</span>
+                      </div>
+                      <div class="coach-step-hint">用行动/提问收尾，让客户确认</div>
+                      <div class="coach-step-text step-3">"加个微信，试驾车一到我第一个留给您。到时候带家人一起来——一家人坐车上感受一圈，比您一个人拿主意省心多了。我把油耗和保养费用一起发您，您算算每天花多少钱就清楚了。"</div>
+                    </div>
+                  </div>
                   <span class="coach-snippet-more" onclick="loadMoreSimilar('card-3')">还有 2 组类似的 ›</span>
                 </div>
                 <span class="coach-collapse-toggle" onclick="toggleCard('card-3')">收起 ▴</span>
@@ -503,7 +642,7 @@
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
-                  <span class="coach-champ-author">小李 · 今日成交 2 单<span class="champ-store-tag baoan">宝安店</span></span>
+                  <span class="coach-champ-author">小李<span class="coach-champ-deal-badge">今日成交 2 单</span><span class="champ-store-tag baoan">宝安店</span></span>
                   <span class="coach-champ-learned">本店已有 9 人学过</span>
                 </div>
                 <div class="coach-champ-quote">不问轴距问宝宝多大，客户聊着聊着就签了</div>
@@ -513,7 +652,7 @@
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
-                  <span class="coach-champ-author">李晨 · 今日成交 2 单<span class="champ-store-tag baoan">宝安店</span></span>
+                  <span class="coach-champ-author">李晨<span class="coach-champ-deal-badge">今日成交 2 单</span><span class="champ-store-tag baoan">宝安店</span></span>
                   <span class="coach-champ-learned">本店已有 7 人学过</span>
                 </div>
                 <div class="coach-champ-quote">先唠家常再聊车，客户自己把需求全抖出来了</div>
@@ -523,7 +662,7 @@
 
               <div class="coach-champ-item">
                 <div class="coach-champ-head">
-                  <span class="coach-champ-author">阿强 · 今日成交 1 单<span class="champ-store-tag xixiang">西乡店</span></span>
+                  <span class="coach-champ-author">阿强<span class="coach-champ-deal-badge">今日成交 1 单</span><span class="champ-store-tag xixiang">西乡店</span></span>
                   <span class="coach-champ-learned">本店已有 11 人学过</span>
                 </div>
                 <div class="coach-champ-quote">先把安全感给足，再谈优惠，客户主动说帮我定</div>
