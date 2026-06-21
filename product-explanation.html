@@ -208,7 +208,72 @@
     .bottom-link:active { opacity: .7; }
     .bottom-link-arrow { font-size: 15px; }
 
-    /* 练习覆盖层样式由 js/practice-overlay.js 统一注入 */
+    /* ========== 今日练摘要卡 ========== */
+    .practice-summary {
+      display: flex; align-items: center; gap: 10px;
+      background: #f8fafc; border: 1px solid #e8ecf1; border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .practice-summary-icon { font-size: 22px; flex: 0 0 auto; line-height: 1; }
+    .practice-summary-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .practice-summary-desc { font-size: 12px; color: var(--muted); }
+    .practice-summary-toggle {
+      font-size: 12px; color: var(--primary); flex: 0 0 auto; white-space: nowrap;
+      display: flex; align-items: center; gap: 2px; padding: 4px 0; cursor: pointer;
+    }
+    .practice-summary-toggle:active { opacity: .7; }
+
+    .client-list-wrap { overflow: hidden; transition: max-height .35s ease, opacity .25s ease, margin .35s ease; }
+    .client-list-wrap.collapsed { max-height: 0; opacity: 0; margin-top: 0; }
+    .client-list-wrap.open { max-height: 500px; opacity: 1; margin-top: 12px; }
+
+    .client-item-compact {
+      display: flex; align-items: center; gap: 10px; padding: 8px 0;
+      border-bottom: 0.5px solid var(--line); font-size: 13px;
+    }
+    .client-item-compact:last-of-type { border-bottom: none; }
+    .client-num-compact { width: 20px; flex: 0 0 auto; font-size: 13px; font-weight: 700; text-align: center; }
+    .client-num-compact.real { color: var(--navy-900); }
+    .client-num-compact.sim  { color: var(--muted); }
+    .client-name-compact { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .client-name-compact.real { color: var(--ink); }
+    .client-name-compact.sim  { color: var(--text); }
+    .client-meta-compact { font-size: 11px; color: var(--muted); white-space: nowrap; flex: 0 0 auto; }
+    .client-hint-compact { font-size: 11px; color: #94a3b8; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ========== 今日学手风琴 ========== */
+    .script-accordion { margin-top: 10px; }
+    .script-accordion-item { border-bottom: 0.5px solid #ecece8; }
+    .script-accordion-item:last-of-type { border-bottom: none; }
+    .script-accordion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; cursor: pointer; font-size: 13.5px; color: #2C2C2A; font-weight: 500;
+      user-select: none;
+    }
+    .script-accordion-header:active { opacity: .7; }
+    .script-accordion-arrow { font-size: 12px; color: #888780; transition: transform .25s ease; display: inline-block; }
+    .script-accordion-arrow.open { transform: rotate(90deg); }
+    .script-accordion-body { overflow: hidden; transition: max-height .35s ease, opacity .25s ease; }
+    .script-accordion-body.collapsed { max-height: 0; opacity: 0; }
+    .script-accordion-body.open { max-height: 500px; opacity: 1; }
+
+    /* ========== 今日学摘要行 ========== */
+    .learn-summary-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0; border-bottom: 0.5px solid var(--line); cursor: pointer;
+    }
+    .learn-summary-row:last-of-type { border-bottom: none; }
+    .learn-summary-row:active { opacity: .7; }
+    .learn-summary-tag {
+      font-size: 11px; color: #0b234a; background: #eef2ff; border-radius: 4px;
+      padding: 2px 6px; flex: 0 0 auto; white-space: nowrap;
+    }
+    .learn-summary-tag.video-tag { background: #fef3c7; color: #92400e; }
+    .learn-summary-info { flex: 1; min-width: 0; }
+    .learn-summary-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+    .learn-summary-hint { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .learn-summary-arrow { font-size: 13px; color: #888780; flex: 0 0 auto; transition: transform .25s ease; }
+    .learn-summary-arrow.open { transform: rotate(90deg); }
 
     @media (max-width: 430px) {
       .stage { padding: 0; }
@@ -234,9 +299,17 @@
             <span class="section-bar"></span>
             <span class="section-label">今日练</span>
           </div>
-          <p class="section-guide">针对今天复盘出来的问题，我把到店真实客户的对话都准备好了，直接重新练一遍怎么接话就行。</p>
-          <div class="client-list" id="clientList"><!-- JS 渲染 --></div>
-          <div class="summary-row">合计 5 组练习 · 全程约 3 分钟</div>
+          <p class="section-guide">把你今天接待的客户对话还原出来了，对着真实情景重新走一遍。</p>
+          <div class="practice-summary">
+            <div class="practice-summary-text" style="flex:1">
+              <div class="practice-summary-title">3 组真实到店对话 + 2 组同类型场景</div>
+              <div class="practice-summary-desc">大概 3 分钟</div>
+            </div>
+            <button class="practice-summary-toggle" onclick="togglePracticeList()" id="practiceToggle">展开 ▾</button>
+          </div>
+          <div class="client-list-wrap collapsed" id="clientListWrap">
+            <div class="client-list" id="clientList"><!-- JS 渲染 --></div>
+          </div>
           <button class="btn-primary" id="startPracticeBtn">开始对练</button>
         </section>
 
@@ -246,101 +319,84 @@
             <span class="section-bar"></span>
             <span class="section-label">今日学</span>
           </div>
-          <p class="section-guide">针对今日复盘出来的问题，总部有现成的学习资料，我帮你挑出来了。</p>
+          <p class="section-guide">刚才练到的那几个问题，总部刚好有现成的话术和资料，抽空看一眼。</p>
           <div class="learn-cards">
-
-            <!-- 卡1 · 话术卡（成交信号，可展开/收起） -->
-            <div class="material-card" id="scriptCard2">
-              <span class="card-tag">成交信号</span>
-
-              <!-- 收起态：目录 -->
-              <div class="script-collapse" id="scriptCollapsed">
-                <div class="script-dir-item" onclick="toggleScriptCard()">
-                  <span>客户问"能不能放婴儿车"</span>
-                  <span class="script-dir-expand">▸</span>
+            <!-- 摘要行：切换到展开视图 -->
+            <div id="learnSummary">
+              <div class="learn-summary-row" onclick="toggleLearnItem(0)">
+                <span class="learn-summary-tag">话术</span>
+                <div class="learn-summary-info">
+                  <div class="learn-summary-title">成交信号 · 三步应对话术</div>
+                  <div class="learn-summary-hint">婴儿车 / 上牌保险 / 提车时间，话术怎么接</div>
                 </div>
-                <div class="script-dir-item" onclick="toggleScriptCard()">
-                  <span>客户问"上牌、保险管不管"</span>
-                  <span class="script-dir-expand">▸</span>
-                </div>
-                <div class="script-dir-item" onclick="toggleScriptCard()">
-                  <span>客户问"最快多久能提车"</span>
-                  <span class="script-dir-expand">▸</span>
-                </div>
-                <div class="script-toggle-row" onclick="toggleScriptCard()">展开看话术 ▾</div>
+                <span class="learn-summary-arrow" id="learnArrow0">▸</span>
               </div>
-
-              <!-- 展开态 -->
-              <div class="script-expanded collapsed" id="scriptExpanded">
-                <div class="script-qa-item">
-                  <div class="script-qa-q">客户问"能不能放婴儿车"</div>
-                  <div class="script-steps-compact">
-                    <div class="script-step-compact s1">
-                      <div class="script-step-compact-label">① 共情赞美铺垫</div>
-                      <div class="script-step-compact-text">"姐，您问婴儿车的事，家里是有宝宝了吧？这个阶段买车，实用比什么都重要。"</div>
-                    </div>
-                    <div class="script-step-compact s2">
-                      <div class="script-step-compact-label">② 产品卖点 + 场景讲解</div>
-                      <div class="script-step-compact-text">"后备厢开口大、地台低，婴儿车不用弯腰就能放进去。后排装安全座椅后，旁边照顾宝宝也方便。"</div>
-                    </div>
-                    <div class="script-step-compact s3">
-                      <div class="script-step-compact-label">③ 引导客户认同</div>
-                      <div class="script-step-compact-text">"我帮您拿进来实际放一下？让嫂子一起看，她用着顺手才是真的好。"</div>
-                    </div>
-                  </div>
-                  <div class="script-qa-src">— 门店三步法生成</div>
+              <div class="learn-summary-row" onclick="toggleLearnItem(1)">
+                <span class="learn-summary-tag video-tag">视频</span>
+                <div class="learn-summary-info">
+                  <div class="learn-summary-title">产品介绍视频 · 4:00</div>
+                  <div class="learn-summary-hint">540L后备厢 = 露营装备、婴儿车都塞得下</div>
                 </div>
-                <div class="script-qa-item">
-                  <div class="script-qa-q">客户问"上牌、保险管不管"</div>
-                  <div class="script-steps-compact">
-                    <div class="script-step-compact s1">
-                      <div class="script-step-compact-label">① 共情赞美铺垫</div>
-                      <div class="script-step-compact-text">"哥，您问这个说明是真准备出手了——上牌保险确实是买车最烦心的一环，我懂。"</div>
-                    </div>
-                    <div class="script-step-compact s2">
-                      <div class="script-step-compact-label">② 产品卖点 + 场景讲解</div>
-                      <div class="script-step-compact-text">"上牌、购置税、保险，咱店一条龙代办，您只管来开车。保险帮您对三家，挑性价比最高的方案。"</div>
-                    </div>
-                    <div class="script-step-compact s3">
-                      <div class="script-step-compact-label">③ 引导客户认同</div>
-                      <div class="script-step-compact-text">"您今天定了我就帮您安排上——身份证带了吗？我先帮您录系统，明天就能排上队。"</div>
-                    </div>
-                  </div>
-                  <div class="script-qa-src">— 门店三步法生成</div>
-                </div>
-                <div class="script-qa-item">
-                  <div class="script-qa-q">客户问"最快多久能提车"</div>
-                  <div class="script-steps-compact">
-                    <div class="script-step-compact s1">
-                      <div class="script-step-compact-label">① 共情赞美铺垫</div>
-                      <div class="script-step-compact-text">"哥您是急着用车吧？我理解，定了车就想赶紧开上，一天都不想多等。"</div>
-                    </div>
-                    <div class="script-step-compact s2">
-                      <div class="script-step-compact-label">② 产品卖点 + 场景讲解</div>
-                      <div class="script-step-compact-text">"白色和灰色有现车，今天订后天提。其他颜色7天调车——我现在帮您查一下库存，看您要的颜色有没有现车。"</div>
-                    </div>
-                    <div class="script-step-compact s3">
-                      <div class="script-step-compact-label">③ 引导客户认同</div>
-                      <div class="script-step-compact-text">"您要哪个颜色？我直接帮您锁定现车，省得被别人抢了。提车那天我提前把车洗干净、油加满，您签字就能开走。"</div>
-                    </div>
-                  </div>
-                  <div class="script-qa-src">— 门店三步法生成</div>
-                </div>
-                <div class="script-toggle-row" onclick="toggleScriptCard()">收起 ▴</div>
+                <span class="learn-summary-arrow" id="learnArrow1">▸</span>
               </div>
             </div>
 
-            <!-- 卡2 · 视频卡（产品介绍） -->
-            <div class="material-card">
-              <span class="card-tag">产品介绍</span>
-              <div class="video-cover-mini" onclick="handleVideoClick('产品介绍视频')">
-                <div class="play-circle-mini"><span class="play-icon-mini"></span></div>
-                <span class="video-dur-mini">4:00</span>
+            <!-- 展开内容区 -->
+            <div id="learnDetail" style="display:none">
+              <!-- 话术卡 -->
+              <div class="material-card" id="learnDetail0" style="display:none;margin-bottom:10px">
+                <span class="card-tag">成交信号</span>
+                <div class="script-accordion">
+                  <div class="script-accordion-item">
+                    <div class="script-accordion-header" onclick="toggleScriptAccordion(0)"><span>客户问"能不能放婴儿车"</span><span class="script-accordion-arrow" id="scriptArrow0">▸</span></div>
+                    <div class="script-accordion-body collapsed" id="scriptBody0">
+                      <div class="script-steps-compact" style="padding-bottom:8px">
+                        <div class="script-step-compact s1"><div class="script-step-compact-label">① 共情赞美铺垫</div><div class="script-step-compact-text">"姐，您问婴儿车的事，家里是有宝宝了吧？这个阶段买车，实用比什么都重要。"</div></div>
+                        <div class="script-step-compact s2"><div class="script-step-compact-label">② 产品卖点 + 场景讲解</div><div class="script-step-compact-text">"后备厢开口大、地台低，婴儿车不用弯腰就能放进去。后排装安全座椅后，旁边照顾宝宝也方便。"</div></div>
+                        <div class="script-step-compact s3"><div class="script-step-compact-label">③ 引导客户认同</div><div class="script-step-compact-text">"我帮您拿进来实际放一下？让嫂子一起看，她用着顺手才是真的好。"</div></div>
+                      </div>
+                      <div class="script-qa-src" style="padding-bottom:8px">— 门店三步法生成</div>
+                    </div>
+                  </div>
+                  <div class="script-accordion-item">
+                    <div class="script-accordion-header" onclick="toggleScriptAccordion(1)"><span>客户问"上牌、保险管不管"</span><span class="script-accordion-arrow" id="scriptArrow1">▸</span></div>
+                    <div class="script-accordion-body collapsed" id="scriptBody1">
+                      <div class="script-steps-compact" style="padding-bottom:8px">
+                        <div class="script-step-compact s1"><div class="script-step-compact-label">① 共情赞美铺垫</div><div class="script-step-compact-text">"哥，您问这个说明是真准备出手了——上牌保险确实是买车最烦心的一环，我懂。"</div></div>
+                        <div class="script-step-compact s2"><div class="script-step-compact-label">② 产品卖点 + 场景讲解</div><div class="script-step-compact-text">"上牌、购置税、保险，咱店一条龙代办，您只管来开车。保险帮您对三家，挑性价比最高的方案。"</div></div>
+                        <div class="script-step-compact s3"><div class="script-step-compact-label">③ 引导客户认同</div><div class="script-step-compact-text">"您今天定了我就帮您安排上——身份证带了吗？我先帮您录系统，明天就能排上队。"</div></div>
+                      </div>
+                      <div class="script-qa-src" style="padding-bottom:8px">— 门店三步法生成</div>
+                    </div>
+                  </div>
+                  <div class="script-accordion-item">
+                    <div class="script-accordion-header" onclick="toggleScriptAccordion(2)"><span>客户问"最快多久能提车"</span><span class="script-accordion-arrow" id="scriptArrow2">▸</span></div>
+                    <div class="script-accordion-body collapsed" id="scriptBody2">
+                      <div class="script-steps-compact" style="padding-bottom:8px">
+                        <div class="script-step-compact s1"><div class="script-step-compact-label">① 共情赞美铺垫</div><div class="script-step-compact-text">"哥您是急着用车吧？我理解，定了车就想赶紧开上，一天都不想多等。"</div></div>
+                        <div class="script-step-compact s2"><div class="script-step-compact-label">② 产品卖点 + 场景讲解</div><div class="script-step-compact-text">"白色和灰色有现车，今天订后天提。其他颜色7天调车——我现在帮您查一下库存，看您要的颜色有没有现车。"</div></div>
+                        <div class="script-step-compact s3"><div class="script-step-compact-label">③ 引导客户认同</div><div class="script-step-compact-text">"您要哪个颜色？我直接帮您锁定现车，省得被别人抢了。提车那天我提前把车洗干净、油加满，您签字就能开走。"</div></div>
+                      </div>
+                      <div class="script-qa-src" style="padding-bottom:8px">— 门店三步法生成</div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">540L后备厢 = 露营装备、婴儿车、全家行李都塞得下</div>
-              <div class="card-source">来源：总部销售学院</div>
-            </div>
 
+              <!-- 视频卡 -->
+              <div class="material-card" id="learnDetail1" style="display:none;margin-bottom:10px">
+                <span class="card-tag">产品介绍</span>
+                <div class="video-cover-mini" onclick="handleVideoClick('产品介绍视频')">
+                  <div class="play-circle-mini"><span class="play-icon-mini"></span></div>
+                  <span class="video-dur-mini">4:00</span>
+                </div>
+                <div class="card-body">540L后备厢 = 露营装备、婴儿车、全家行李都塞得下</div>
+                <div class="card-source">来源：总部销售学院</div>
+              </div>
+
+              <!-- 收起按钮 -->
+              <button class="learn-summary-row" onclick="collapseAllLearn()" style="justify-content:center;font-size:13px;color:#888780">收起 ▴</button>
+            </div>
           </div>
           <div class="bottom-link" onclick="handleMoreLib()" style="margin-top:12px;">没看够？进总部完整资料库 <span class="bottom-link-arrow">›</span></div>
         </section>
@@ -583,22 +639,70 @@
     function handleVideoClick(title) { showToast('视频播放：' + title); }
     function handleMoreLib() { showToast('即将进入总部完整资料库'); }
 
-    // ===== 卡2 话术卡展开/收起 =====
-    function toggleScriptCard() {
-      const collapsed = document.getElementById('scriptCollapsed');
-      const expanded = document.getElementById('scriptExpanded');
-      if (expanded.classList.contains('collapsed')) {
-        collapsed.style.display = 'none';
-        expanded.classList.remove('collapsed');
-        expanded.classList.add('open');
+    // ===== 今日练：展开/收起客户列表 =====
+    function togglePracticeList() {
+      const wrap = document.getElementById('clientListWrap');
+      const toggle = document.getElementById('practiceToggle');
+      if (wrap.classList.contains('collapsed')) {
+        wrap.classList.remove('collapsed');
+        wrap.classList.add('open');
+        toggle.textContent = '收起 ▴';
       } else {
-        expanded.classList.remove('open');
-        expanded.classList.add('collapsed');
-        setTimeout(function () { collapsed.style.display = ''; }, 350);
+        wrap.classList.remove('open');
+        wrap.classList.add('collapsed');
+        toggle.textContent = '展开 ▾';
       }
     }
 
-    // ===== 渲染客户清单 =====
+    // ===== 今日学：摘要行展开/收起 =====
+    function toggleLearnItem(index) {
+      const summary = document.getElementById('learnSummary');
+      const detail = document.getElementById('learnDetail');
+      const detailItem = document.getElementById('learnDetail' + index);
+      const arrow = document.getElementById('learnArrow' + index);
+
+      // 隐藏摘要，显示详情区
+      summary.style.display = 'none';
+      detail.style.display = '';
+
+      // 只显示当前项
+      for (let i = 0; i < 2; i++) {
+        const item = document.getElementById('learnDetail' + i);
+        if (item) { item.style.display = i === index ? '' : 'none'; }
+      }
+    }
+
+    function collapseAllLearn() {
+      document.getElementById('learnSummary').style.display = '';
+      document.getElementById('learnDetail').style.display = 'none';
+      // 重置箭头
+      for (let i = 0; i < 2; i++) {
+        const a = document.getElementById('learnArrow' + i);
+        if (a) { a.classList.remove('open'); }
+      }
+    }
+    function toggleScriptAccordion(index) {
+      const body = document.getElementById('scriptBody' + index);
+      const arrow = document.getElementById('scriptArrow' + index);
+      const isOpening = body.classList.contains('collapsed');
+
+      // 先收起所有
+      for (let i = 0; i < 3; i++) {
+        const b = document.getElementById('scriptBody' + i);
+        const a = document.getElementById('scriptArrow' + i);
+        if (b) { b.classList.remove('open'); b.classList.add('collapsed'); }
+        if (a) { a.classList.remove('open'); }
+      }
+
+      // 再展开当前（如果之前是收起的）
+      if (isOpening) {
+        body.classList.remove('collapsed');
+        body.classList.add('open');
+        arrow.classList.add('open');
+      }
+    }
+
+    // ===== 渲染客户清单（紧凑版：姓名+时间+一行痛点提示） =====
     function renderClientList() {
       const container = document.getElementById('clientList');
       const realItems = round1Data.filter(function(d) { return d.type === 'real'; });
@@ -606,11 +710,11 @@
       let html = '';
       const realLast = realItems.length - 1;
       realItems.forEach(function(item, i) {
-        html += '<div class="client-item' + (i === realLast ? ' no-border' : '') + '"><span class="client-num real">' + (i + 1) + '</span><div class="client-info"><div class="client-info-row"><span class="client-name real">' + item.name + '</span><span class="client-meta">' + item.context + '</span></div><div class="client-pain">' + item.pain + '</div></div></div>';
+        html += '<div class="client-item-compact"' + (i === realLast ? ' style="border-bottom:none"' : '') + '><span class="client-num-compact real">' + (i + 1) + '</span><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span class="client-name-compact real">' + item.name + '</span><span class="client-meta-compact">' + item.context + '</span></div><div class="client-hint-compact">' + item.pain + '</div></div></div>';
       });
       html += '<div class="divider-row"><span class="divider-line"></span><span class="divider-text">真实客户 ' + realItems.length + ' 组 · 模拟场景 ' + simItems.length + ' 组</span><span class="divider-line"></span></div>';
       simItems.forEach(function(item, i) {
-        html += '<div class="client-item"><span class="client-num sim">' + (i + realItems.length + 1) + '</span><div class="client-info"><div class="client-name sim">模拟 · ' + item.name + '</div><div class="client-pain">' + item.pain + '</div></div></div>';
+        html += '<div class="client-item-compact"><span class="client-num-compact sim">' + (i + realItems.length + 1) + '</span><div style="flex:1;min-width:0"><span class="client-name-compact sim">模拟 · ' + item.name + '</span><div class="client-hint-compact">' + item.pain + '</div></div></div>';
       });
       container.innerHTML = html;
     }
