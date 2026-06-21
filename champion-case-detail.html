@@ -124,12 +124,24 @@
       margin-top: 1px; line-height: 1.5;
     }
     .quick-step-body { min-width: 0; }
-    .quick-step-what {
-      font-size: 13px; color: var(--ink); line-height: 1.5; font-weight: 600;
+    .quick-step-up,
+    .quick-step-down {
+      font-size: 12.5px; line-height: 1.55;
+      display: flex; gap: 6px; align-items: baseline;
     }
-    .quick-step-move {
-      font-size: 12.5px; color: #596579; line-height: 1.5;
-      margin-top: 2px;
+    .quick-step-up + .quick-step-down { margin-top: 8px; }
+    .quick-step-tag {
+      flex: 0 0 auto;
+      font-size: 10px; font-weight: 700;
+      padding: 1px 5px; border-radius: 3px;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+    .quick-step-up .quick-step-tag {
+      background: #f1f5f9; color: #64748b;
+    }
+    .quick-step-down .quick-step-tag {
+      background: #fff7ed; color: #c2410c;
     }
 
     /* 记住两点 */
@@ -323,31 +335,31 @@
           navTitle: '小李 · 场景化讲解案例',
           closeTime: '18 分钟',
           quickSteps: [
-            { signal: '客户反复追问空间、全程没问价格', move: '反问「是不是经常带小朋友出门」，引出真实场景' },
-            { signal: '客户问后备厢多大', move: '不说升数，说「婴儿车折起来立着放，旁边塞三袋超市东西」' },
-            { signal: '客户说预算还是超了', move: '不降价，帮她自己算「担心的点都解决了，它值不值这个数」' }
+            { signal: '客户一直问空间、全程没问价格', move: '是不是经常带小朋友出门？' },
+            { signal: '客户问后备厢多大', move: '婴儿车折起来立着放，旁边还能塞三袋超市的东西' },
+            { signal: '客户说预算还是超了', move: '你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？' }
           ],
           quickLearn: [
-            '客户追问同一方向超过两次 → 不是要数据，是要你理解她的场景。先反问，别抢答。',
-            '客户问一个规格 → 不是在关心数字，是在判断能不能装下她的生活。能翻译成画面就别只报数字。'
+            '客户同一个问题问了两遍以上，不是真要数据，是想让你懂她的情况。先反问，别抢答。',
+            '客户问配置，不是关心那个数字，是在想能不能装下她的日子。能说成画面就别只报数字。'
           ],
           steps: [
             {
-              signal: '年轻女性声音，对话中多次提到孩子、老人、周末出行。全程没主动问价格，最关心的是空间够不够用。',
+              signal: '年轻女客户，聊的时候一直说孩子、老人、周末出去玩。全程没问价格，最在意空间够不够。',
               responseLabel: '小李怎么接',
-              response: '「姐，平时是不是经常带小朋友出门？」',
+              response: '姐，平时是不是经常带小朋友出门？',
               why: '她没问预算，没问"今天能定吗"。客户最在意空间，就先从空间聊起。一句反问让客户自己说出真实需求，比她推销十句都有用。'
             },
             {
               signal: '客户主动问了两次后排和后备厢空间。',
               responseLabel: '小李怎么接',
-              response: '客户问「后备厢多大」，不说升数：「儿童座椅装右边，左边坐两个大人。婴儿车折起来立着放，旁边还能塞三袋超市的东西。」',
+              response: '儿童座椅装右边，左边坐两个大人。婴儿车折起来立着放，旁边还能塞三袋超市的东西。',
               why: '客户要的不是一个数字，是她带孩子出门的那个画面。把参数翻译成生活场景，她能想象到自己用这车的样子。想象到了，就想要了。'
             },
             {
-              signal: '从她反复追问空间可以推断——她真正想确认的是后排能不能装儿童座椅+坐人，后备厢能不能塞婴儿车。这些话没直说，但每一次追问都指向同一个方向。',
+              signal: '她一直问空间，其实就是想知道——后排能不能装儿童座椅+坐人，后备厢能不能塞婴儿车。这些话没明说，但每次问的都是同一件事。',
               responseLabel: '小李怎么接',
-              response: '客户说「预算还是有点超」，没报优惠：「姐，你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？」',
+              response: '姐，你担心的那些点，这车都解决了对吧？那你自己觉得，它值不值这个数？',
               why: '没替客户还价，而是帮客户自己算账。把前面所有解决了的问题摆出来，让客户自己得出「值」的结论。她自己觉得值，比销售说一百句都管用。'
             }
           ],
@@ -360,31 +372,31 @@
           navTitle: '李晨 · 需求挖掘案例',
           closeTime: '22 分钟',
           quickSteps: [
-            { signal: '客户说「随便看看」，逛一圈没在任何车前停', move: '不问预算、不问车型，先聊家常「平时自己开还是带家人多」' },
-            { signal: '客户提到偶尔跑长途回老家', move: '顺着问「之前那车跑高速感觉咋样」，让他自己说出痛点' },
-            { signal: '客户对推荐点头但还在犹豫', move: '把客户自己说的需求串起来推荐，不是推最好的车，是推最对的车' }
+            { signal: '客户说「随便看看」，逛一圈没在任何车前停', move: '平时自己开还是带家人多？' },
+            { signal: '客户提到偶尔跑长途回老家', move: '那动力和高速稳不稳就很重要了。你之前那车跑高速感觉咋样？' },
+            { signal: '客户对推荐点头但还在犹豫', move: '你刚才说跑长途、带家人，这几点都刚好对上。要不要试一下？' }
           ],
           quickLearn: [
-            '客户说「随便看看」→ 不是拒绝，是还没找到能聊起来的人。先聊家常，别急着介绍配置。',
-            '客户提到一个场景 → 不是在闲聊，是在告诉你决策标准。推荐跟着需求走，不跟着参数表走。'
+            '客户说「随便看看」，不是拒绝，是还没找到能聊起来的人。先聊家常，别急着介绍配置。',
+            '客户提到一个场景，不是在闲聊，是在告诉你他在意的点。推荐跟着需求走，不跟着参数表走。'
           ],
           steps: [
             {
-              signal: '客户进店说「随便看看」，逛了一圈没在任何车前面停下来，也一直没明确说想看什么车型。',
+              signal: '客户进店说「随便看看」，转了一圈哪辆车都没停下来看，也没说想看啥。',
               responseLabel: '李晨怎么接',
-              response: '「哥，平时主要是自己开还是带家人多？」',
+              response: '哥，平时主要是自己开还是带家人多？',
               why: '不问「预算多少」，不问「看哪款」。用一句谁都能答的家常话，让客户自然说出用车场景。一旦他说出「带家人」，你就知道空间和舒适性是重点。'
             },
             {
               signal: '客户提到偶尔要跑长途回老家。',
               responseLabel: '李晨怎么接',
-              response: '「那动力和高速稳不稳就很重要了。你之前那车跑高速感觉咋样？」',
+              response: '那动力和高速稳不稳就很重要了。你之前那车跑高速感觉咋样？',
               why: '从客户自己的经历出发，让他自己说出对旧车的不满。痛点是他自己说的，比销售说一百句都有说服力。而且这段话自然引出了"你需要一台高速更稳的车"。'
             },
             {
               signal: '客户对推荐车型点头但还在犹豫，没主动问价也没说去别家比。',
               responseLabel: '李晨怎么接',
-              response: '「哥，你刚才说跑长途、带家人，这三点 MG7 都刚好对上。你要不要试一下，感受一下高速上那个稳劲？」',
+              response: '哥，你刚才说跑长途、带家人，这三点 MG7 都刚好对上。你要不要试一下，感受一下高速上那个稳劲？',
               why: '把前面聊出来的需求串起来——「跑长途」「带家人」都是客户自己说的，推荐的不是"最好的车"，而是"最对的车"。客户觉得你懂他，信任就有了，后面的推荐他全接了。'
             }
           ],
@@ -397,31 +409,31 @@
           navTitle: '阿强 · 逼单成交案例',
           closeTime: '30 分钟',
           quickSteps: [
-            { signal: '客户说「考虑考虑」但人没走', move: '不说服、不逼迫，先说「我先帮你占名额，随时可退」，给退路' },
-            { signal: '客户开始认真算月供和首付', move: '「今天能锁，明天不敢保证」+「跟家里商量」，有紧迫感没逼迫感' },
-            { signal: '客户在颜色上纠结卡住了', move: '把大决策拆成小决策，颜色说成可改的，先锁优惠再说' }
+            { signal: '客户说「考虑考虑」但人没走', move: '今天这个活动名额我先帮你占着，不想要了随时退，一分不少' },
+            { signal: '客户开始认真算月供和首付', move: '这个优惠今天能锁，明天我不敢保证。你把方案发回去跟家里商量一下' },
+            { signal: '客户在颜色上纠结卡住了', move: '你先定白色，提车的时候想换灰色也行。关键先把优惠锁住，颜色后面能改' }
           ],
           quickLearn: [
-            '客户说考虑但人没走 → 不是不想买，是怕做错决定。先给安全网（可退），别急着逼他。',
-            '客户在小决定上卡住 → 帮他把大决策和小决策分开，小决定给灵活性，大决策自然就过了。'
+            '客户说考虑但人没走，不是不想买，是怕做错决定。先给安全网（可退），别急着逼他。',
+            '客户在小决定上卡住，帮他把大决策和小决策分开，小决定给灵活性，大决策自然就过了。'
           ],
           steps: [
             {
               signal: '客户看了两圈，试驾完回来，嘴里说「再考虑考虑」，但人没走，还在店里转。',
               responseLabel: '阿强怎么接',
-              response: '「哥，定不定没关系。今天这个活动名额我先帮你占着，不想要了随时退，一分不少。」',
+              response: '哥，定不定没关系。今天这个活动名额我先帮你占着，不想要了随时退，一分不少。',
               why: '客户说「考虑」的时候，最怕被逼着现在做决定。阿强反着来——先给退路。客户没压力了，反而愿意坐下来认真聊。这句「随时退」不是在让步，是在把客户留下来。'
             },
             {
               signal: '客户开始认真算价格，问月供多少、首付多少。',
               responseLabel: '阿强怎么接',
-              response: '「这个优惠今天能锁，明天我不敢保证。但你现在不定也没关系，我把方案发你，你晚上跟家里商量一下。」',
+              response: '这个优惠今天能锁，明天我不敢保证。但你现在不定也没关系，我把方案发你，你晚上跟家里商量一下。',
               why: '制造了稀缺感，但没有逼迫感。「跟家里商量」这句话让客户觉得阿强站在他这边，不是只想成交。但「今天能锁明天不敢保证」已经把紧迫感种下了——客户回去商量的时候，脑子里会一直想这句话。'
             },
             {
               signal: '客户还在犹豫颜色，白色和灰色之间拿不定主意。',
               responseLabel: '阿强怎么接',
-              response: '「白色这周能提，灰色要多等两周。你先定白色，提车的时候想换灰色也行。关键是先把优惠锁住，颜色后面能改。」',
+              response: '白色这周能提，灰色要多等两周。你先定白色，提车的时候想换灰色也行。关键是先把优惠锁住，颜色后面能改。',
               why: '把大决策（买不买）拆成小决策（选颜色），再把小决策变成可逆的。客户觉得「没什么损失」，当场就定了。阿强没逼他「现在就买」，而是给他一个「现在定了也没风险」的理由。'
             }
           ],
@@ -449,7 +461,7 @@
 
       // 标题行
       html += '<div class="quick-header">';
-      html += '<h2 class="quick-title">⏱ 1 分钟速览</h2>';
+      html += '<h2 class="quick-title">1 分钟速览</h2>';
       html += '<span class="time-badge">到店 ' + data.closeTime + ' 成交</span>';
       html += '</div>';
 
@@ -461,8 +473,8 @@
         html += '<div class="quick-step-item">';
         html += '<span class="quick-step-num">' + CIRCLE_NUMS[i] + '</span>';
         html += '<div class="quick-step-body">';
-        html += '<div class="quick-step-what">' + qs.signal + '</div>';
-        html += '<div class="quick-step-move">→ ' + qs.move + '</div>';
+        html += '<div class="quick-step-up"><span class="quick-step-tag">客户问</span>' + qs.signal + '</div>';
+        html += '<div class="quick-step-down"><span class="quick-step-tag">销冠回</span>' + qs.move + '</div>';
         html += '</div></div>';
       }
       html += '</div>';
@@ -491,9 +503,9 @@
       // ===== 完整拆解（默认收起）=====
       html += '<div class="expandable-sections collapsed" id="expandableSections">';
 
-      // 问题 → 解法
+      // 一步步拆
       html += '<section class="section-card">';
-      html += '<h3 class="section-title">问题 → 解法</h3>';
+      html += '<h3 class="section-title">一步步拆</h3>';
 
       for (var k = 0; k < data.steps.length; k++) {
         var step = data.steps[k];
@@ -505,7 +517,7 @@
         html += '<div class="response-block">';
         html += '<span class="num-label" style="background:#f3f4f6;color:#5f6c80;">' + step.responseLabel + '</span>';
         html += '<p class="num-text">' + step.response + '</p>';
-        html += '<p class="why-line"><b>为什么管用</b>：' + step.why + '</p>';
+        html += '<p class="why-line"><b>为啥管用</b>：' + step.why + '</p>';
         html += '</div></div></div>';
       }
 
@@ -515,7 +527,7 @@
       html += '<section class="section-card muted-bg">';
       html += '<h3 class="section-title">还原场景，练一下</h3>';
       html += '<div class="practice-scene">';
-      html += '<div class="practice-scene-label">客户原话</div>';
+      html += '<div class="practice-scene-label">客户这么说</div>';
       html += data.practice.scene;
       html += '</div>';
       html += '<button class="practice-btn practice-btn-blue" id="practiceBtn" aria-label="进入练习队列">';
