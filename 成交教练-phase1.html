@@ -120,7 +120,7 @@
     .section-label-spacer { flex: 1; }
     .section-head-link { font-size: 12px; color: var(--muted); cursor: pointer; white-space: nowrap; }
     .section-head-link:active { color: var(--primary); }
-    .section-guide { font-size: 14px; color: var(--ink); line-height: 1.75; margin-bottom: 14px; }
+    .section-guide { font-size: 15px; color: var(--ink); line-height: 1.7; margin-bottom: 14px; }
 
     /* ===== 今日练：按钮 ===== */
     .practice-summary { margin-bottom: 4px; }
@@ -211,9 +211,20 @@
     .learn-summary-hint { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .learn-summary-arrow { font-size: 13px; color: #888780; flex: 0 0 auto; transition: transform .25s ease; }
     .learn-summary-arrow.open { transform: rotate(90deg); }
+    .learn-done-mark { font-size: 12px; color: var(--success); font-weight: 500; display: none; }
+    .learn-done-mark.show { display: inline; }
 
     .learn-detail-wrap { overflow: hidden; max-height: 0; opacity: 0; transition: max-height .35s ease, opacity .25s ease; }
-    .learn-detail-wrap.open { max-height: 500px; opacity: 1; }
+    .learn-detail-wrap.open { max-height: 600px; opacity: 1; }
+    .learn-done-btn {
+      display: block; width: 100%; margin-top: 10px; padding: 10px;
+      font-size: 13px; font-weight: 500; color: var(--navy-900);
+      background: transparent; border: 1px solid var(--navy-900);
+      border-radius: 8px; cursor: pointer; text-align: center;
+      transition: background .15s, color .15s;
+    }
+    .learn-done-btn:active { background: var(--navy-900); color: #fff; }
+    .learn-done-btn.done { color: var(--success); border-color: var(--success); background: #f0fdf4; }
 
     .material-card {
       background: #fff; border: 0.5px solid #d9d9d6; border-radius: 12px;
@@ -579,7 +590,7 @@
                 <div class="learn-summary-row" onclick="toggleLearnItem(0)">
                   <span class="learn-summary-tag">话术</span>
                   <div class="learn-summary-info">
-                    <div class="learn-summary-title">产品讲解 · 场景翻译三步法</div>
+                    <div class="learn-summary-title">产品讲解 · 场景翻译三步法 <span class="learn-done-mark" id="learnMark0">✓ 已学会</span></div>
                     <div class="learn-summary-hint">后排空间 / 婴儿车 / 儿童座椅，话术怎么接</div>
                   </div>
                   <span class="learn-summary-arrow" id="learnArrow0">▸</span>
@@ -603,13 +614,14 @@
                     </div>
                     <div class="script-qa-src">— 门店三步法生成</div>
                   </div>
+                  <button class="learn-done-btn" onclick="markLearned(0, this)">我学会了</button>
                 </div>
               </div>
               <div class="learn-item">
                 <div class="learn-summary-row" onclick="toggleLearnItem(1)">
                   <span class="learn-summary-tag video-tag">视频</span>
                   <div class="learn-summary-info">
-                    <div class="learn-summary-title">后备箱产品介绍视频 · 4分钟</div>
+                    <div class="learn-summary-title">后备箱产品介绍视频 · 4分钟 <span class="learn-done-mark" id="learnMark1">✓ 已学会</span></div>
                     <div class="learn-summary-hint">场景化展示后备厢空间，怎么装都行</div>
                   </div>
                   <span class="learn-summary-arrow" id="learnArrow1">▸</span>
@@ -624,6 +636,7 @@
                     <div class="card-body">后备厢空间场景化演示——婴儿车、露营装备、全家行李怎么装</div>
                     <div class="card-source">来源：总部销售学院</div>
                   </div>
+                  <button class="learn-done-btn" onclick="markLearned(1, this)">我学会了</button>
                 </div>
               </div>
             </div>
@@ -893,7 +906,33 @@
         } else {
           wrap.classList.add('open');
           arrow.classList.add('open');
+          if (!window._learnOpened) window._learnOpened = {};
+          if (!window._learnOpened[index]) {
+            window._learnOpened[index] = Date.now();
+          }
         }
+      };
+
+      window.markLearned = function (index, btn) {
+        if (btn.classList.contains('done')) return;
+        btn.classList.add('done');
+        btn.textContent = '已学会';
+        // 收起详情
+        var wrap = document.getElementById('learnDetail' + index);
+        var arrow = document.getElementById('learnArrow' + index);
+        wrap.classList.remove('open');
+        arrow.classList.remove('open');
+        // 列表标记
+        var mark = document.getElementById('learnMark' + index);
+        if (mark) mark.classList.add('show');
+        // 计时
+        var duration = '';
+        if (window._learnOpened && window._learnOpened[index]) {
+          var sec = Math.round((Date.now() - window._learnOpened[index]) / 1000);
+          if (sec < 60) duration = ' (' + sec + '秒)';
+          else duration = ' (' + Math.round(sec/60) + '分' + (sec%60) + '秒)';
+        }
+        showToast('已记录学习' + duration);
       };
 
       // ===== 深练 — CoachPractice 覆盖层 =====

@@ -89,6 +89,26 @@
     '@keyframes cpBubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}',
     '.cp-round-tag{display:flex;align-items:center;gap:4px;padding:4px 0 12px;font-size:12px;color:rgba(255,255,255,.35);font-weight:500}',
 
+    '/* 客户语音播放条 — 微信语音风格 */',
+    '.cp-voice-bar{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px;min-height:36px}',
+    '.cp-voice-icon{width:20px;height:20px;flex:0 0 auto;display:grid;place-items:center}',
+    '.cp-voice-icon svg{width:16px;height:16px;color:rgba(255,255,255,.25)}',
+    '.cp-voice-bars{display:flex;align-items:flex-end;gap:2px;height:18px;flex:1}',
+    '.cp-voice-bar-el{width:3px;border-radius:1.5px;background:rgba(255,255,255,.12);transition:background .3s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el{background:rgba(59,130,246,.5);animation:cpVBar .55s ease-in-out infinite}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(1){height:6px;animation-delay:.05s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(2){height:14px;animation-delay:.15s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(3){height:9px;animation-delay:.25s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(4){height:18px;animation-delay:.1s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(5){height:7px;animation-delay:.2s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(6){height:13px;animation-delay:.3s}',
+    '.cp-voice-bars.playing .cp-voice-bar-el:nth-child(7){height:10px;animation-delay:.4s}',
+    '@keyframes cpVBar{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.25)}}',
+    '.cp-voice-bars.played .cp-voice-bar-el{background:rgba(16,185,129,.2)}',
+    '.cp-voice-tag{font-size:10px;color:rgba(255,255,255,.2);flex:0 0 auto;transition:color .3s}',
+    '.cp-voice-bars.playing~.cp-voice-tag{color:rgba(96,165,250,.5)}',
+    '.cp-voice-bars.played~.cp-voice-tag{color:rgba(16,185,129,.35)}',
+
     '/* ===== 底部按钮区 ===== */',
     '.cp-bottom{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;padding:8px 20px 36px;position:relative;z-index:2}',
     '.cp-waveform{display:none;align-items:center;justify-content:center;gap:3px;height:12px;margin-bottom:4px}',
@@ -187,6 +207,7 @@
   var SPIN   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-opacity=".2"/><path d="M12 2a10 10 0 019.95 9"/></svg>';
   var STAR_S = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
   var STAR_E = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+  var SPKR   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
 
   // 客户头像 — 精致人物剪影（替代 emoji）
   var CUSTOMER_AVATAR = '<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">'+
@@ -226,7 +247,8 @@
     scoreFn:     null,
     opts:        {},
     container:   null,
-    _timer:      null
+    _timer:      null,
+    _playing:    false
   };
 
   // ===================================================================
@@ -311,6 +333,45 @@
   }
 
   // ===================================================================
+  //  语音合成 — 客户话术自动播放
+  // ===================================================================
+  function speakCustomer(text) {
+    if (!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    S._playing = true;
+    updateVoiceBar('playing');
+
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-CN';
+    u.rate = 0.9;
+    u.pitch = 1.05;
+    u.volume = 1;
+    u.onend = function() { S._playing = false; updateVoiceBar('played'); };
+    u.onerror = function() { S._playing = false; updateVoiceBar('played'); };
+    speechSynthesis.speak(u);
+  }
+
+  function stopSpeak() {
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    S._playing = false;
+    updateVoiceBar('idle');
+  }
+
+  function updateVoiceBar(state) {
+    var bars = document.getElementById('cpVoiceBars');
+    var tag = document.getElementById('cpVoiceTag');
+    if (bars) {
+      bars.classList.remove('playing', 'played');
+      if (state !== 'idle') bars.classList.add(state);
+    }
+    if (tag) {
+      if (state === 'playing') tag.textContent = '正在播放';
+      else if (state === 'played') tag.textContent = '已播放';
+      else tag.textContent = '';
+    }
+  }
+
+  // ===================================================================
   //  左侧树
   // ===================================================================
   function buildTree() {
@@ -390,7 +451,14 @@
         '<div class="cp-cust">'+
         ' <div class="cp-cust-head"><div class="cp-cust-avatar">'+(d.customerAvatar||CUSTOMER_AVATAR)+'</div><div><span class="cp-cust-name">'+(d.customerName||'客户')+'</span><span class="cp-cust-role">真实客户场景</span></div></div>'+
         ' <div class="cp-bubble">'+round.customer+'</div>'+
+        ' <div class="cp-voice-bar">'+
+        '  <span class="cp-voice-icon">'+SPKR+'</span>'+
+        '  <span class="cp-voice-bars playing" id="cpVoiceBars"><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span></span>'+
+        '  <span class="cp-voice-tag" id="cpVoiceTag">正在播放</span>'+
+        ' </div>'+
         '</div>';
+      // 自动播放客户语音
+      setTimeout(function(){ speakCustomer(round.customer); }, 400);
     } else if (S.phase==='review') {
       var r=S.results[S.results.length-1]; if(!r) return;
       var stars='';
@@ -404,6 +472,11 @@
         '<div class="cp-cust">'+
         ' <div class="cp-cust-head"><div class="cp-cust-avatar">'+CUSTOMER_AVATAR+'</div><div><span class="cp-cust-name">'+(d.customerName||'客户')+'</span><span class="cp-cust-role">真实客户场景</span></div></div>'+
         ' <div class="cp-bubble" style="opacity:.55">'+round.customer+'</div>'+
+        ' <div class="cp-voice-bar" style="opacity:.55">'+
+        '  <span class="cp-voice-icon">'+SPKR+'</span>'+
+        '  <span class="cp-voice-bars played" id="cpVoiceBars"><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span><span class="cp-voice-bar-el"></span></span>'+
+        '  <span class="cp-voice-tag" id="cpVoiceTag">已播放</span>'+
+        ' </div>'+
         '</div>'+
         '<div class="cp-stars">'+stars+'</div>'+
         '<div class="cp-review-card">'+
@@ -515,7 +588,7 @@
 
   function nextRound() {
     if (S.locked) return;
-    S.locked=true; clearTimer();
+    S.locked=true; clearTimer(); stopSpeak();
 
     if (isLastRound()) {
       S.phase='finish';
@@ -535,14 +608,14 @@
   }
 
   function exit() {
-    clearTimer(); stopListening();
+    clearTimer(); stopListening(); stopSpeak();
     $('cpOverlay').classList.remove('show');
     if (!S.container) document.body.style.overflow='';
     if (S.opts.onExit) S.opts.onExit();
   }
 
   function restart() {
-    clearTimer(); stopListening();
+    clearTimer(); stopListening(); stopSpeak();
     S.roundIdx=0; S.phase='speaking'; S.results=[]; S.locked=false;
 
     var c=$('cpContent'); if(c) c.innerHTML='';
@@ -621,7 +694,7 @@
     start: function(data) {
       data=data||DEFAULT_DATA;
       S.data=data; S.roundIdx=0; S.phase='init'; S.results=[]; S.locked=false;
-      clearTimer(); stopListening();
+      clearTimer(); stopListening(); stopSpeak();
 
       $('cpOverlay').classList.add('show');
       if (!S.container) document.body.style.overflow='hidden';
