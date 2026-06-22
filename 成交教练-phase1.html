@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#071327">
+  <title>成交教练</title>
+  <style>
+    :root {
+      --navy-950: #071327;
+      --navy-900: #0b234a;
+      --navy-800: #153a78;
+      --primary: #1677FF;
+      --primary-light: #EAF2FF;
+      --accent: #c2410c;
+      --gold: #f5a623;
+      --success: #10b981;
+      --ink: #1e293b;
+      --text: #334155;
+      --muted: #94a3b8;
+      --line: #e2e8f0;
+      --page: #F2F6FC;
+      --card: #fff;
+      --card-border: #dde4f0;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.035), 0 2px 8px rgba(0,0,0,.025);
+      --shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.04);
+      --shadow-lg: 0 24px 64px rgba(20,32,52,.2);
+      --radius-sm: 6px;
+      --radius: 10px;
+      --radius-lg: 14px;
+      --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%; background: #dfe4ec;
+      font-family: var(--font); color: var(--ink);
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+    }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; -webkit-user-select: none; user-select: none; }
+    button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
+    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
+    .phone {
+      position: relative; width: min(390px, 100vw); height: min(844px, calc(100vh - 36px));
+      min-height: 700px; overflow: hidden; background: var(--page);
+      border: 1px solid #cfd6e1; border-radius: 28px; box-shadow: var(--shadow-lg);
+    }
+    .scroll { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* ===== HEADER BLOCK（沿用 成交教练.html）===== */
+    .coach-header-block {
+      background: linear-gradient(160deg, #08172b 0%, #0f2342 50%, #132f58 100%);
+      padding: 0; position: relative; overflow: hidden;
+    }
+    .coach-header-block::before {
+      content: ""; position: absolute; top: -60px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(22,119,255,.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .coach-nav {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 18px 16px 0;
+    }
+    .coach-back {
+      position: absolute; left: 16px;
+      width: 28px; height: 28px; display: grid; place-items: center;
+      color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%; font-size: 16px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .coach-back:active { background: rgba(255,255,255,.08); color: #fff; }
+    .coach-nav-title { font-size: 16px; font-weight: 600; color: #fff; }
+
+    .coach-hero-core {
+      position: relative; z-index: 1;
+      text-align: center; padding: 14px 18px 16px;
+    }
+    .coach-greet { font-size: 15px; font-weight: 500; color: #bccde4; }
+    .coach-score-block { margin-top: 12px; cursor: pointer; }
+    .coach-score-num { font-size: 44px; font-weight: 600; color: #f5a623; line-height: 1; }
+    .coach-score-unit { font-size: 18px; color: #f5a623; font-weight: 500; }
+    .coach-five-dim-label { font-size: 12px; color: #7e95b5; font-weight: 500; letter-spacing: .04em; }
+    .coach-rank { font-size: 12px; color: #7e95b5; margin-top: 4px; }
+
+    .coach-dims {
+      position: relative; z-index: 1;
+      display: flex; gap: 8px; padding: 0 12px 14px;
+    }
+    .coach-dim {
+      flex: 1; padding: 8px 4px 8px; text-align: center;
+      border-radius: 12px; cursor: pointer;
+      transition: transform 0.12s;
+    }
+    .coach-dim:active { transform: scale(.96); }
+    .coach-dim-score { font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .coach-dim-label { font-size: 10px; margin-top: 3px; line-height: 1.3; }
+    .coach-dim.weak { background: rgba(220,38,38,.18); }
+    .coach-dim.weak .coach-dim-score { color: #f87171; }
+    .coach-dim.weak .coach-dim-label { color: #fca5a5; }
+    .coach-dim.normal { background: rgba(255,255,255,.09); }
+    .coach-dim.normal .coach-dim-score { color: #cdd9e8; }
+    .coach-dim.normal .coach-dim-label { color: #7e93b0; }
+
+    /* ===== BODY ===== */
+    .coach-body { background: var(--page); padding: 10px 0 0; }
+
+    /* ===== Section 卡片 ===== */
+    .section {
+      margin: 10px 16px; background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);
+    }
+    .section + .section { margin-top: 14px; }
+    .section-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .section-bar { width: 3px; height: 18px; border-radius: 2px; flex: 0 0 auto; background: var(--navy-900); }
+    .section-label { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .section-label-spacer { flex: 1; }
+    .section-head-link { font-size: 12px; color: var(--muted); cursor: pointer; white-space: nowrap; }
+    .section-head-link:active { color: var(--primary); }
+    .section-guide { font-size: 14px; color: var(--ink); line-height: 1.75; margin-bottom: 14px; }
+
+    /* ===== 今日练：按钮 ===== */
+    .practice-summary { margin-bottom: 4px; }
+    .btn-practice-outline {
+      display: block; width: 100%; padding: 12px 14px;
+      font-size: 15px; font-weight: 600; color: var(--navy-900);
+      background: var(--card); border: 1.5px solid var(--navy-900);
+      border-radius: 12px; text-align: center; cursor: pointer;
+      transition: background .15s, transform .12s;
+    }
+    .btn-practice-outline small { display: block; font-size: 11px; font-weight: 400; color: var(--muted); margin-top: 3px; }
+    .btn-practice-outline:active { background: #f8fafc; transform: scale(.98); }
+    .btn-practice-outline.done { color: var(--success); border-color: var(--success); background: #f0fdf4; }
+    .practice-hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 6px; }
+
+    .practice-sub-link { display: none; }
+
+    /* ===== 展开区域 ===== */
+    .practice-detail-wrap { overflow: hidden; transition: max-height .4s ease, opacity .3s ease; }
+    .practice-detail-wrap.collapsed { max-height: 0; opacity: 0; }
+    .practice-detail-wrap.open { max-height: 700px; opacity: 1; }
+
+    @media (max-width: 430px) {
+      .stage { padding: 0; }
+      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+    }
+
+    /* 组内头部：客户名居左，切组按钮居右 */
+    .group-hd {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .group-hd-name {
+      font-size: 15px; font-weight: 600; color: var(--ink);
+    }
+    .group-hd-time {
+      font-size: 12px; color: #94a3b8; font-weight: 400; margin-top: 2px;
+    }
+    .group-hd-actions {
+      display: flex; gap: 12px; flex-shrink: 0; padding-top: 2px;
+    }
+    .group-hd-btn {
+      font-size: 12px; color: var(--muted); cursor: pointer; white-space: nowrap;
+    }
+    .group-hd-btn:active { color: var(--primary); }
+    .group-hd-btn:disabled { color: #cbd5e1; cursor: default; }
+
+    /* 组详情 */
+    .group-detail { padding: 4px 0 0; }
+    .group-wrap {
+      background: #f8fafc; border: 1px solid #edf0f5; border-radius: 10px;
+      padding: 14px 14px 10px; margin-top: 6px;
+    }
+    .group-snippet { padding: 12px 0 4px; }
+    .group-snippet-line { font-size: 14px; line-height: 1.6; margin-bottom: 6px; color: var(--ink); }
+    .group-snippet-line .lbl-cust { color: #64748b; font-weight: 600; font-size: 13px; }
+    .group-snippet-line .lbl-you  { color: #993c1d; font-weight: 600; font-size: 13px; }
+    .group-snippet-note { font-size: 12px; color: #94a3b8; margin-bottom: 12px; }
+
+    /* 三步法 */
+    .script-steps-compact { margin-top: 10px; }
+    .script-step-compact {
+      padding: 6px 0 6px 8px; border-left: 2.5px solid #e0e0dc;
+      margin-bottom: 6px; border-radius: 0 4px 4px 0;
+    }
+    .script-step-compact.s1 { border-left-color: #f59e0b; }
+    .script-step-compact.s2 { border-left-color: #1677FF; }
+    .script-step-compact.s3 { border-left-color: #10b981; }
+    .script-step-compact-label { font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+    .script-step-compact-text { font-size: 13px; color: #334155; line-height: 1.55; }
+    .script-qa-src { font-size: 11px; color: #888780; padding-bottom: 4px; }
+
+    /* ===== 今日学 ===== */
+    .learn-cards { display: grid; gap: 8px; }
+    .learn-summary-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0; border-bottom: 0.5px solid var(--line); cursor: pointer;
+    }
+    .learn-summary-row:last-of-type { border-bottom: none; }
+    .learn-summary-row:active { opacity: .7; }
+    .learn-summary-tag {
+      font-size: 11px; color: #0b234a; background: #eef2ff; border-radius: 4px;
+      padding: 2px 6px; flex: 0 0 auto; white-space: nowrap;
+    }
+    .learn-summary-tag.video-tag { background: #fef3c7; color: #92400e; }
+    .learn-summary-info { flex: 1; min-width: 0; }
+    .learn-summary-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+    .learn-summary-hint { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .learn-summary-arrow { font-size: 13px; color: #888780; flex: 0 0 auto; transition: transform .25s ease; }
+    .learn-summary-arrow.open { transform: rotate(90deg); }
+
+    .learn-detail-wrap { overflow: hidden; max-height: 0; opacity: 0; transition: max-height .35s ease, opacity .25s ease; }
+    .learn-detail-wrap.open { max-height: 500px; opacity: 1; }
+
+    .material-card {
+      background: #fff; border: 0.5px solid #d9d9d6; border-radius: 12px;
+      padding: 14px 14px 12px; margin-bottom: 8px;
+    }
+    .card-tag { display: inline-block; font-size: 11px; color: #0b234a; margin-bottom: 6px; }
+    .card-body { font-size: 13.5px; color: #2C2C2A; line-height: 1.6; }
+    .card-source { margin-top: 6px; font-size: 11px; color: #888780; }
+
+    .video-cover-mini {
+      height: 120px; background: #f4f5f7; border-radius: 8px;
+      display: grid; place-items: center; margin-bottom: 10px;
+      position: relative; cursor: pointer; overflow: hidden;
+    }
+    .video-cover-mini:active { opacity: .85; }
+    .play-circle-mini {
+      width: 36px; height: 36px; display: grid; place-items: center;
+      border-radius: 50%; background: rgba(255,255,255,.88); border: 1px solid rgba(0,0,0,.06);
+    }
+    .play-icon-mini {
+      width: 0; height: 0;
+      border-left: 10px solid #0b234a;
+      border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+      margin-left: 2px;
+    }
+    .video-dur-mini {
+      position: absolute; right: 8px; bottom: 6px; font-size: 11px;
+      color: #fff; background: rgba(0,0,0,.45); padding: 2px 6px; border-radius: 4px;
+    }
+
+    .bottom-links { display: flex; gap: 10px; padding: 14px 16px 20px; }
+    .bottom-link {
+      flex: 1; padding: 12px; font-size: 13px; font-weight: 500;
+      color: var(--muted); background: var(--card);
+      border: 1px solid var(--card-border); border-radius: 22px;
+      text-align: center; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .bottom-link:active { background: #f8fafc; border-color: #cbd5e1; }
+
+    .practice-detail-wrap.open { max-height: 700px; opacity: 1; }
+    .dp-overlay {
+      position: absolute; inset: 0; z-index: 40;
+      background: linear-gradient(170deg, #060d1a 0%, #0a1628 35%, #0f1f3d 100%);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .dp-overlay.show { opacity: 1; pointer-events: auto; }
+    .dp-overlay::before {
+      content: ""; position: absolute; top: -80px; right: -60px;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(59,130,246,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .dp-topbar {
+      position: relative; z-index: 2; display: flex; align-items: center;
+      padding: 14px 14px 10px; gap: 6px;
+      background: rgba(6,13,26,.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .dp-back {
+      width: 32px; height: 32px; flex: 0 0 auto; display: grid; place-items: center;
+      color: rgba(255,255,255,.5); font-size: 22px; border-radius: 50%;
+      transition: background .15s, color .15s; cursor: pointer;
+    }
+    .dp-back:active { background: rgba(255,255,255,.08); color: #fff; }
+    .dp-topbar-info { flex: 1; text-align: center; }
+    .dp-topbar-cust { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.85); }
+    .dp-topbar-round { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 2px; }
+    .dp-topbar-spacer { width: 32px; flex: 0 0 auto; }
+
+    .dp-body {
+      position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column;
+      padding: 0 20px; overflow-y: auto; overscroll-behavior: contain;
+    }
+    .dp-body::-webkit-scrollbar { display: none; }
+
+    .dp-ctx {
+      flex: 0 0 auto; margin: 0 -20px; padding: 8px 20px;
+      background: rgba(255,255,255,.04); border-bottom: 0.5px solid rgba(255,255,255,.05);
+      font-size: 12px; color: rgba(255,255,255,.35); line-height: 1.5;
+      position: sticky; top: 0; z-index: 2;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+
+    .dp-customer-text {
+      flex: 0 0 auto; text-align: center; padding: 36px 16px 24px;
+      font-size: 17px; color: #e2e8f0; line-height: 1.7; font-weight: 500;
+    }
+
+    .dp-coach-card {
+      flex: 0 0 auto; margin-top: 4px;
+      padding: 14px 16px;
+      background: rgba(245,166,35,.06); border: 1px solid rgba(245,166,35,.2);
+      border-radius: 12px;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity .4s ease, transform .4s cubic-bezier(0.22,0.61,0.36,1);
+    }
+    .dp-coach-card.show { opacity: 1; transform: translateY(0); }
+    .dp-coach-badge {
+      font-size: 11px; color: rgba(245,166,35,.8); font-weight: 600;
+      margin-bottom: 8px; letter-spacing: 1px;
+    }
+    .dp-coach-text { font-size: 13.5px; color: rgba(255,255,255,.75); line-height: 1.75; white-space: pre-line; }
+
+    .dp-ref-card {
+      flex: 0 0 auto; margin-top: 10px;
+      padding: 14px 16px;
+      background: rgba(16,185,129,.05); border: 1px solid rgba(16,185,129,.18);
+      border-radius: 12px;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity .4s .08s ease, transform .4s .08s cubic-bezier(0.22,0.61,0.36,1);
+    }
+    .dp-ref-card.show { opacity: 1; transform: translateY(0); }
+    .dp-ref-badge {
+      font-size: 11px; color: rgba(16,185,129,.8); font-weight: 600;
+      margin-bottom: 8px; letter-spacing: 1px;
+    }
+    .dp-ref-text {
+      font-size: 13.5px; color: rgba(255,255,255,.85); line-height: 1.75;
+      padding: 10px 14px; background: rgba(255,255,255,.03);
+      border-radius: 8px; border-left: 2px solid rgba(16,185,129,.3);
+    }
+
+    .dp-actions {
+      flex: 0 0 auto; padding: 16px 20px 24px;
+      display: flex; gap: 12px; position: relative; z-index: 2;
+    }
+    .dp-actions.hidden { display: none; }
+    .dp-btn {
+      flex: 1; padding: 15px; font-size: 15px; font-weight: 600;
+      border-radius: 12px; text-align: center;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .dp-btn:active { transform: scale(.98); }
+    .dp-btn-continue { color: #fff; background: #3b82f6; }
+    .dp-btn-continue:active { background: #2563eb; }
+    .dp-btn-finish {
+      color: rgba(255,255,255,.65);
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    }
+    .dp-btn-finish:active { background: rgba(255,255,255,.1); }
+
+    .dp-finish {
+      position: absolute; inset: 0; z-index: 45;
+      background: linear-gradient(170deg, #040b18 0%, #08162e 40%, #0d1f44 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .4s ease;
+      padding: 40px 24px; text-align: center;
+    }
+    .dp-finish.show { opacity: 1; pointer-events: auto; }
+    .dp-finish-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .dp-finish-sub { font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.7; margin-bottom: 32px; }
+    .dp-finish-btn {
+      width: 100%; max-width: 280px; padding: 16px;
+      font-size: 16px; font-weight: 700; color: #fff;
+      background: #0b234a; border-radius: 14px;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .dp-finish-btn:active { background: #081b38; transform: scale(.98); }
+
+    /* ===== 五维详情 Overlay ===== */
+    .dim-overlay {
+      position: absolute; inset: 0; z-index: 50;
+      background: var(--page); transform: translateX(105%);
+      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .dim-overlay.open { transform: translateX(0); }
+    .dim-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 16px;
+      background: linear-gradient(160deg, #08172b 0%, #0f2342 50%, #132f58 100%);
+      color: #fff; flex-shrink: 0;
+    }
+    .dim-back {
+      width: auto; height: auto; border-radius: 20px;
+      padding: 6px 14px; font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,.75); background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      display: flex; align-items: center; gap: 2px;
+    }
+    .dim-back:active { background: rgba(255,255,255,.14); color: #fff; }
+    .dim-title { font-size: 16px; font-weight: 600; }
+    .dim-body { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
+
+    .dim-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); padding: 18px 16px; margin-bottom: 12px;
+    }
+    .dim-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .dim-card-head h3 { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .dim-big-score { font-size: 32px; font-weight: 700; padding: 8px 16px; border-radius: 12px; }
+    .dim-row {
+      display: flex; align-items: center; gap: 10px; padding: 11px 0;
+      border-bottom: 1px solid #f8fafc; cursor: pointer;
+    }
+    .dim-row:last-child { border-bottom: none; }
+    .dim-row-label { font-size: 13px; font-weight: 500; color: var(--text); min-width: 56px; }
+    .dim-track { flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+    .dim-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+    .dim-row-score { font-size: 13px; font-weight: 700; color: var(--ink); min-width: 28px; text-align: right; }
+    .dim-row-arrow { font-size: 13px; color: var(--muted); min-width: 16px; text-align: right; }
+    .dim-tip-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px;
+    }
+    .dim-tip-card h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+    .dim-tip-item {
+      display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f8fafc;
+    }
+    .dim-tip-item:last-child { border-bottom: none; }
+    .dim-tip-num {
+      flex-shrink: 0; width: 22px; height: 22px;
+      background: #eef2ff; color: #6366f1; border-radius: 50%;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dim-tip-text { font-size: 13px; color: var(--text); line-height: 1.65; flex: 1; }
+    .dim-back-btn {
+      display: block; width: 100%; padding: 14px; margin-bottom: 24px;
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 12px; text-align: center;
+    }
+    .dim-back-btn:active { background: #f8fafc; }
+
+    .phone.dim-open { overflow: hidden; }
+    .phone.dim-open .scroll { overflow: hidden; }
+    .phone.dp-open { overflow: hidden; }
+    .phone.dp-open .scroll { overflow: hidden; }
+
+    /* ===== 底部选择 Sheet ===== */
+    .sheet-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,.35);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .sheet-overlay.show { opacity: 1; pointer-events: auto; }
+    .sheet-panel {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: #fff; border-radius: 16px 16px 0 0;
+      padding: 8px 16px 24px;
+      transform: translateY(100%);
+      transition: transform .35s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .sheet-overlay.show .sheet-panel { transform: translateY(0); }
+    .sheet-handle {
+      width: 36px; height: 4px; background: #d9d9d9; border-radius: 2px;
+      margin: 0 auto 14px;
+    }
+    .sheet-title { font-size: 14px; font-weight: 600; color: var(--ink); text-align: center; margin-bottom: 14px; }
+    .sheet-btn {
+      display: block; width: 100%; padding: 14px; font-size: 15px; font-weight: 500;
+      text-align: center; border-radius: 12px; margin-bottom: 8px;
+      transition: background .15s;
+    }
+    .sheet-btn-primary { color: #fff; background: var(--navy-900); }
+    .sheet-btn-primary:active { background: #081b38; }
+    .sheet-btn-secondary { color: var(--navy-900); background: #f1f5f9; }
+    .sheet-btn-secondary:active { background: #e2e8f0; }
+    .sheet-btn-cancel { color: var(--muted); background: transparent; font-weight: 400; }
+    .sheet-btn-cancel:active { background: #f1f5f9; }
+
+    .toast {
+      position: fixed; z-index: 100; left: 50%; bottom: 100px; max-width: 82%;
+      padding: 10px 16px; color: #fff; background: rgba(14,24,41,.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 22px; font-size: 13px; font-weight: 500; text-align: center;
+      font-family: var(--font); opacity: 0; pointer-events: none;
+      transform: translate(-50%, 12px);
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="phone" role="application" aria-label="成交教练">
+
+      <div class="scroll" id="mainScroll">
+
+        <!-- ===== HEADER：五维诊断 ===== -->
+        <header class="coach-header-block">
+          <div class="coach-nav">
+            <button class="coach-back" onclick="window.history.length>1?history.back():void(0)" aria-label="返回">‹</button>
+            <span class="coach-nav-title">成交教练</span>
+          </div>
+          <div class="coach-hero-core">
+            <p class="coach-greet">今天接待了 10 组客户，辛苦了</p>
+            <div class="coach-score-block" onclick="openDimDetail('overview')">
+              <div class="coach-five-dim-label">五维能力得分</div>
+              <span class="coach-score-num">76</span>
+              <span class="coach-score-unit">分</span>
+            </div>
+            <div class="coach-rank">门店第 7 名 · 全店 32 人</div>
+          </div>
+          <div class="coach-dims">
+            <div class="coach-dim weak" onclick="openDimDetail('product')">
+              <div class="coach-dim-score">48</div>
+              <div class="coach-dim-label">产品专业</div>
+            </div>
+            <div class="coach-dim normal" onclick="openDimDetail('needs')">
+              <div class="coach-dim-score">56</div>
+              <div class="coach-dim-label">需求分析</div>
+            </div>
+            <div class="coach-dim normal" onclick="openDimDetail('service')">
+              <div class="coach-dim-score">78</div>
+              <div class="coach-dim-label">服务满意</div>
+            </div>
+            <div class="coach-dim normal" onclick="openDimDetail('compete')">
+              <div class="coach-dim-score">61</div>
+              <div class="coach-dim-label">竞品应对</div>
+            </div>
+            <div class="coach-dim normal" onclick="openDimDetail('followup')">
+              <div class="coach-dim-score">70</div>
+              <div class="coach-dim-label">客户跟进</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ===== BODY ===== -->
+        <div class="coach-body">
+
+          <!-- ===== 今日练 ===== -->
+          <section class="section" id="practiceSection">
+            <div class="section-head">
+              <span class="section-bar"></span>
+              <span class="section-label">精准练</span>
+              <span class="section-label-spacer"></span>
+              <span class="section-head-link" onclick="togglePracticeDetail()" id="practiceSubLink">看这 4 组对话</span>
+            </div>
+            <p class="section-guide">今天有 4 组客户，客户没听懂你的产品讲解，练一遍不丢单。</p>
+
+            <div class="practice-summary">
+              <button class="btn-practice-outline" id="btnPractice" onclick="handlePracticeBtn()">
+                开始对练
+              </button>
+            </div>
+            <p class="practice-hint">十来分钟就能练完</p>
+
+            <!-- 展开：按组切换 -->
+            <div class="practice-detail-wrap collapsed" id="practiceDetailWrap">
+              <div class="group-detail" id="groupDetail"></div>
+              <div style="text-align:center;padding:8px 0 2px">
+                <button style="font-size:12px;color:#888780;cursor:pointer" onclick="togglePracticeDetail()">收起</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== 今日学 ===== -->
+          <section class="section" id="learnSection">
+            <div class="section-head">
+              <span class="section-bar"></span>
+              <span class="section-label">精准学</span>
+            </div>
+            <p class="section-guide">今天接待的问题，已为你整理好总部的资料，学一遍不丢单。</p>
+
+            <div class="learn-cards">
+              <div class="learn-item">
+                <div class="learn-summary-row" onclick="toggleLearnItem(0)">
+                  <span class="learn-summary-tag">话术</span>
+                  <div class="learn-summary-info">
+                    <div class="learn-summary-title">产品讲解 · 场景翻译三步法</div>
+                    <div class="learn-summary-hint">后排空间 / 婴儿车 / 儿童座椅，话术怎么接</div>
+                  </div>
+                  <span class="learn-summary-arrow" id="learnArrow0">▸</span>
+                </div>
+                <div class="learn-detail-wrap" id="learnDetail0">
+                  <div class="material-card">
+                    <span class="card-tag">产品讲解</span>
+                    <div class="script-steps-compact">
+                      <div class="script-step-compact s1">
+                        <div class="script-step-compact-label">① 共情 — 先接住感受</div>
+                        <div class="script-step-compact-text">"姐，您特意问后排坐不坐得下，一听就是真心为家人着想。"</div>
+                      </div>
+                      <div class="script-step-compact s2">
+                        <div class="script-step-compact-label">② 场景 — 把参数放进她家的画面</div>
+                        <div class="script-step-compact-text">后备厢 540 升 = 婴儿车竖着放，旁边还能塞两箱牛奶。别报数字，给她画面。</div>
+                      </div>
+                      <div class="script-step-compact s3">
+                        <div class="script-step-compact-label">③ 行动 — 让她自己感受</div>
+                        <div class="script-step-compact-text">"您上车坐进去试试，调到您家人最舒服的位置。买车得全家都满意。"</div>
+                      </div>
+                    </div>
+                    <div class="script-qa-src">— 门店三步法生成</div>
+                  </div>
+                </div>
+              </div>
+              <div class="learn-item">
+                <div class="learn-summary-row" onclick="toggleLearnItem(1)">
+                  <span class="learn-summary-tag video-tag">视频</span>
+                  <div class="learn-summary-info">
+                    <div class="learn-summary-title">后备箱产品介绍视频 · 4分钟</div>
+                    <div class="learn-summary-hint">场景化展示后备厢空间，怎么装都行</div>
+                  </div>
+                  <span class="learn-summary-arrow" id="learnArrow1">▸</span>
+                </div>
+                <div class="learn-detail-wrap" id="learnDetail1">
+                  <div class="material-card">
+                    <span class="card-tag">产品介绍</span>
+                    <div class="video-cover-mini" onclick="showToast('视频播放中…')">
+                      <div class="play-circle-mini"><span class="play-icon-mini"></span></div>
+                      <span class="video-dur-mini">4:00</span>
+                    </div>
+                    <div class="card-body">后备厢空间场景化演示——婴儿车、露营装备、全家行李怎么装</div>
+                    <div class="card-source">来源：总部销售学院</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="bottom-links">
+            <button class="bottom-link" onclick="location.href='learn-record.html'">学习记录</button>
+            <button class="bottom-link" onclick="location.href='hq-materials.html'">总部学习资料</button>
+          </div>
+
+        </div><!-- /coach-body -->
+
+      </div><!-- /scroll -->
+
+      <!-- ===== 深练覆盖层 ===== -->
+      <div class="dp-overlay" id="dpOverlay">
+        <div class="dp-topbar">
+          <button class="dp-back" onclick="exitDeepPractice()" aria-label="退出">‹</button>
+          <div class="dp-topbar-info">
+            <div class="dp-topbar-cust">带娃的姐姐</div>
+            <div class="dp-topbar-round">第 <span id="dpRoundNum">1</span> 轮</div>
+          </div>
+          <div class="dp-topbar-spacer"></div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-ctx">今日 14:20 到店 · 带俩孩子看 SUV · 关注空间和实用</div>
+          <div class="dp-customer-text" id="dpCustomerText"></div>
+          <div class="dp-coach-card" id="dpCoachCard">
+            <div class="dp-coach-badge">教练点评</div>
+            <div class="dp-coach-text" id="dpCoachText"></div>
+          </div>
+          <div class="dp-ref-card" id="dpRefCard">
+            <div class="dp-ref-badge">可以这样接</div>
+            <div class="dp-ref-text" id="dpRefText"></div>
+          </div>
+        </div>
+        <div class="dp-actions hidden" id="dpActions">
+          <button class="dp-btn dp-btn-continue" id="dpBtnContinue" onclick="nextRound()">继续练下一轮</button>
+          <button class="dp-btn dp-btn-finish" id="dpBtnFinish" onclick="finishPractice()">掌握了，收工</button>
+        </div>
+        <div class="dp-finish" id="dpFinish">
+          <div class="dp-finish-title">今天练得不错</div>
+          <div class="dp-finish-sub">「参数 → 场景」这个方法<br>你在实战里练透了</div>
+          <button class="dp-finish-btn" onclick="exitDeepPractice()">返回首页</button>
+        </div>
+      </div>
+
+      <!-- ===== 再来一次 Sheet ===== -->
+      <div class="sheet-overlay" id="sheetOverlay" onclick="if(event.target===this)hideSheet()">
+        <div class="sheet-panel">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">再来一次</div>
+          <button class="sheet-btn sheet-btn-primary" onclick="retrySameGroup()">重练这一组</button>
+          <button class="sheet-btn sheet-btn-secondary" onclick="retryAnotherGroup()">换一组再练</button>
+          <button class="sheet-btn sheet-btn-cancel" onclick="hideSheet()">取消</button>
+        </div>
+      </div>
+
+      <!-- ===== 五维详情 Overlay ===== -->
+      <div class="dim-overlay" id="dimOverlay">
+        <header class="dim-head">
+          <button class="dim-back" onclick="closeDimDetail()">‹ 返回</button>
+          <h2 class="dim-title" id="dimTitle">五维能力</h2>
+          <span style="width:44px"></span>
+        </header>
+        <div class="dim-body" id="dimBody"></div>
+      </div>
+
+    </div><!-- /phone -->
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./js/coach-practice.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // ===== 4 组客户数据 =====
+      var GROUPS = [
+        {
+          name: '带娃的姐姐', time: '14:20',
+          she: '后排坐得下我们一家人不？',
+          you: '后备厢 540 升，同级最大。',
+          note: '人家问坐不坐得下，你答了个数字',
+          steps: [
+            { cls: 's1', label: '① 共情 — 先接住感受，别急着答', text: '"姐，您特意问后排坐不坐得下，一听就是真心为家人着想——买车的初衷不就是让一家老小都舒服嘛。"' },
+            { cls: 's2', label: '② 场景 — 参数翻译成她家的画面', text: '儿童座椅装两边，中间坐大人也不挤。后备厢婴儿车竖着放，旁边还能塞两箱牛奶——这就是您家周末出门的样子。' },
+            { cls: 's3', label: '③ 行动 — 让她自己感受', text: '"您上车坐进去试试，靠背角度能调，调到您家人最舒服的位置。买车得全家都满意，您说是吧？"' }
+          ]
+        },
+        {
+          name: '带媳妇的哥', time: '16:05',
+          she: '这后备厢，放得下婴儿车不？',
+          you: '咱这底盘用的是……（讲起安全）',
+          note: '她已经在想这车适不适合自家了，你还在介绍车',
+          steps: [
+            { cls: 's1', label: '① 共情 — 先接住她的场景', text: '"哥，嫂子问婴儿车的事，家里是有宝宝了吧？这个阶段买车，实用比什么都重要。"' },
+            { cls: 's2', label: '② 场景 — 把后备厢翻译成带娃画面', text: '后备厢开口大、地台低，婴儿车不用弯腰就能放进去。后排装安全座椅后，旁边照顾宝宝也方便。' },
+            { cls: 's3', label: '③ 行动 — 用演示代替讲述', text: '"我帮您拿进来实际放一下？让嫂子一起看，她用着顺手才是真的好。"' }
+          ]
+        },
+        {
+          name: '看半天的小伙子', time: '15:10',
+          she: '行，我再看看。',
+          you: '好的。',
+          note: '「再看看」是最后一个回合，一句「好的」就把人送出门了',
+          steps: [
+            { cls: 's1', label: '① 共情 — 别放他走，先追问', text: '"哥等一下——我看您看了挺久的，是有哪个地方拿不准吗？您直说，我帮您参考参考。"' },
+            { cls: 's2', label: '② 场景 — 帮他聚焦', text: '"哥您今天是主要看空间，还是更在意配置和油耗？我帮您先把这车捋清楚，您再去对比心里也有个数。"' },
+            { cls: 's3', label: '③ 行动 — 约下次到店', text: '"加个微信，试驾车一到我第一个留给您。到时候带家人一起来——一家人坐车上感受一圈，比您一个人拿主意省心多了。"' }
+          ]
+        },
+        {
+          name: '带父母的女儿', time: '11:30',
+          she: '这座椅是皮的吗？好打理不？',
+          you: '这是 Nappa 真皮，意大利进口的。',
+          note: '客户问好不好打理，你报了个材质品牌',
+          steps: [
+            { cls: 's1', label: '① 共情 — 先接住她的顾虑', text: '"姐，您问好不好打理——家里是有小孩吧？孩子吃东西弄脏了，确实得挑个耐脏的。"' },
+            { cls: 's2', label: '② 场景 — 把材质翻译成日常', text: '这皮子特别好擦，湿巾一抹就干净。我车上随时备着湿巾，您试试——番茄酱都能擦掉。' },
+            { cls: 's3', label: '③ 行动 — 让她自己上手', text: '"您摸一下这个质感，再试试这杯水倒在上面——您看，根本渗不进去，我家孩子两岁了这座椅跟新的一样。"' }
+          ]
+        }
+      ];
+
+      var currentGroup = 0;
+
+      // ===== 五维数据 =====
+      var DIM_DATA = {
+        overview: {
+          name: '五维能力', score: 76, color: '#f5a623',
+          subs: [
+            { key: 'product', name: '产品专业', score: 48, color: '#ef4444' },
+            { key: 'needs', name: '需求分析', score: 56, color: '#f97316' },
+            { key: 'service', name: '服务满意', score: 78, color: '#1677FF' },
+            { key: 'compete', name: '竞品应对', score: 61, color: '#1677FF' },
+            { key: 'followup', name: '客户跟进', score: 70, color: '#1677FF' }
+          ],
+          strengths: [
+            { title: '服务意识突出', desc: '接待礼仪和试驾体验均超 75 分，客户到店体验好。' },
+            { title: '跟进节奏在线', desc: '知道约定下次联系时间，能主动给出带家人到店的钩子。' }
+          ],
+          improvements: [
+            { title: '从「报参数」转向「讲场景」', desc: '多组客户在聊生活需求时，你直接跳到车辆数据。先共情、再追问、最后用参数佐证。' },
+            { title: '竞品对比要有具体锚点', desc: '不要泛泛说"我们更好"，准备 3 个核心差异点，用数字和场景讲故事。' }
+          ]
+        },
+        product: { name:'产品专业',score:48,color:'#ef4444',subs:[['车辆参数知识',52],['竞品对比能力',41],['技术讲解转化',38],['配置适配推荐',55]],suggestions:['客户问油耗时，先反问"您每天大概开多少公里？"再用实际油费帮客户算账。','竞品对比不要回避，先认同再转移："秦确实省油，我们的优势在于底盘和智能座舱。"','每个参数背后对应一个客户利益点——「540L」→「婴儿车竖着放，旁边还能塞两箱牛奶」。'] },
+        needs: { name:'需求分析',score:56,color:'#f97316',subs:[['倾听理解',62],['提问挖掘',48],['需求确认',55],['家庭决策洞察',42]],suggestions:['先回应客户感受再报数据：客户问"坐不坐得下"，先问"您家几口人？"。','培养追问习惯：客户每说一个需求，至少追问一个"为什么"。','学会做需求确认：挖掘完后总结"李哥我理解您主要关注三点：空间、油耗、保养，对吗？"。'] },
+        service: { name:'服务满意',score:78,color:'#1677FF',subs:[['接待礼仪',82],['试驾体验',75],['问题响应',80],['交车服务',72]],suggestions:['保持现有接待水准，这是你的核心优势。','交车后回访个性化，结合试驾时客户最在意的点做针对性跟进。','在试驾环节加入「惊喜时刻」：提前调好空调、备好水，小细节拉开差距。'] },
+        compete: { name:'竞品应对',score:61,color:'#1677FF',subs:[['竞品知识储备',65],['优势转化能力',55],['异议化解',58],['价值塑造',68]],suggestions:['提前准备 3 个核心竞品的 3 个关键差异点。','客户提价格优势时，具体说"我们多了 X、Y、Z 三个配置，算下来更划算"。','学会「先认同再转移」：先肯定竞品优势，再自然过渡到自己的差异化。'] },
+        followup: { name:'客户跟进',score:70,color:'#1677FF',subs:[['跟进及时性',75],['个性化沟通',62],['成交信号捕捉',68],['老客户维系',72]],suggestions:['保持「约定下次联系时间」的好习惯。','等待期间不要沉默：发一条个性化信息给客户。','客户说"回去商量"时，当场帮他梳理需要商量的点。'] }
+      };
+
+      // ===== 深练数据 =====
+      // ===== 深练数据（按组索引）=====
+      var PRACTICE_DATA = [
+        // 第 1 组 · 带娃的姐姐
+        [
+          { customer:'后排坐得下我们一家人不？',coach:'你又报数字了。客户问的是空间感受，不是后备厢多大。\n\n先问她家几口人、平时谁坐后排，再带她上车感受。参数要翻译成她家的画面。',reference:'「姐，您家里几口人呀？平时后排谁坐得多？我先带您实际坐进去感受一下。」' },
+          { customer:'我俩孩子，有时还带我爸妈，后排仨大人挤不挤？',coach:'需求问出来了。别报轴距数字，把「仨大人」翻译成画面：两边安全座椅，中间还能坐一个大人。让她看到，不是让她听到。',reference:'「来，您坐中间，两边放安全座椅——您看，仨大人完全够。您爸妈坐这儿腿也能伸开。」' },
+          { customer:'那婴儿车能放进去不？周末还得去超市买东西。',coach:'她开始想自己的生活场景了。别报 540L，直接给画面——婴儿车怎么放、旁边能塞什么。',reference:'「婴儿车竖着放，旁边超市袋子随便堆——这就是您家周末出门的样子。后排还能再放倒，搬家都够用。」' },
+          { customer:'儿童座椅好装不？我一个人在家也得会装。',coach:'她已经在想买回家怎么用了。别说「ISOFIX 接口」，让她自己上手试试——三分钟装好就是最好的讲解。',reference:'「姐您看这个扣，一推一扣就装好了。来，您自己试试——三分钟搞定，单手都能操作。」' },
+          { customer:'车我挺喜欢的，就是价格有点超预算，我再回去考虑考虑。',coach:'全程没问价，突然说超预算——不是真嫌贵，是缺一个说服自己的理由。把你前面帮她解决的问题串起来，让她自己判断值不值。',reference:'「姐，您刚才担心的空间、婴儿车、儿童座椅，咱这车都解决了对吧？那您自己觉得，它值不值这个数？买车得全家都满意。」' }
+        ],
+        // 第 2 组 · 带媳妇的哥
+        [
+          { customer:'这后备厢，放得下婴儿车不？',coach:'她又问到具体物品了——别报容积升数。把后备厢翻译成她家的带娃画面：婴儿车怎么放、旁边还能塞什么。',reference:'「姐您稍等，我帮您拿个差不多大小的箱子过来，咱实际放一下看看——您看，竖着放婴儿车，旁边还能塞三袋超市的东西。」' },
+          { customer:'周末去趟山姆，加上婴儿车，东西能一趟拉回来不？',coach:'别讲底盘平整度了。把后排座椅放倒给她看——这就是她家周末的样子。',reference:'「您看，后排一放倒，婴儿车竖着放，旁边超市袋子随便堆——这就是您家周末采购的样子。够用吧？」' },
+          { customer:'我老公 185，坐驾驶位后排还能放安全座椅吗？',coach:'别报头部空间几指。让她老公坐进去调好，你帮她往后排装一下安全座椅。',reference:'「哥您先把驾驶位调到舒服的位置——姐您看，后面空间完全够。安全座椅我帮您装一下，您摸摸这个距离。」' },
+          { customer:'那油耗怎么样？每天接送孩子来回 30 公里。',coach:'他开始算使用成本了。别报百公里油耗，帮他算每天的账。',reference:'「30 公里的话，这车一公里 5 毛钱，一天 15 块，一个月不到 500。哥您现在打车接送一天多少钱？算下来这车白开啊。」' },
+          { customer:'听起来不错，就是价格比隔壁贵了两万。',coach:'他开始比价了——别争谁便宜，帮他算三年总账。',reference:'「哥咱算个总账——这车油耗低，三年省一万多；保值率高，卖车时多卖两三万。现在多花两万，三年后其实省了。您算算是不是这个理？」' }
+        ],
+        // 第 3 组 · 看半天的小伙子
+        [
+          { customer:'行，我再看看。',coach:'别就这么放他走——他嘴上说「再看看」，心里可能卡着一个你没问到的问题。',reference:'「哥等一下——我看您看了挺久的，是有哪个地方拿不准吗？您直说，我帮您参考参考。」' },
+          { customer:'也没啥，就是第一次看，想多对比对比。',coach:'他没走！说明愿意聊。别急着介绍车，先帮他聚焦。',reference:'「理解理解，第一次看确实要多比比。哥您今天是主要看空间，还是更在意配置和油耗？我帮您先把这个车捋清楚，您再去对比心里也有个数。」' },
+          { customer:'其实我主要担心油耗，每天通勤来回 40 公里。',coach:'找到了！他之前「再看看」就是因为油耗没说清楚。现在帮他算一笔每天的账。',reference:'「40 公里是吧？那我帮您算一下——这车百公里 6 个油，一天来回不到 3 升，20 块钱。一个月 400 块油钱，比打车省太多了。」' },
+          { customer:'那保养贵不贵？我听说涡轮的车保养比自吸的贵。',coach:'他在认真考虑持有成本了——别回避，给他一个具体的数字让他放心。',reference:'「小保养一次 400 多，一年两次，不到一千块。涡轮现在技术很成熟了，跟自吸一样省心——您放心开就行。」' },
+          { customer:'行，那你帮我算算落地多少钱。',coach:'他要算价格了！别急着报总价，先确认他看中的配置，再一项项帮他列清楚。',reference:'「好的哥，您看中的是白色这款对吧？我帮您列一下：车价、购置税、保险、上牌——一共落地 X 万。今天订的话，后天就能提车，白色刚好有现车。」' }
+        ],
+        // 第 4 组 · 带父母的女儿
+        [
+          { customer:'这座椅是皮的吗？好打理不？',coach:'她问的是好不好打理，不是材质名称。你报「Nappa 真皮意大利进口」，她只听到了「贵、难伺候」。',reference:'「姐，您问好不好打理——家里是有小孩吧？这皮子特别好擦，湿巾一抹就干净。我车上随时备着湿巾，您试试。」' },
+          { customer:'我爸妈年纪大了腿脚不太方便，这个车上下车会不会很费劲？',coach:'别报座椅高度多少厘米——她在担心爸妈受罪。直接让她爸妈坐进来感受。',reference:'「姐，您让爸妈到车边来——您看，门一开，这座椅高度刚好，一抬脚就坐进去了。不用弯腰，不用钻，您试试。」' },
+          { customer:'那我妈坐后排，膝盖会不会顶着前面？我爸腰不好，坐久了行不行？',coach:'别报膝部空间毫米数。把她爸妈的称呼直接带进话里，用身体感受空间。',reference:'「来，您坐后排感受一下——您看膝盖离前面还有两拳，您爸腿再长也够。这座椅靠背能调角度，您爸腰不好正好可以往后仰一点，长途也不累。」' },
+          { customer:'听起来是不错，但老人家上下车频率也不高，多花这些钱值得吗？',coach:'她开始算性价比了。把她前面自己说的痛点串起来——爸妈腿脚不方便、爸腰不好。让她自己确认这些东西值得花钱。',reference:'「姐，您刚才说爸妈腿脚不方便，爸腰也不好——那每次出门，让他们舒舒服服坐进去，不用弯腰不用钻，这个体验值不值？咱买车不就是为了让家人舒服嘛。」' },
+          { customer:'那周末带他们出去转转，顺便看看车。',coach:'她自己提出要带爸妈来了！别急着约时间，先给她一个具体的画面，让她觉得「今天来对了」。',reference:'「好的姐，周末您带爸妈来，我把车开到门口。让爸妈直接坐进去感受——您爸坐后排腿能伸开，您妈坐副驾不用弯腰，一家人在车里就知道这车合不合适了。」' }
+        ]
+      ];
+
+      var currentRound = 0, totalRounds = 0, currentPracticeGroup = 0;
+
+      // ===== Toast =====
+      window._toastTimer = null;
+      window.showToast = function (msg) {
+        var t = document.getElementById('toast');
+        clearTimeout(window._toastTimer);
+        t.textContent = msg; t.classList.add('show');
+        window._toastTimer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+      };
+
+      // ===== 组详情渲染 =====
+      function renderGroup(index) {
+        var g = GROUPS[index];
+        var prevDisabled = index === 0;
+        var nextDisabled = index >= GROUPS.length - 1;
+
+        var h = '';
+        // 整块包在一起
+        h += '<div class="group-wrap">';
+        h += '<div class="group-hd">';
+        h += '<div><div class="group-hd-name">' + g.name + '</div><div class="group-hd-time">今日 ' + g.time + ' 到店</div></div>';
+        h += '<div class="group-hd-actions">';
+        h += '<button class="group-hd-btn" onclick="changeGroup(-1)"' + (prevDisabled ? ' disabled' : '') + '>' + (prevDisabled ? '' : '上一组') + '</button>';
+        h += '<button class="group-hd-btn" onclick="changeGroup(1)"' + (nextDisabled ? ' disabled' : '') + '>' + (nextDisabled ? '' : '下一组') + '</button>';
+        h += '</div></div>';
+        // 对话
+        h += '<div class="group-snippet">';
+        h += '<div class="group-snippet-line"><span class="lbl-cust">她说：</span>"' + g.she + '"</div>';
+        h += '<div class="group-snippet-line"><span class="lbl-you">你说：</span>"' + g.you + '"</div>';
+        h += '<div class="group-snippet-note">点评：' + g.note + '</div>';
+        h += '</div>';
+        // 三步法
+        h += '<div class="script-steps-compact">';
+        for (var i = 0; i < g.steps.length; i++) {
+          var s = g.steps[i];
+          h += '<div class="script-step-compact ' + s.cls + '"><div class="script-step-compact-label">' + s.label + '</div><div class="script-step-compact-text">' + s.text + '</div></div>';
+        }
+        h += '<div class="script-qa-src">— 门店三步法生成</div>';
+        h += '</div>';
+        h += '</div>';
+        document.getElementById('groupDetail').innerHTML = h;
+      }
+
+      window.changeGroup = function (delta) {
+        currentGroup += delta;
+        if (currentGroup < 0) currentGroup = 0;
+        if (currentGroup >= GROUPS.length) currentGroup = GROUPS.length - 1;
+        renderGroup(currentGroup);
+      };
+
+      // ===== 今日练：展开/收起 =====
+      window.togglePracticeDetail = function () {
+        var wrap = document.getElementById('practiceDetailWrap');
+        var link = document.getElementById('practiceSubLink');
+        if (wrap.classList.contains('collapsed')) {
+          currentGroup = 0;
+          renderGroup(0);
+          wrap.classList.remove('collapsed'); wrap.classList.add('open');
+          link.textContent = '收起';
+        } else {
+          wrap.classList.remove('open'); wrap.classList.add('collapsed');
+          link.textContent = '看这 4 组对话';
+        }
+      };
+
+      // ===== 今日学：展开资料 =====
+      window.toggleLearnItem = function (index) {
+        var wrap = document.getElementById('learnDetail' + index);
+        var arrow = document.getElementById('learnArrow' + index);
+        var isOpen = wrap.classList.contains('open');
+        if (isOpen) {
+          wrap.classList.remove('open');
+          arrow.classList.remove('open');
+        } else {
+          wrap.classList.add('open');
+          arrow.classList.add('open');
+        }
+      };
+
+      // ===== 深练 — CoachPractice 覆盖层 =====
+      var _dpInited = false;
+      window.startDeepPractice = function (groupIndex) {
+        if (typeof groupIndex === 'undefined') groupIndex = 0;
+        currentPracticeGroup = groupIndex;
+        var g = GROUPS[groupIndex];
+        var rounds = PRACTICE_DATA[groupIndex].map(function(r) { return { customer: r.customer }; });
+
+        if (!_dpInited) {
+          CoachPractice.init({
+            container: document.querySelector('.phone'),
+            onExit: function () {
+              document.querySelector('.phone').classList.remove('dp-open');
+            },
+            onComplete: function (results) {
+              document.getElementById('btnPractice').textContent = '已练，再来一次';
+              document.getElementById('btnPractice').classList.add('done');
+            },
+            onRetry: function () {
+              var others = [0,1,2,3].filter(function(i){ return i !== currentPracticeGroup; });
+              var pick = others[Math.floor(Math.random() * others.length)];
+              startDeepPractice(pick);
+            }
+          });
+          _dpInited = true;
+        }
+
+        CoachPractice.start({
+          title: '产品讲解对练',
+          scene: '今日 ' + g.time + ' 到店 · ' + g.note,
+          customerName: g.name,
+          customerAvatar: '👤',
+          rounds: rounds
+        });
+        // 开始新练习时重置按钮状态
+        document.getElementById('btnPractice').textContent = '开始对练';
+        document.getElementById('btnPractice').classList.remove('done');
+        document.querySelector('.phone').classList.add('dp-open');
+      };
+
+      function runRound(roundIndex) {
+        var rounds = PRACTICE_DATA[currentPracticeGroup];
+        if (roundIndex >= rounds.length) { finishPractice(); return; }
+        var data = rounds[roundIndex];
+        currentRound = roundIndex;
+        document.getElementById('dpCoachCard').classList.remove('show');
+        document.getElementById('dpRefCard').classList.remove('show');
+        document.getElementById('dpActions').classList.add('hidden');
+        document.getElementById('dpRoundNum').textContent = roundIndex + 1;
+        document.getElementById('dpCustomerText').textContent = '';
+        setTimeout(function () {
+          document.getElementById('dpCustomerText').textContent = '「' + data.customer + '」';
+        }, 300);
+        setTimeout(function () {
+          totalRounds++;
+          document.getElementById('dpCoachText').textContent = data.coach;
+          document.getElementById('dpRefText').textContent = data.reference;
+          document.getElementById('dpCoachCard').classList.add('show');
+          document.getElementById('dpRefCard').classList.add('show');
+          document.getElementById('dpActions').classList.remove('hidden');
+          document.getElementById('dpBtnContinue').textContent = (currentRound + 1 >= rounds.length) ? '最后一轮，继续练' : '继续练下一轮';
+        }, 1800);
+      }
+
+      window.nextRound = function () {
+        var body = document.querySelector('.dp-body'); if (body) body.scrollTop = 0;
+        runRound(currentRound + 1);
+      };
+
+      window.finishPractice = function () {
+        document.getElementById('dpFinish').classList.add('show');
+        var btn = document.getElementById('btnPractice');
+        btn.textContent = '已练 ' + totalRounds + ' 轮，再来一次';
+        btn.classList.add('done');
+      };
+
+      // ===== 底部 Sheet =====
+      window.showSheet = function () {
+        document.getElementById('sheetOverlay').classList.add('show');
+      };
+      window.hideSheet = function () {
+        document.getElementById('sheetOverlay').classList.remove('show');
+      };
+      window.retrySameGroup = function () {
+        hideSheet();
+        startDeepPractice(currentPracticeGroup);
+      };
+      window.retryAnotherGroup = function () {
+        hideSheet();
+        // 随机选另一组
+        var other = [0,1,2,3].filter(function(i){ return i !== currentPracticeGroup; });
+        var pick = other[Math.floor(Math.random() * other.length)];
+        startDeepPractice(pick);
+      };
+
+      // 首页「再来一次」按钮触发 sheet
+      window.handlePracticeBtn = function () {
+        var btn = document.getElementById('btnPractice');
+        if (btn.classList.contains('done')) {
+          showSheet();
+        } else {
+          startDeepPractice(0);
+        }
+      };
+
+      window.exitDeepPractice = function () {
+        CoachPractice.exit();
+      };
+
+      // ===== 五维详情 =====
+      window.openDimDetail = function (key) {
+        var d = DIM_DATA[key]; if (!d) return;
+        document.getElementById('dimTitle').textContent = d.name;
+        var body = document.getElementById('dimBody');
+        if (key === 'overview') {
+          body.innerHTML =
+            '<div class="dim-card">' +
+              '<div class="dim-card-head"><div><h3>五维能力得分</h3><p style="font-size:12px;color:var(--muted);margin-top:2px">点击各维度查看详情</p></div>' +
+              '<div class="dim-big-score" style="background:' + d.color + '20;color:' + d.color + '">' + d.score + '</div></div>' +
+              d.subs.map(function(s){ return '<div class="dim-row" onclick="openDimDetail(\''+s.key+'\')"><span class="dim-row-label">'+s.name+'</span><div class="dim-track"><div class="dim-fill" style="width:'+s.score+'%;background:'+s.color+'"></div></div><span class="dim-row-score" style="color:'+s.color+'">'+s.score+'</span><span class="dim-row-arrow">›</span></div>'; }).join('') +
+            '</div>' +
+            '<div class="dim-tip-card"><h4 style="color:#10b981">核心优势</h4>' + d.strengths.map(function(s){ return '<div class="dim-tip-item"><div class="dim-tip-num" style="background:#ecfdf5;color:#10b981">✓</div><div class="dim-tip-text"><strong>'+s.title+'</strong>：'+s.desc+'</div></div>'; }).join('') + '</div>' +
+            '<div class="dim-tip-card"><h4 style="color:#f59e0b">待提升</h4>' + d.improvements.map(function(s){ return '<div class="dim-tip-item"><div class="dim-tip-num">•</div><div class="dim-tip-text"><strong>'+s.title+'</strong>：'+s.desc+'</div></div>'; }).join('') + '</div>' +
+            '<button class="dim-back-btn" onclick="closeDimDetail()">← 返回成交教练首页</button>';
+        } else {
+          body.innerHTML =
+            '<div class="dim-card">' +
+              '<div class="dim-card-head"><div><h3>'+d.name+'</h3><p style="font-size:12px;color:var(--muted);margin-top:2px">子维度得分</p></div>' +
+              '<div class="dim-big-score" style="background:'+(d.score<60?'#fef2f2':d.color+'15')+';color:'+d.color+'">'+d.score+'</div></div>' +
+              d.subs.map(function(sub){ var s=sub[1],bc=s<60?'#ef4444':d.color; return '<div class="dim-row"><span class="dim-row-label">'+sub[0]+'</span><div class="dim-track"><div class="dim-fill" style="width:'+s+'%;background:'+bc+'"></div></div><span class="dim-row-score" style="color:'+bc+'">'+s+'</span></div>'; }).join('') +
+            '</div>' +
+            '<div class="dim-tip-card"><h4>改进建议</h4>' + d.suggestions.map(function(t,i){ return '<div class="dim-tip-item"><div class="dim-tip-num">'+(i+1)+'</div><div class="dim-tip-text">'+t+'</div></div>'; }).join('') + '</div>' +
+            '<button class="dim-back-btn" onclick="openDimDetail(\'overview\')">← 返回五维总览</button>' +
+            '<button class="dim-back-btn" onclick="closeDimDetail()">← 返回成交教练首页</button>';
+        }
+        document.getElementById('dimOverlay').classList.add('open');
+        document.querySelector('.phone').classList.add('dim-open');
+      };
+
+      window.closeDimDetail = function () {
+        document.getElementById('dimOverlay').classList.remove('open');
+        document.querySelector('.phone').classList.remove('dim-open');
+      };
+    })();
+  </script>
+</body>
+</html>

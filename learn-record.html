@@ -12,9 +12,11 @@
       --text: #334155;
       --muted: #94a3b8;
       --line: #e2e8f0;
+      --hairline: #f1f5f9;
       --page: #F2F6FC;
       --card: #fff;
       --card-border: #dde4f0;
+      --gold: #f5a623;
       --shadow-sm: 0 1px 2px rgba(0,0,0,.035), 0 2px 8px rgba(0,0,0,.025);
       --shadow: 0 1px 3px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.04);
       --shadow-lg: 0 24px 64px rgba(20,32,52,.2);
@@ -33,7 +35,8 @@
     .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
     .phone {
       position: relative; width: min(390px, 100vw); height: min(844px, calc(100vh - 36px));
-      min-height: 700px; overflow: hidden; background: var(--page);
+      min-height: 700px; overflow: hidden;
+      background: linear-gradient(170deg, #08172b 0%, #0f2342 50%, #132f58 100%);
       border: 1px solid #cfd6e1; border-radius: 28px; box-shadow: var(--shadow-lg);
       display: flex; flex-direction: column;
     }
@@ -41,12 +44,8 @@
     .scroll::-webkit-scrollbar { display: none; }
 
     /* Header */
-    .header {
-      background: linear-gradient(160deg, #08172b 0%, #0f2342 50%, #132f58 100%);
-      padding: 18px 16px 16px;
-      flex-shrink: 0;
-    }
-    .nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .header { padding: 18px 16px 0; flex-shrink: 0; }
+    .nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
     .back-btn {
       width: 32px; height: 32px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
@@ -55,47 +54,94 @@
       border-radius: 50%; cursor: pointer; transition: background 0.15s;
     }
     .back-btn:active { background: rgba(255,255,255,.14); color: #fff; }
-    .nav-title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; color: #fff; }
+    .nav-title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; color: #fff; padding-right: 42px; }
 
-    /* Week summary */
-    .week-summary { padding: 12px 16px 0; }
-    .summary-row {
-      display: flex; align-items: baseline; gap: 6px;
+    /* ===== 本周成长小结卡片 ===== */
+    .week-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: var(--shadow);
     }
-    .summary-label { font-size: 13px; color: rgba(255,255,255,.65); }
-    .summary-value { font-size: 22px; font-weight: 700; color: #fff; }
-    .summary-unit { font-size: 13px; color: rgba(255,255,255,.55); }
-    .summary-avg { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 4px; padding-bottom: 4px; }
+    .week-card-title {
+      font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .04em;
+      padding: 14px 16px 0;
+    }
+
+    /* 2×2 统计 */
+    .week-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .week-stat {
+      padding: 13px 16px; display: flex; flex-direction: column; gap: 4px;
+    }
+    .week-stat:nth-child(-n+2) { border-bottom: 1px solid #f1f5f9; }
+    .week-stat:nth-child(odd) { border-right: 1px solid #f1f5f9; }
+    .week-stat-label { font-size: 12px; color: var(--muted); }
+    .week-stat-value { font-size: 18px; font-weight: 700; color: var(--ink); }
+
+    /* 周几打勾行 */
+    .weekday-row {
+      display: flex; justify-content: space-around;
+      padding: 10px 10px 14px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .weekday-col {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .weekday-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 13px; line-height: 1;
+    }
+    .weekday-dot.done { background: #e6f7ed; color: #10b981; }
+    .weekday-dot.off  { background: #fef2f2; color: #fca5a5; }
+    .weekday-label { font-size: 11px; color: var(--muted); }
+    .weekday-col.done .weekday-label { color: var(--text); font-weight: 500; }
 
     /* Content */
-    .content { padding: 16px; }
+    .content { padding: 16px 16px 24px; }
 
-    /* Day group */
-    .day-group { margin-bottom: 16px; }
-    .day-header {
+    /* Day card */
+    .day-card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .day-card + .day-card { margin-top: 12px; }
+
+    .day-card-header {
       display: flex; align-items: baseline; justify-content: space-between;
-      padding: 0 2px 8px;
+      padding: 14px 16px 8px;
     }
     .day-date { font-size: 14px; font-weight: 600; color: var(--ink); }
-    .day-duration { font-size: 12px; color: var(--muted); }
+    .day-total { font-size: 12px; color: var(--muted); }
+
+    .day-card-body { padding: 0 16px 4px; }
 
     /* Log item */
     .log-item {
-      background: var(--card); border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg); padding: 14px 16px;
-      box-shadow: var(--shadow-sm);
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0;
+      border-top: 1px solid var(--hairline);
     }
-    .log-item + .log-item { margin-top: 8px; }
-    .log-info { flex: 1; min-width: 0; }
-    .log-title { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.4; }
-    .log-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
-    .log-duration { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
+    .log-left { min-width: 0; display: flex; align-items: baseline; gap: 6px; }
+    .log-title { font-size: 14px; color: var(--ink); line-height: 1.4; }
+    .log-type-sep { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .log-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 12px; }
+    .log-duration { font-size: 12px; color: var(--muted); white-space: nowrap; }
 
-    .divider { height: 1px; background: var(--line); margin: 8px 2px; }
+    /* Stars */
+    .item-stars { display: flex; gap: 1px; font-size: 12px; line-height: 1; }
+    .star-on  { color: var(--gold); }
+    .star-off { color: #e2e8f0; }
 
-    /* Empty state */
-    .empty { text-align: center; padding: 48px 16px; color: var(--muted); font-size: 14px; }
+    /* 15星制数字徽章（成交话术演练等） */
+    .star-score {
+      display: inline-flex; align-items: baseline; gap: 1px;
+      color: var(--gold); font-weight: 600; white-space: nowrap;
+    }
+    .star-score .sc-num { font-size: 15px; font-weight: 700; }
+    .star-score .sc-of  { font-size: 11px; color: var(--muted); font-weight: 400; }
 
     @media (max-width: 430px) {
       .stage { padding: 0; }
@@ -111,13 +157,7 @@
           <button class="back-btn" onclick="history.back()" aria-label="返回">‹</button>
           <span class="nav-title">学习记录</span>
         </div>
-        <div class="week-summary">
-          <div class="summary-row">
-            <span class="summary-label">本周学习</span>
-            <span class="summary-value">4 小时 32 分钟</span>
-          </div>
-          <div class="summary-avg">日均 39 分钟</div>
-        </div>
+        <div class="week-card" id="weekCard"></div>
       </div>
 
       <div class="scroll">
@@ -129,72 +169,131 @@
   <script>
     var LEARN_DATA = [
       {
-        date: '2026-06-20',
-        dayLabel: '6月20日 周五',
-        totalMinutes: 45,
+        date: '2026-06-20', dayLabel: '6月20日 周五', totalMinutes: 45,
         items: [
-          { title: 'MG7 新品上市资料', type: 'PDF', minutes: 25 },
-          { title: '成交话术演练', type: '视频', minutes: 20 }
+          { title: 'MG7 新品上市资料', type: 'PDF', minutes: 25, stars: 1 },
+          { title: '成交话术演练',       type: '对练', minutes: 20, stars: 12, maxStars: 15 }
         ]
       },
       {
-        date: '2026-06-19',
-        dayLabel: '6月19日 周四',
-        totalMinutes: 30,
+        date: '2026-06-19', dayLabel: '6月19日 周四', totalMinutes: 30,
         items: [
-          { title: '留资开口标准话术', type: 'PPT', minutes: 30 }
+          { title: '留资开口标准话术', type: 'PPT', minutes: 30, stars: 1 }
         ]
       },
       {
-        date: '2026-06-18',
-        dayLabel: '6月18日 周三',
-        totalMinutes: 60,
+        date: '2026-06-18', dayLabel: '6月18日 周三', totalMinutes: 60,
         items: [
-          { title: 'MG4 产品核心卖点讲解', type: 'PDF', minutes: 30 },
-          { title: '竞品对比分析 — 秦 PLUS vs MG4', type: 'Word', minutes: 30 }
+          { title: 'MG4 产品核心卖点讲解',       type: 'PDF',  minutes: 30, stars: 1 },
+          { title: '竞品对比分析 — 秦 PLUS vs MG4', type: 'Word', minutes: 30, stars: 1 }
         ]
       },
       {
-        date: '2026-06-17',
-        dayLabel: '6月17日 周二',
-        totalMinutes: 35,
+        date: '2026-06-17', dayLabel: '6月17日 周二', totalMinutes: 35,
         items: [
-          { title: '金融方案推荐技巧', type: 'PPT', minutes: 35 }
+          { title: '金融方案推荐技巧', type: 'PPT', minutes: 35, stars: 1 }
         ]
       },
       {
-        date: '2026-06-16',
-        dayLabel: '6月16日 周一',
-        totalMinutes: 50,
+        date: '2026-06-16', dayLabel: '6月16日 周一', totalMinutes: 50,
         items: [
-          { title: '试驾邀约标准流程', type: '视频', minutes: 20 },
-          { title: 'MG Cyberster 展厅接待攻略', type: 'PDF', minutes: 30 }
+          { title: '试驾邀约标准流程',        type: '视频', minutes: 20, stars: 1 },
+          { title: 'MG Cyberster 展厅接待攻略', type: 'PDF', minutes: 30, stars: 1 }
         ]
       }
     ];
 
+    var WEEKDAYS = [
+      { label: '一', dayIdx: 1 },
+      { label: '二', dayIdx: 2 },
+      { label: '三', dayIdx: 3 },
+      { label: '四', dayIdx: 4 },
+      { label: '五', dayIdx: 5 },
+      { label: '六', dayIdx: 6 },
+      { label: '日', dayIdx: 0 }
+    ];
+
+    function formatDuration(totalMin) {
+      var h = Math.floor(totalMin / 60);
+      var m = totalMin % 60;
+      if (h > 0 && m > 0) return h + '小时' + m + '分钟';
+      if (h > 0) return h + '小时';
+      return m + '分钟';
+    }
+
+    function renderStars(n, max) {
+      max = max || 3;
+      // 大刻度（如成交话术演练 15 星）：数字徽章
+      if (max > 5) {
+        return '<span class="star-score">★ <span class="sc-num">' + n + '</span><span class="sc-of">/' + max + '</span></span>';
+      }
+      // 小刻度：逐颗星星
+      var h = '';
+      for (var i = 1; i <= max; i++) {
+        h += '<span class="' + (i <= n ? 'star-on' : 'star-off') + '">★</span>';
+      }
+      return h;
+    }
+
+    function renderWeekCard() {
+      var totalMin = 0, totalRounds = 0;
+      var activeDays = {};
+      LEARN_DATA.forEach(function(d) {
+        totalMin += d.totalMinutes;
+        totalRounds += d.items.length;
+        activeDays[new Date(d.date).getDay()] = true;
+      });
+
+      var html = '';
+      html += '<div class="week-card-title">本周成长小结</div>';
+      html += '<div class="week-grid">';
+      html += '<div class="week-stat"><span class="week-stat-label">练习天数</span><span class="week-stat-value">' + LEARN_DATA.length + ' 天</span></div>';
+      html += '<div class="week-stat"><span class="week-stat-label">练习轮数</span><span class="week-stat-value">' + totalRounds + ' 轮</span></div>';
+      html += '<div class="week-stat"><span class="week-stat-label">学习时长</span><span class="week-stat-value">' + formatDuration(totalMin) + '</span></div>';
+      html += '<div class="week-stat"><span class="week-stat-label">门店排名</span><span class="week-stat-value">第 12 名</span></div>';
+      html += '</div>';
+
+      html += '<div class="weekday-row">';
+      WEEKDAYS.forEach(function(w) {
+        var done = activeDays[w.dayIdx];
+        var cls = done ? 'weekday-col done' : 'weekday-col off';
+        html += '<div class="' + cls + '">';
+        html += '<div class="weekday-dot ' + (done ? 'done' : 'off') + '">' + (done ? '✓' : '✕') + '</div>';
+        html += '<span class="weekday-label">' + w.label + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      document.getElementById('weekCard').innerHTML = html;
+    }
+
     function renderList() {
       var html = '';
       LEARN_DATA.forEach(function(day) {
-        html += '<div class="day-group">';
-        html += '<div class="day-header">';
+        html += '<div class="day-card">';
+        html += '<div class="day-card-header">';
         html += '<span class="day-date">' + day.dayLabel + '</span>';
-        html += '<span class="day-duration">' + day.totalMinutes + ' 分钟</span>';
+        html += '<span class="day-total">' + day.totalMinutes + ' 分钟</span>';
         html += '</div>';
+        html += '<div class="day-card-body">';
         day.items.forEach(function(item) {
           html += '<div class="log-item">';
-          html += '<div class="log-info">';
-          html += '<div class="log-title">' + item.title + '</div>';
-          html += '<div class="log-meta">' + item.type + '</div>';
+          html += '<div class="log-left">';
+          html += '<span class="log-title">' + item.title + '</span>';
+          html += '<span class="log-type-sep">· ' + item.type + '</span>';
           html += '</div>';
-          html += '<div class="log-duration">' + item.minutes + ' 分钟</div>';
+          html += '<div class="log-right">';
+          html += '<span class="log-duration">' + item.minutes + '分钟</span>';
+          html += '<div class="item-stars">' + renderStars(item.stars, item.maxStars) + '</div>';
+          html += '</div>';
           html += '</div>';
         });
-        html += '</div>';
+        html += '</div></div>';
       });
       document.getElementById('logList').innerHTML = html;
     }
 
+    renderWeekCard();
     renderList();
   </script>
 </body>
