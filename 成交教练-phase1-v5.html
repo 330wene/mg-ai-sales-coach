@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#EBEFF5">
+<title>成交教练</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   成交教练 Phase1 v5 — 支付宝蓝金融科技卡片风格
+   设计宽度：412px 移动端
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* 品牌色 */
+  --blue:        #1677FF;
+  --blue-deep:   #0E5FD8;
+  --blue-light:  #EAF2FF;
+  /* 背景 */
+  --bg-page:     #EBEFF5;
+  --bg-gradient: #E3ECF9;
+  --card-white:  #FFFFFF;
+  /* 文字 */
+  --ink:         #1D2129;
+  --text:        #4E5969;
+  --muted:       #8A94A6;
+  /* 分隔 */
+  --divider:     #EFF2F7;
+  /* 语义色 */
+  --green:       #00B42A;
+  --orange:      #FF7D00;
+  --red-dot:     #FA5151;
+  --gold:        #E8920A;
+  /* 卡片阴影 */
+  --card-shadow: 0 6px 22px rgba(27,67,140,.07);
+  /* 按钮阴影 */
+  --btn-shadow:  0 6px 16px rgba(22,119,255,.28);
+  /* 按钮渐变 */
+  --btn-gradient: linear-gradient(135deg, #2E8FFF, #1677FF);
+  /* 字体 */
+  --font: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  /* 圆角 */
+  --radius-card:   18px;
+  --radius-alert:  13px;
+  --radius-btn:    13px;
+  --radius-capsule: 22px;
+  --radius-tag:    7px;
+  --radius-bar:    3px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  min-height:100%;
+  background: linear-gradient(180deg, #E3ECF9 0%, #EBEFF5 220px);
+  font-family: var(--font);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+a{text-decoration:none;color:inherit}
+
+/* ── Stage & Phone ── */
+.stage{min-height:100vh;display:grid;place-items:center;padding:18px}
+.phone{
+  position:relative;
+  width:min(412px, 100vw);
+  height:min(915px, calc(100vh - 36px));
+  min-height:700px;
+  overflow:hidden;
+  background: linear-gradient(180deg, #E3ECF9 0%, #EBEFF5 220px);
+  border:1px solid #d5dbe3;
+  border-radius:28px;
+  box-shadow:0 24px 64px rgba(20,32,52,.12);
+  display:flex;
+  flex-direction:column;
+}
+.scroll{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── Header ── */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:56px;
+  padding:0 16px;
+  position:relative;
+}
+.header-back{
+  position:absolute;
+  left:14px;
+  background:none;
+  border:none;
+  font-size:20px;
+  color:var(--muted);
+  cursor:pointer;
+  padding:4px;
+  line-height:1;
+}
+.header-back:active{opacity:.6}
+.header-title{font-size:18px;font-weight:700;color:var(--ink)}
+
+/* ── Card base ── */
+.block{
+  margin:0 14px 14px;
+  background:var(--card-white);
+  border-radius:var(--radius-card);
+  padding:20px 18px;
+  box-shadow:var(--card-shadow);
+}
+.block-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+.block-bar{
+  width:4px;
+  height:17px;
+  border-radius:var(--radius-bar);
+  flex-shrink:0;
+}
+.block-bar.blue{background:var(--blue)}
+.block-bar.gold{background:var(--gold)}
+.block-title{font-size:17px;font-weight:700;color:var(--ink);flex:1}
+
+/* Capsule tag (排名) */
+.capsule{
+  display:inline-flex;
+  align-items:center;
+  height:28px;
+  padding:0 12px;
+  border-radius:14px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--blue);
+  background:var(--blue-light);
+  white-space:nowrap;
+}
+
+/* Link (右上角 / 底部) */
+.link-muted{
+  font-size:13px;
+  color:var(--muted);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:opacity .15s;
+}
+.link-muted:active{opacity:.6}
+.link-blue{
+  display:block;
+  text-align:center;
+  font-size:13px;
+  color:var(--blue);
+  font-weight:500;
+  cursor:pointer;
+  padding:6px 0 2px;
+  transition:opacity .15s;
+}
+.link-blue:active{opacity:.6}
+
+/* ── Expand/Collapse ── */
+.link-muted{cursor:pointer;user-select:none}
+.link-arrow{
+  display:inline-block;
+  font-size:15px;
+  transition:transform .3s ease;
+  vertical-align:middle;
+  line-height:1;
+}
+.link-muted.expanded .link-arrow{transform:rotate(90deg)}
+.expand-target{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .45s cubic-bezier(.4,0,.2,1);
+}
+.expand-target.open{max-height:800px}
+
+/* ── Info list (今日学习 / 今日对练条目) ── */
+.info-list{
+  display:flex;
+  flex-direction:column;
+}
+.info-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:9px 0;
+  font-size:14px;
+  font-weight:500;
+  color:var(--ink);
+  line-height:1.55;
+}
+.info-item + .info-item{
+  border-top:1px solid var(--divider);
+}
+.info-num{
+  flex-shrink:0;
+  width:18px;height:18px;
+  border-radius:50%;
+  font-size:10px;font-weight:700;
+  display:grid;place-items:center;
+  background:var(--blue-light);
+  color:var(--blue);
+  margin-top:2px;
+}
+.info-text{
+  flex:1;
+  min-width:0;
+}
+.info-action{
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:5px 12px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--blue);
+  background:var(--blue-light);
+  border:1px solid #C5DCFB;
+  border-radius:var(--radius-capsule);
+  cursor:pointer;
+  white-space:nowrap;
+  user-select:none;
+  transition:background .15s, transform .12s;
+}
+.info-action:active{
+  background:#D6E8FF;
+  transform:scale(.97);
+}
+
+/* ── Main button (渐变蓝按钮) ── */
+.btn-primary{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:48px;
+  font-size:16px;
+  font-weight:600;
+  color:#fff;
+  background:var(--btn-gradient);
+  border-radius:var(--radius-btn);
+  box-shadow:var(--btn-shadow);
+  cursor:pointer;
+  user-select:none;
+  transition: transform .12s, box-shadow .12s;
+}
+.btn-primary:active{
+  transform:translateY(1px) scale(.985);
+  box-shadow:0 3px 10px rgba(22,119,255,.22);
+}
+@media(prefers-reduced-motion:reduce){
+  .btn-primary{transition:none}
+}
+
+/* ── 今日得分卡 ── */
+.score-center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:0 0 4px;
+}
+.score-radar{
+  width:100%;
+  max-width:348px;
+  aspect-ratio:348/260;
+  position:relative;
+  cursor:pointer;
+}
+.score-radar svg{width:100%;height:100%;display:block}
+
+/* 图例 */
+.legend-row{
+  display:flex;
+  justify-content:center;
+  gap:24px;
+  padding:10px 0 14px;
+  font-size:12px;
+  color:var(--text);
+  user-select:none;
+}
+.legend-row span{display:inline-flex;align-items:center;gap:5px}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.legend-dot.green{background:var(--green)}
+.legend-dot.blue{background:var(--blue)}
+.legend-dot.orange{background:var(--orange)}
+
+/* ── 金牌案例卡 ── */
+.champ-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 0;
+}
+.champ-item + .champ-item{border-top:1px solid var(--divider)}
+.champ-left{display:flex;align-items:center;gap:8px}
+.champ-tag{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 8px;
+  font-size:11px;
+  font-weight:500;
+  color:var(--blue);
+  background:var(--blue-light);
+  border-radius:var(--radius-tag);
+  white-space:nowrap;
+}
+.champ-name{font-size:14px;font-weight:600;color:var(--ink)}
+.champ-play{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  flex-shrink:0;
+  margin-left:auto;
+  padding:7px 14px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--blue);
+  background:var(--blue-light);
+  border:1px solid #C5DCFB;
+  border-radius:var(--radius-capsule);
+  cursor:pointer;
+  user-select:none;
+  white-space:nowrap;
+  transition:background .15s, transform .12s;
+}
+.champ-play:active{
+  background:#D6E8FF;
+  transform:scale(.97);
+}
+.champ-play.playing{
+  color:var(--red-dot);
+  background:#FFF1F0;
+  border-color:#FFCCC7;
+}
+.champ-play svg{width:12px;height:12px;fill:currentColor;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){
+  .champ-play{transition:none}
+}
+
+/* ── Footer ── */
+.footer-record{
+  padding:10px 0 28px;
+  margin:0 14px;
+  text-align:center;
+  font-size:13px;
+  font-weight:500;
+  color:var(--blue);
+  border-top:1px solid var(--divider);
+  cursor:pointer;
+}
+.footer-record:active{opacity:.6}
+
+/* ═══════════════════════════════════════════════════════
+   Dim Overlay (五维详情)
+   ═══════════════════════════════════════════════════════ */
+.dim-overlay{
+  position:absolute;inset:0;z-index:50;
+  background:var(--bg-page);
+  transform:translateX(105%);
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.dim-overlay.open{transform:translateX(0)}
+.dim-head{
+  display:flex;align-items:center;justify-content:center;
+  height:56px;padding:0 16px;
+  position:relative;
+  background:var(--card-white);
+  border-bottom:1px solid var(--divider);
+  flex-shrink:0;
+}
+.dim-back{
+  position:absolute;
+  left:14px;
+  background:none;
+  border:none;
+  font-size:20px;
+  color:var(--muted);
+  cursor:pointer;
+  padding:4px;
+  line-height:1;
+}
+.dim-back:active{opacity:.6}
+.dim-title{font-size:18px;font-weight:700;color:var(--ink)}
+.dim-body{flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch}
+.dim-card{
+  background:var(--card-white);
+  border-radius:14px;
+  padding:18px 16px;
+  margin-bottom:10px;
+  box-shadow:var(--card-shadow);
+}
+.dim-card-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.dim-card-head h3{font-size:15px;font-weight:600;color:var(--ink)}
+.dim-card-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.dim-big-score{
+  font-size:30px;font-weight:700;
+  padding:6px 16px;border-radius:10px;
+  background:#F7F8FA;color:var(--ink);
+}
+.dim-row{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 0;border-bottom:1px solid var(--divider);
+  cursor:pointer;transition:opacity .12s;
+}
+.dim-row:last-child{border-bottom:none}
+.dim-row:active{opacity:.6}
+.dim-row-label{font-size:13px;font-weight:500;color:var(--text);min-width:56px}
+.dim-track{flex:1;height:6px;background:#EFF2F7;border-radius:3px;overflow:hidden}
+.dim-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.dim-row-score{font-size:13px;font-weight:700;min-width:26px;text-align:right}
+.dim-row-arrow{font-size:13px;color:var(--muted)}
+.dim-tip{
+  background:var(--card-white);
+  border-radius:14px;padding:16px;margin-bottom:10px;
+  box-shadow:var(--card-shadow);
+}
+.dim-tip h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.dim-tip-item{
+  display:flex;gap:8px;padding:9px 0;
+  border-bottom:1px solid var(--divider);
+  font-size:13px;color:var(--text);line-height:1.6;
+}
+.dim-tip-item:last-child{border-bottom:none}
+.dim-tip-num{
+  flex-shrink:0;width:20px;height:20px;
+  border-radius:50%;
+  font-size:10px;font-weight:700;
+  display:grid;place-items:center;
+  background:var(--blue-light);
+  color:var(--blue);
+}
+.dim-tip-num.green{background:#E8F8ED;color:var(--green)}
+.dim-tip-num.amber{background:#FFF7E8;color:var(--orange)}
+.dim-back-btn{
+  display:block;
+  background:none;
+  border:none;
+  font-size:20px;
+  color:var(--muted);
+  cursor:pointer;
+  padding:12px 0;
+  line-height:1;
+}
+.dim-back-btn:active{opacity:.6}
+.phone.dim-open{overflow:hidden}
+.phone.dim-open .scroll{overflow:hidden}
+
+/* ═══════════════════════════════════════════════════════
+   Practice Finish (练完总结)
+   ═══════════════════════════════════════════════════════ */
+.practice-finish{
+  position:absolute;inset:0;z-index:70;
+  background: rgba(11,17,33,.94);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:40px 24px;text-align:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease;
+}
+.practice-finish.show{opacity:1;pointer-events:auto}
+.pf-stars{font-size:48px;margin-bottom:16px;letter-spacing:4px}
+.pf-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:8px}
+.pf-sub{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:32px}
+.pf-btn{
+  width:100%;max-width:280px;height:48px;
+  font-size:16px;font-weight:700;color:#fff;
+  background:var(--btn-gradient);
+  border-radius:var(--radius-btn);
+  box-shadow:var(--btn-shadow);
+  cursor:pointer;
+  transition:transform .12s, box-shadow .12s;
+}
+.pf-btn:active{transform:scale(.98);box-shadow:0 3px 10px rgba(22,119,255,.22)}
+@media(prefers-reduced-motion:reduce){
+  .pf-btn{transition:none}
+}
+
+/* ═══════════════════════════════════════════════════════
+   Radar fade-in animation
+   ═══════════════════════════════════════════════════════ */
+.radar-data-polygon{
+  transform-origin:center;
+  animation: radarIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes radarIn{
+  from{transform:scale(.7);opacity:.3}
+  to{transform:scale(1);opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  .radar-data-polygon{animation:none}
+}
+
+/* ── Responsive ── */
+@media(max-width:430px){
+  .stage{padding:0}
+  .phone{width:100vw;height:100vh;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}
+  .header{padding:0 env(safe-area-inset-right,16px) 0 env(safe-area-inset-left,16px)}
+}
+
+/* ═══════════════════════════════════════════════════════
+   Listen Overlay (听销冠分享)
+   ═══════════════════════════════════════════════════════ */
+.listen-overlay{
+  position:absolute;inset:0;z-index:60;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background .35s ease;
+}
+.listen-overlay.active{
+  background:rgba(0,0,0,.5);
+  pointer-events:auto;
+}
+
+.listen-panel{
+  position:absolute;bottom:0;left:0;right:0;z-index:61;
+  background:#fff;border-radius:20px 20px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.12);
+  transform:translateY(100%);
+  transition:transform .42s cubic-bezier(.22,.61,.36,1);
+  overflow:visible;
+}
+.listen-overlay.active .listen-panel{transform:translateY(0)}
+
+.listen-card-inner{
+  display:flex;align-items:flex-start;gap:0;
+  padding:12px 24px 0;
+  position:relative;
+}
+
+.listen-figure-col{
+  flex:0 0 80px;
+  position:relative;
+  margin-top:-56px;
+  margin-right:4px;
+}
+.listen-figure-img{
+  display:block;
+  width:80px;height:auto;
+  margin-left:-4px;
+  filter:drop-shadow(0 2px 12px rgba(0,0,0,.2));
+  opacity:0;transform:translateY(20px);
+  transition:all .45s cubic-bezier(.22,.61,.36,1) .1s;
+}
+.listen-overlay.active .listen-figure-img{
+  opacity:1;transform:translateY(0);
+}
+
+.listen-content-col{
+  flex:1;min-width:0;
+  padding-top:2px;
+}
+
+.listen-now-label{
+  font-size:15px;font-weight:700;color:var(--blue);
+  display:flex;align-items:center;gap:6px;
+  margin-bottom:6px;
+}
+.listen-now-label::before{
+  content:'';flex:0 0 auto;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);
+  animation:pulseDot 1.2s ease-in-out infinite;
+}
+@keyframes pulseDot{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.3;transform:scale(.6)}
+}
+.listen-duration{
+  font-weight:400;color:var(--muted);font-size:13px;
+}
+
+.listen-waves{
+  display:flex;align-items:center;gap:4px;
+  height:24px;margin-bottom:12px;
+}
+.listen-wave-bar{
+  width:4px;border-radius:2px;background:var(--blue);
+  animation:waveAnim .8s ease-in-out infinite;
+}
+.listen-wave-bar:nth-child(1){height:10px;animation-delay:0s}
+.listen-wave-bar:nth-child(2){height:20px;animation-delay:.1s}
+.listen-wave-bar:nth-child(3){height:14px;animation-delay:.2s}
+.listen-wave-bar:nth-child(4){height:22px;animation-delay:.3s}
+.listen-wave-bar:nth-child(5){height:10px;animation-delay:.15s}
+@keyframes waveAnim{
+  0%,100%{transform:scaleY(1)}
+  50%{transform:scaleY(.4)}
+}
+
+.listen-actions{
+  margin:0 -24px;
+  display:flex;gap:0;
+}
+.listen-done-btn{
+  flex:1;padding:14px 0;
+  text-align:center;font-size:15px;font-weight:700;
+  color:#fff;
+  background:var(--btn-gradient);
+  border-radius:0 0 0 20px;
+  transition:background .15s;
+}
+.listen-done-btn:active{background:var(--blue-deep)}
+.listen-next-btn{
+  flex:1;padding:14px 0;
+  text-align:center;font-size:15px;font-weight:700;
+  color:var(--blue);
+  background:var(--blue-light);
+  border-radius:0 0 20px 0;
+  transition:background .15s;
+}
+.listen-next-btn:active{background:#D6E8FF}
+</style>
+</head>
+<body>
+<main class="stage">
+<div class="phone">
+
+<header class="header">
+  <button class="header-back" onclick="location.href='index.html'">←</button>
+  <span class="header-title">成交教练</span>
+</header>
+
+<div class="scroll">
+
+<!-- ① 今日得分 -->
+<section class="block">
+  <div class="block-head">
+    <span class="block-bar blue"></span>
+    <span class="block-title">今日得分</span>
+    <span class="capsule">门店第3名</span>
+  </div>
+  <div class="score-center">
+    <div class="score-radar" onclick="openDim('overview')" id="radar"></div>
+  </div>
+  <span class="link-blue" onclick="openDim('overview')">五维总分详情 ›</span>
+</section>
+
+<!-- ② 今日学习 -->
+<section class="block">
+  <div class="block-head">
+    <span class="block-bar blue"></span>
+    <span class="block-title">今日学习</span>
+    <span class="link-muted" onclick="location.href='index.html#learn-range'" style="cursor:pointer">更多学习资料 ›</span>
+  </div>
+  <div class="info-list">
+    <div class="info-item"><span class="info-num">1</span><span class="info-text">知识点：MG4·续航资料</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
+    <div class="info-item"><span class="info-num">2</span><span class="info-text">知识点：MG4·竞品对比资料</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
+  </div>
+</section>
+
+<!-- ③ 今日对练 -->
+<section class="block">
+  <div class="block-head">
+    <span class="block-bar blue"></span>
+    <span class="block-title">今日对练</span>
+    <span class="link-muted" onclick="toggleExpand('expandPractice',this)" data-label="更多对练">更多对练 <span class="link-arrow">›</span></span>
+  </div>
+  <div class="info-list">
+    <div class="info-item"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+    <div class="info-item"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+  </div>
+  <div class="expand-target" id="expandPractice">
+    <div class="info-list">
+      <div class="info-item"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      <div class="info-item"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      <div class="info-item"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      <div class="info-item"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      <div class="info-item"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ 金牌案例 -->
+<section class="block">
+  <div class="block-head">
+    <span class="block-bar gold"></span>
+    <span class="block-title">金牌案例</span>
+    <span class="link-muted" onclick="toggleExpand('expandChamp',this)" data-label="更多金牌案例">更多金牌案例 <span class="link-arrow">›</span></span>
+  </div>
+  <div class="champ-item">
+    <div class="champ-left">
+      <span class="champ-tag">宝安店</span>
+      <span class="champ-name">小李</span>
+    </div>
+    <span class="champ-play" data-idx="0" data-tts="小李的成交分享。销冠支招：接待宝妈客户时，不聊枯燥配置，专门聊她带娃出门的难处。客户觉得被理解了，主动问怎么订车，当场成交。" onclick="startListen(0)">
+      <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+    </span>
+  </div>
+  <div class="champ-item">
+    <div class="champ-left">
+      <span class="champ-tag">宝安店</span>
+      <span class="champ-name">李晨</span>
+    </div>
+    <span class="champ-play" data-idx="1" data-tts="李晨的成交分享。销冠支招：遇到不爱说话的客户，先聊家里几口人、平时去哪玩。等客户放松了，才愿意讲真实需求，后面推荐车型完全不踩雷。" onclick="startListen(1)">
+      <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+    </span>
+  </div>
+  <div class="expand-target" id="expandChamp">
+    <div class="champ-item">
+      <div class="champ-left">
+        <span class="champ-tag">福田店</span>
+        <span class="champ-name">王芳</span>
+      </div>
+      <span class="champ-play" data-idx="2" data-tts="王芳的成交分享。销冠支招：客户纠结颜色时别催，直接带客户到停车场看实车颜色，阳光下和展厅里完全不同，客户当场就定了。" onclick="startListen(2)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+      </span>
+    </div>
+    <div class="champ-item">
+      <div class="champ-left">
+        <span class="champ-tag">南山店</span>
+        <span class="champ-name">张伟</span>
+      </div>
+      <span class="champ-play" data-idx="3" data-tts="张伟的成交分享。销冠支招：客户说再考虑考虑时，我直接打开手机给他看库存表，告诉他这配置只剩2台，下周涨价。紧迫感是真实的不必编造。" onclick="startListen(3)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+      </span>
+    </div>
+    <div class="champ-item">
+      <div class="champ-left">
+        <span class="champ-tag">龙岗店</span>
+        <span class="champ-name">陈静</span>
+      </div>
+      <span class="champ-play" data-idx="4" data-tts="陈静的成交分享。销冠支招：遇到全家来看车的，重点照顾决策者——通常是管钱的太太。先让她坐驾驶位，再讲安全配置，成交率翻倍。" onclick="startListen(4)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+      </span>
+    </div>
+    <div class="champ-item">
+      <div class="champ-left">
+        <span class="champ-tag">罗湖店</span>
+        <span class="champ-name">刘洋</span>
+      </div>
+      <span class="champ-play" data-idx="5" data-tts="刘洋的成交分享。销冠支招：竞品对比不要贬低对手，先承认对方优势，再用数据说话。客户觉得你客观可信，反而更容易被说服。" onclick="startListen(5)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+      </span>
+    </div>
+    <div class="champ-item">
+      <div class="champ-left">
+        <span class="champ-tag">龙华店</span>
+        <span class="champ-name">赵鑫</span>
+      </div>
+      <span class="champ-play" data-idx="6" data-tts="赵鑫的成交分享。销冠支招：客户说预算不够时，不急着推低配，先算分期月供，再对比打车成本。客户发现月供比打车还便宜，果断升级配置。" onclick="startListen(6)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
+      </span>
+    </div>
+  </div>
+</section>
+
+<div class="footer-record" onclick="location.href='index.html#learn-record'">我的学习记录 ›</div>
+
+</div>
+
+<!-- 五维详情 -->
+<div class="dim-overlay" id="dimOverlay">
+  <header class="dim-head">
+    <button class="dim-back" onclick="closeDim()">←</button>
+    <span class="dim-title" id="dimTitle">五维能力</span>
+  </header>
+  <div class="dim-body" id="dimBody"></div>
+</div>
+
+<!-- 练完总结 -->
+<div class="practice-finish" id="practiceFinish">
+  <img src="成交教练对练.png" alt="成交教练对练" style="width:min(280px,78%);border-radius:16px;margin-bottom:20px;box-shadow:0 8px 40px rgba(96,165,250,.12),0 2px 12px rgba(0,0,0,.3)">
+  <div class="pf-stars">⭐⭐⭐</div>
+  <div class="pf-title">今天练得不错</div>
+  <div class="pf-sub">「参数 → 场景」这个方法<br>你在实战里练透了</div>
+  <button class="pf-btn" onclick="exitPracticeFinish()">返回首页</button>
+</div>
+
+<!-- 听销冠分享 Overlay -->
+<div class="listen-overlay" id="listenOverlay" onclick="if(event.target===this)closeListen()">
+  <div class="listen-panel" id="listenPanel">
+    <div class="listen-card-inner">
+      <div class="listen-figure-col">
+        <img class="listen-figure-img" src="零售大师.png" alt="大师">
+      </div>
+      <div class="listen-content-col">
+        <div class="listen-now-label"><span id="listenNowLabel">销冠小李正在分享</span><span class="listen-duration" id="listenDuration"> · 约3分钟</span></div>
+        <div class="listen-waves">
+          <div class="listen-wave-bar"></div>
+          <div class="listen-wave-bar"></div>
+          <div class="listen-wave-bar"></div>
+          <div class="listen-wave-bar"></div>
+          <div class="listen-wave-bar"></div>
+        </div>
+      </div>
+    </div>
+    <div class="listen-actions">
+      <button class="listen-done-btn" onclick="closeListen()">听完了</button>
+      <button class="listen-next-btn" onclick="playNextListen()">听下一个分享</button>
+    </div>
+  </div>
+</div>
+
+</div>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   数据定义
+   ═══════════════════════════════════════════════════════ */
+var D={
+  overview:{name:'五维能力',score:76,color:'#1D2129',
+    subs:[
+      {key:'product', name:'产品专业', score:48, color:'#FF7D00'},
+      {key:'needs',   name:'需求分析', score:56, color:'#FF7D00'},
+      {key:'service', name:'服务满意', score:78, color:'#00B42A'},
+      {key:'compete', name:'竞品应对', score:61, color:'#1677FF'},
+      {key:'followup',name:'客户跟进', score:70, color:'#1677FF'}
+    ],
+    strengths:[
+      {title:'服务意识突出',desc:'接待礼仪和试驾体验均超75分，客户到店体验好。'},
+      {title:'跟进节奏在线',desc:'知道约定下次联系时间，能主动给出带家人到店的钩子。'}
+    ],
+    improvements:[
+      {title:'从「报参数」转向「讲场景」',desc:'多组客户在聊生活需求时，你直接跳到车辆数据。先共情、再追问、最后用参数佐证。'},
+      {title:'竞品对比要有具体锚点',desc:'不要泛泛说"我们更好"，准备3个核心差异点，用数字和场景讲故事。'}
+    ]
+  },
+  product:{name:'产品专业',score:48,color:'#FF7D00',subs:[
+    ['车辆参数知识',52],['竞品对比能力',41],['技术讲解转化',38],['配置适配推荐',55]
+  ],suggestions:[
+    '客户问油耗，先反问"您每天开多少公里？"再用油费帮客户算账。',
+    '竞品对比不回避，先认同再转移："秦确实省油，我们的优势在于底盘和智能座舱。"',
+    '每个参数对应用户利益——「540L」→「婴儿车竖放，旁边还能塞两箱牛奶」。'
+  ]},
+  needs:{name:'需求分析',score:56,color:'#FF7D00',subs:[
+    ['倾听理解',62],['提问挖掘',48],['需求确认',55],['家庭决策洞察',42]
+  ],suggestions:[
+    '客户问"坐不坐得下"先反问"您家几口人？"再带他上车感受。',
+    '培养追问习惯：客户每说一个需求，至少追问一个"为什么"。',
+    '学会做需求确认：总结"李哥您主要关注空间、油耗、保养，对吗？"'
+  ]},
+  service:{name:'服务满意',score:78,color:'#00B42A',subs:[
+    ['接待礼仪',82],['试驾体验',75],['问题响应',80],['交车服务',72]
+  ],suggestions:[
+    '保持现有接待水准，这是核心优势。',
+    '交车后回访个性化，结合试驾时客户最在意的点做针对性跟进。',
+    '试驾加入「惊喜时刻」：提前调好空调备好水，小细节拉开差距。'
+  ]},
+  compete:{name:'竞品应对',score:61,color:'#1677FF',subs:[
+    ['竞品知识储备',65],['优势转化能力',55],['异议化解',58],['价值塑造',68]
+  ],suggestions:[
+    '提前准备3个核心竞品的3个关键差异点。',
+    '客户提价格优势，具体说"我们多了X、Y、Z三个配置，算下来更划算"。',
+    '先认同再转移：肯定竞品优势，自然过渡到自己差异化。'
+  ]},
+  followup:{name:'客户跟进',score:70,color:'#1677FF',subs:[
+    ['跟进及时性',75],['个性化沟通',62],['成交信号捕捉',68],['老客户维系',72]
+  ],suggestions:[
+    '保持「约定下次联系时间」的好习惯。',
+    '等待期间别沉默：发一条个性化信息给客户。',
+    '客户说"回去商量"，当场帮他梳理需要商量的点。'
+  ]}
+};
+
+/* ═══════════════════════════════════════════════════════
+   五维雷达图（完全重写）
+   viewBox 348×330，正五边形从正上方顺时针
+   ═══════════════════════════════════════════════════════ */
+(function(){
+  var d=D.overview, subs=d.subs, n=subs.length;
+
+  // SVG 坐标系（紧凑版）
+  var vbW=348, vbH=260;
+  var cx=174, cy=135;
+  var R=75;           // 100% 数据半径
+  var lblR=R+36;     // 标签半径
+
+  // 顶点坐标 helper：angle 从正上方顺时针（-90° + i*72°）
+  function vtx(r,i){
+    var a = -Math.PI/2 + i*2*Math.PI/n;
+    return {x:cx+r*Math.cos(a), y:cy+r*Math.sin(a)};
+  }
+
+  // 数据得分点坐标
+  var dp=[];
+  for(var i=0;i<n;i++){
+    dp.push(vtx(R * subs[i].score/100, i));
+  }
+
+  var s='<svg viewBox="0 0 '+vbW+' '+vbH+'" xmlns="http://www.w3.org/2000/svg">';
+
+  // Defs — 径向渐变（中心 0.30 → 边缘 0.10）
+  s+='<defs>';
+  s+='<radialGradient id="rgrad" cx="50%" cy="50%" r="50%">';
+  s+='<stop offset="0%" stop-color="#1677FF" stop-opacity="0.30"/>';
+  s+='<stop offset="100%" stop-color="#1677FF" stop-opacity="0.10"/>';
+  s+='</radialGradient>';
+  s+='</defs>';
+
+  // ── 背景网格：3 圈（40% / 70% / 100%） ──
+  var levels=[
+    {r:R,     fill:'#F5F9FF', stroke:'#DBE5F3', sw:0.8},
+    {r:R*0.7, fill:'none',    stroke:'#DBE5F3', sw:0.5},
+    {r:R*0.4, fill:'none',    stroke:'#DBE5F3', sw:0.5}
+  ];
+  for(var li=0;li<levels.length;li++){
+    var lv=levels[li];
+    var pts='';
+    for(var i=0;i<n;i++){
+      var v=vtx(lv.r,i);
+      pts+=(i?'L':'M')+v.x.toFixed(2)+','+v.y.toFixed(2)+' ';
+    }
+    s+='<path d="'+pts+'Z" fill="'+lv.fill+'" stroke="'+lv.stroke+'" stroke-width="'+lv.sw+'" stroke-linejoin="round"/>';
+  }
+
+  // ── 辐射线：中心 → 各顶点 ──
+  for(var i=0;i<n;i++){
+    var v=vtx(R,i);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+v.x.toFixed(2)+'" y2="'+v.y.toFixed(2)+'" stroke="#DBE5F3" stroke-width="0.5" stroke-dasharray="4,5"/>';
+  }
+
+  // ── 数据多边形（带动画 class） ──
+  var dpPath='';
+  for(var i=0;i<n;i++) dpPath+=(i?'L':'M')+dp[i].x.toFixed(2)+','+dp[i].y.toFixed(2)+' ';
+  s+='<path class="radar-data-polygon" d="'+dpPath+'Z" fill="url(#rgrad)" stroke="#1677FF" stroke-width="2.2" stroke-linejoin="round"/>';
+
+  // ── 数据顶点圆点（白底 + 档位色描边） ──
+  for(var i=0;i<n;i++){
+    s+='<circle cx="'+dp[i].x.toFixed(2)+'" cy="'+dp[i].y.toFixed(2)+'" r="4.5" fill="#fff" stroke="'+subs[i].color+'" stroke-width="2.2"/>';
+  }
+
+  // ── 标签：外侧，维度名在上 / 分数在下 ──
+  var names=['产品专业','需求分析','服务满意','竞品应对','客户跟进'];
+  for(var i=0;i<n;i++){
+    var v=vtx(lblR,i);
+    // 维度名（弱色 12.5px）
+    s+='<text x="'+v.x.toFixed(1)+'" y="'+(v.y-8).toFixed(1)+'" text-anchor="middle" font-size="12.5" fill="#8A94A6" font-weight="400" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif">'+names[i]+'</text>';
+    // 分数（档位色 18px/800）
+    s+='<text x="'+v.x.toFixed(1)+'" y="'+(v.y+18).toFixed(1)+'" text-anchor="middle" font-size="18" fill="'+subs[i].color+'" font-weight="800" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif">'+subs[i].score+'</text>';
+  }
+
+  // ── 中心总分 ──
+  s+='<text x="'+cx+'" y="'+(cy-3)+'" text-anchor="middle" font-size="36" fill="#1677FF" font-weight="700" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif" letter-spacing="-0.5">76</text>';
+  s+='<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-size="11" fill="#8A94A6" font-weight="500" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif">五维分</text>';
+
+  s+='</svg>';
+  document.getElementById('radar').innerHTML = s;
+})();
+
+/* ═══════════════════════════════════════════════════════
+   展开/收起
+   ═══════════════════════════════════════════════════════ */
+window.toggleExpand = function(id, el){
+  var target = document.getElementById(id);
+  var isOpen = target.classList.contains('open');
+  var label = el.getAttribute('data-label');
+  if(isOpen){
+    target.classList.remove('open');
+    el.classList.remove('expanded');
+    el.innerHTML = label + ' <span class="link-arrow">›</span>';
+  }else{
+    target.classList.add('open');
+    el.classList.add('expanded');
+    el.innerHTML = '收起 <span class="link-arrow">›</span>';
+  }
+};
+
+/* ═══════════════════════════════════════════════════════
+   Practice / Finish
+   ═══════════════════════════════════════════════════════ */
+window.startPractice=function(idx){
+  document.getElementById('practiceFinish').classList.add('show');
+};
+window.exitPracticeFinish=function(){
+  document.getElementById('practiceFinish').classList.remove('show');
+};
+
+/* ═══════════════════════════════════════════════════════
+   五维详情 Overlay
+   ═══════════════════════════════════════════════════════ */
+window.openDim=function(k){
+  var d=D[k];if(!d)return;
+  document.getElementById('dimTitle').textContent=d.name;
+  var b='';
+  if(k==='overview'){
+    b='<div class="dim-card"><div class="dim-card-head"><div><h3>五维能力得分</h3><p class="dim-card-sub">点击各维度查看详情</p></div><div class="dim-big-score">'+d.score+'</div></div>';
+    for(var i=0;i<d.subs.length;i++){
+      var s=d.subs[i];
+      b+='<div class="dim-row" onclick="openDim(\''+s.key+'\')"><span class="dim-row-label">'+s.name+'</span><div class="dim-track"><div class="dim-fill" style="width:'+s.score+'%;background:'+s.color+'"></div></div><span class="dim-row-score" style="color:'+s.color+'">'+s.score+'</span><span class="dim-row-arrow">›</span></div>';
+    }
+    b+='</div><div class="dim-tip"><h4 style="color:#00B42A">核心优势</h4>'+d.strengths.map(function(s){return'<div class="dim-tip-item"><span class="dim-tip-num green">✓</span><span><strong>'+s.title+'</strong>：'+s.desc+'</span></div>';}).join('')+'</div><div class="dim-tip"><h4 style="color:#FF7D00">待提升</h4>'+d.improvements.map(function(s){return'<div class="dim-tip-item"><span class="dim-tip-num amber">•</span><span><strong>'+s.title+'</strong>：'+s.desc+'</span></div>';}).join('')+'</div><button class="dim-back-btn" onclick="closeDim()">← 返回成交教练首页</button>';
+  }else{
+    b='<div class="dim-card"><div class="dim-card-head"><div><h3>'+d.name+'</h3><p class="dim-card-sub">子维度得分</p></div><div class="dim-big-score" style="background:'+(d.score<60?'#FFF1F0':'#F7F8FA')+';color:'+d.color+'">'+d.score+'</div></div>';
+    for(var i=0;i<d.subs.length;i++){
+      var sub=d.subs[i], sc=sub[1], bc=sc<60?'#FF7D00':d.color;
+      b+='<div class="dim-row"><span class="dim-row-label">'+sub[0]+'</span><div class="dim-track"><div class="dim-fill" style="width:'+sc+'%;background:'+bc+'"></div></div><span class="dim-row-score" style="color:'+bc+'">'+sc+'</span></div>';
+    }
+    b+='</div><div class="dim-tip"><h4>改进建议</h4>'+d.suggestions.map(function(t,i){return'<div class="dim-tip-item"><span class="dim-tip-num">'+(i+1)+'</span><span>'+t+'</span></div>';}).join('')+'</div><button class="dim-back-btn" onclick="openDim(\'overview\')">← 返回五维总览</button><button class="dim-back-btn" onclick="closeDim()">← 返回成交教练首页</button>';
+  }
+  document.getElementById('dimBody').innerHTML=b;
+  document.getElementById('dimOverlay').classList.add('open');
+  document.querySelector('.phone').classList.add('dim-open');
+};
+window.closeDim=function(){
+  document.getElementById('dimOverlay').classList.remove('open');
+  document.querySelector('.phone').classList.remove('dim-open');
+};
+
+/* ═══════════════════════════════════════════════════════
+   Toast
+   ═══════════════════════════════════════════════════════ */
+var _toastTimer;
+window.showToast=function(msg){
+  var t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;z-index:100;left:50%;bottom:100px;padding:10px 20px;color:#fff;background:rgba(29,33,41,.92);border-radius:22px;font-size:13px;font-weight:500;opacity:0;transform:translate(-50%,12px);transition:all .25s;pointer-events:none;max-width:82%;text-align:center;font-family:var(--font)';
+  document.body.appendChild(t);
+  clearTimeout(_toastTimer);
+  requestAnimationFrame(function(){t.style.opacity='1';t.style.transform='translate(-50%,0)';});
+  _toastTimer=setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},300);},1800);
+};
+
+/* ═══════════════════════════════════════════════════════
+   听销冠分享 — Listen Overlay
+   ═══════════════════════════════════════════════════════ */
+var LISTEN_DATA = [
+  { name:'小李', duration:'约3分钟', tts:'小李的成交分享。销冠支招：接待宝妈客户时，不聊枯燥配置，专门聊她带娃出门的难处。客户觉得被理解了，主动问怎么订车，当场成交。' },
+  { name:'李晨', duration:'约2分钟', tts:'李晨的成交分享。销冠支招：遇到不爱说话的客户，先聊家里几口人、平时去哪玩。等客户放松了，才愿意讲真实需求，后面推荐车型完全不踩雷。' },
+  { name:'王芳', duration:'约3分钟', tts:'王芳的成交分享。销冠支招：客户纠结颜色时别催，直接带客户到停车场看实车颜色，阳光下和展厅里完全不同，客户当场就定了。' },
+  { name:'张伟', duration:'约2分钟', tts:'张伟的成交分享。销冠支招：客户说再考虑考虑时，我直接打开手机给他看库存表，告诉他这配置只剩2台，下周涨价。紧迫感是真实的不必编造。' },
+  { name:'陈静', duration:'约3分钟', tts:'陈静的成交分享。销冠支招：遇到全家来看车的，重点照顾决策者——通常是管钱的太太。先让她坐驾驶位，再讲安全配置，成交率翻倍。' },
+  { name:'刘洋', duration:'约2分钟', tts:'刘洋的成交分享。销冠支招：竞品对比不要贬低对手，先承认对方优势，再用数据说话。客户觉得你客观可信，反而更容易被说服。' },
+  { name:'赵鑫', duration:'约3分钟', tts:'赵鑫的成交分享。销冠支招：客户说预算不够时，不急着推低配，先算分期月供，再对比打车成本。客户发现月供比打车还便宜，果断升级配置。' }
+];
+var _listenIdx = 0;
+var _listenUtt = null;
+
+window.startListen = function(idx){
+  _listenIdx = idx;
+  updateListenLabel();
+  document.getElementById('listenOverlay').classList.add('active');
+  playListenTTS();
+};
+
+window.playNextListen = function(){
+  _listenIdx = (_listenIdx + 1) % LISTEN_DATA.length;
+  updateListenLabel();
+  playListenTTS();
+};
+
+function updateListenLabel(){
+  var c = LISTEN_DATA[_listenIdx];
+  document.getElementById('listenNowLabel').textContent = '销冠'+c.name+'正在分享';
+  document.getElementById('listenDuration').textContent = ' · '+c.duration;
+}
+
+function playListenTTS(){
+  stopListenTTS();
+  var u = new SpeechSynthesisUtterance(LISTEN_DATA[_listenIdx].tts);
+  u.lang = 'zh-CN'; u.rate = 0.95;
+  u.onend = function(){};
+  u.onerror = function(){};
+  _listenUtt = u;
+  speechSynthesis.speak(u);
+}
+
+window.closeListen = function(){
+  stopListenTTS();
+  document.getElementById('listenOverlay').classList.remove('active');
+};
+
+function stopListenTTS(){
+  speechSynthesis.cancel();
+  _listenUtt = null;
+}
+</script>
+</body>
+</html>

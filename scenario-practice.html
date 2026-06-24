@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#060d1a">
+<title>场景还原 · 成交教练对练</title>
+<style>
+/* ═══════════════════════════════════════════════════
+   场景还原对练 — 深蓝暗色调（取自成交教练对练.png）
+   ═══════════════════════════════════════════════════ */
+:root {
+  --bg-deep:      #060d1a;
+  --bg-page:      #0b1832;
+  --bg-card:      #132240;
+  --bg-card-alt:  #1a2d52;
+  --border-card:  #1e3560;
+  --border-subtle: #162848;
+
+  --accent:       #4a7ae0;
+  --accent-soft:  rgba(74,122,224,0.12);
+  --accent-glow:  rgba(74,122,224,0.25);
+
+  --gold:         #f0a826;
+  --gold-soft:    rgba(240,168,38,0.12);
+
+  --text-primary: #e6ecf5;
+  --text-body:    #b8c4d8;
+  --text-muted:   #7a8ba6;
+
+  --radius-sm: 8px;
+  --radius:   12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  min-height: 100%; min-height: 100dvh;
+  background: #040914;
+  font-family: var(--font);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  font: inherit; color: inherit; border: 0; background: none; cursor: pointer;
+  -webkit-user-select: none; user-select: none;
+}
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+.stage { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 18px; }
+.phone {
+  position: relative;
+  width: min(390px, 100vw);
+  height: min(844px, calc(100dvh - 36px));
+  min-height: 700px;
+  overflow: hidden;
+  background: var(--bg-page);
+  border: 1px solid #1a2d52;
+  border-radius: 28px;
+  box-shadow: 0 0 60px rgba(74,122,224,0.04), 0 24px 64px rgba(0,0,0,0.5);
+  display: flex; flex-direction: column;
+}
+
+/* ── Screen management ── */
+.screen { display: none; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ═══════════════════════════════════════════════════
+   SCREEN 0 — COUNTDOWN
+   ═══════════════════════════════════════════════════ */
+.countdown-container {
+  flex: 1; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.countdown-container img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.countdown-overlay {
+  position: absolute; inset: 0;
+  background: rgba(6,13,26,0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.countdown-number {
+  font-size: 140px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 60px rgba(74,122,224,0.5), 0 0 120px rgba(74,122,224,0.2);
+  letter-spacing: -4px;
+  transition: none;
+}
+.countdown-number.pop {
+  animation: countPop 0.9s var(--ease-out-expo);
+}
+@keyframes countPop {
+  0%   { transform: scale(1.6); opacity: 0; }
+  30%  { transform: scale(1.0); opacity: 1; }
+  70%  { transform: scale(1.0); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════
+   SCREEN 1 — PRACTICE SCENE
+   ═══════════════════════════════════════════════════ */
+.scene-header {
+  display: flex; align-items: center; justify-content: center;
+  height: 52px; padding: 0 16px; flex-shrink: 0;
+  position: relative; z-index: 20;
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.scene-back {
+  position: absolute; left: 14px;
+  width: 30px; height: 30px; display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
+  font-size: 18px; color: var(--text-muted); flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.scene-back:active { background: rgba(255,255,255,0.06); color: #fff; }
+.scene-title {
+  font-size: 15px; font-weight: 700; color: var(--text-primary);
+}
+
+.scene-body {
+  flex: 1; position: relative; overflow: hidden; cursor: pointer;
+}
+.scene-body img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  background: var(--bg-deep);
+}
+
+/* Customer profile floating card */
+.customer-float {
+  position: absolute; top: 16px; left: 16px; right: 16px;
+  z-index: 15;
+  padding: 16px 18px;
+  background: rgba(19,34,64,0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  display: flex; flex-direction: column; gap: 8px;
+  animation: fadeInDown 0.5s var(--ease-out-expo) both;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.customer-float .cf-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.customer-float .cf-name {
+  font-size: 18px; font-weight: 800; color: #fff;
+}
+.customer-float .cf-tag {
+  font-size: 11px; font-weight: 700;
+  padding: 2px 10px; border-radius: 4px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(74,122,224,0.15);
+}
+.customer-float .cf-time {
+  font-size: 12px; color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* Tap hint at bottom */
+.tap-hint {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 15;
+  font-size: 12px; color: rgba(255,255,255,0.4);
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: hintPulse 2.5s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.75; }
+}
+
+/* ═══════════════════════════════════════════════════
+   SCREEN 2 — RESULT / REVIEW
+   ═══════════════════════════════════════════════════ */
+.result-scroll {
+  flex: 1; overflow-y: auto; overscroll-behavior: contain;
+  padding: 40px 24px 32px;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  scrollbar-width: none;
+}
+.result-scroll::-webkit-scrollbar { display: none; }
+
+.result-card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 28px 22px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+}
+
+/* Stars — completion mark, not rating */
+.stars-wrap {
+  display: flex; gap: 10px; justify-content: center;
+}
+.star {
+  font-size: 40px; color: var(--gold);
+  filter: drop-shadow(0 0 8px rgba(240,168,38,0.35));
+  animation: starPop 0.45s var(--ease-out-expo) both;
+}
+.star:nth-child(1) { animation-delay: 0.1s; }
+.star:nth-child(2) { animation-delay: 0.35s; }
+.star:nth-child(3) { animation-delay: 0.6s; }
+@keyframes starPop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.result-done-title {
+  font-size: 28px; font-weight: 900; color: var(--text-primary);
+  letter-spacing: 1px;
+}
+
+.result-hint {
+  font-size: 13px; color: var(--gold);
+  font-weight: 600;
+}
+
+.result-customer {
+  font-size: 13px; color: var(--text-muted);
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+}
+.result-customer b { color: var(--text-primary); font-weight: 700; }
+
+/* Divider */
+.result-divider {
+  width: 40px; height: 3px;
+  background: var(--border-card); border-radius: 2px; margin: 4px 0;
+}
+
+/* Action buttons */
+.result-actions {
+  width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 8px;
+}
+.btn-primary {
+  width: 100%; min-height: 48px; display: flex; align-items: center;
+  justify-content: center; gap: 6px; padding: 12px 20px;
+  color: #fff; font-size: 14px; font-weight: 700;
+  background: linear-gradient(135deg, #3b6fd4 0%, #4a7ae0 100%);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 20px rgba(74,122,224,0.3);
+  transition: transform 0.15s var(--ease-out-expo), box-shadow 0.15s;
+}
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 12px rgba(74,122,224,0.2);
+}
+
+.btn-secondary {
+  width: 100%; min-height: 48px; display: flex; align-items: center;
+  justify-content: center; gap: 6px; padding: 12px 20px;
+  color: var(--accent); font-size: 14px; font-weight: 700;
+  background: var(--accent-soft);
+  border: 1px solid rgba(74,122,224,0.2);
+  border-radius: var(--radius-xl);
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-secondary:active {
+  background: rgba(74,122,224,0.2);
+  transform: scale(0.97);
+}
+
+.btn-ghost {
+  width: 100%; min-height: 44px; display: flex; align-items: center;
+  justify-content: center; padding: 10px;
+  color: var(--text-muted); font-size: 13px; font-weight: 600;
+  transition: color 0.15s;
+}
+.btn-ghost:active { color: var(--text-body); }
+
+/* Screen transition */
+.screen.fade-in {
+  animation: screenFadeIn 0.4s var(--ease-out-expo) both;
+}
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 430px) {
+  .stage { padding: 0; }
+  .phone { width: 100vw; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<main class="stage">
+<div class="phone" role="application" aria-label="场景还原对练">
+
+  <!-- ══════════════ SCREEN 0: COUNTDOWN ══════════════ -->
+  <div class="screen active" id="countdownScreen">
+    <div class="countdown-container">
+      <img src="成交教练对练.png" alt="场景">
+      <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">3</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN 1: PRACTICE SCENE ══════════════ -->
+  <div class="screen" id="practiceScreen">
+    <div class="scene-header">
+      <button class="scene-back" onclick="goBack()" aria-label="返回">‹</button>
+      <span class="scene-title">场景还原对练</span>
+    </div>
+    <div class="scene-body" id="sceneBody">
+      <img src="成交教练对练.png" alt="成交教练对练">
+      <!-- Customer profile float -->
+      <div class="customer-float" id="customerFloat">
+        <div class="cf-row">
+          <span class="cf-name">李先生</span>
+          <span class="cf-tag">对比型</span>
+          <span class="cf-time">今日 14:40 到店</span>
+        </div>
+      </div>
+      <div class="tap-hint">轻触任意位置查看结果</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SCREEN 2: RESULT ══════════════ -->
+  <div class="screen" id="resultScreen">
+    <div class="scene-header">
+      <button class="scene-back" onclick="goBackFromResult()" aria-label="返回">‹</button>
+      <span class="scene-title">练完了</span>
+    </div>
+    <div class="result-scroll">
+      <div class="result-card">
+
+        <!-- Stars grow with each practice -->
+        <div class="stars-wrap" id="starsWrap"></div>
+        <div class="result-hint" id="resultHint"></div>
+
+        <div class="result-divider"></div>
+
+        <!-- Action buttons -->
+        <div class="result-actions">
+          <button class="btn-primary" onclick="nextRealScene()">
+            练下一个客户
+          </button>
+          <button class="btn-secondary" onclick="sameCustomerSim()">
+            同画像再练一轮
+          </button>
+          <button class="btn-ghost" onclick="quitPractice()">
+            返回，不练了
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script>
+var $ = function(id){ return document.getElementById(id); };
+
+// ── Countdown ──
+(function runCountdown(){
+  var num = 3;
+  var el = $('countdownNumber');
+  var overlay = $('countdownOverlay');
+
+  function tick(){
+    if (num < 1) {
+      // Done — show practice screen
+      $('countdownScreen').classList.remove('active');
+      $('practiceScreen').classList.add('active', 'fade-in');
+      return;
+    }
+    el.textContent = num;
+    el.classList.remove('pop');
+    void el.offsetWidth; // reflow
+    el.classList.add('pop');
+    num--;
+    setTimeout(tick, 1000);
+  }
+
+  // Start after a brief moment so the image is visible
+  setTimeout(tick, 400);
+})();
+
+// ── Practice scene: tap anywhere → results ──
+$('sceneBody').addEventListener('click', function(e){
+  // Don't trigger if they clicked the back button area (but that's not in sceneBody)
+  showResult();
+});
+
+// Also allow tapping the customer float itself
+$('customerFloat').addEventListener('click', function(e){
+  e.stopPropagation();
+  showResult();
+});
+
+var practiceCount = 0;
+
+// ── Show result screen ──
+function showResult(){
+  practiceCount++;
+  var wrap = $('starsWrap');
+
+  // Add a star
+  var star = document.createElement('span');
+  star.className = 'star';
+  star.textContent = '⭐';
+  wrap.appendChild(star);
+
+  // Brief hint
+  var hint = practiceCount === 1 ? '恭喜你获得第一颗星' : '恭喜你，又获得一颗星';
+  $('resultHint').textContent = hint;
+
+  $('practiceScreen').classList.remove('active');
+  $('resultScreen').classList.add('active', 'fade-in');
+}
+
+// ── Back buttons ──
+function goBack(){
+  if (history.length > 1) { history.back(); }
+  else { window.location.href = 'index.html'; }
+}
+
+function goBackFromResult(){
+  // Go back to practice scene (replay)
+  $('resultScreen').classList.remove('active');
+  $('practiceScreen').classList.add('active', 'fade-in');
+
+  // Re-trigger customer float animation
+  var cf = $('customerFloat');
+  cf.style.animation = 'none';
+  cf.offsetHeight;
+  cf.style.animation = '';
+}
+
+// ── Action buttons ──
+function nextRealScene(){
+  // Reset to practice screen for next customer
+  $('resultScreen').classList.remove('active');
+  $('practiceScreen').classList.add('active', 'fade-in');
+  $('customerFloat').style.animation = 'none';
+  $('customerFloat').offsetHeight;
+  $('customerFloat').style.animation = '';
+}
+
+function sameCustomerSim(){
+  // Same customer profile, new AI-generated scenario
+  $('resultScreen').classList.remove('active');
+  $('practiceScreen').classList.add('active', 'fade-in');
+  $('customerFloat').style.animation = 'none';
+  $('customerFloat').offsetHeight;
+  $('customerFloat').style.animation = '';
+}
+
+function quitPractice(){
+  if (confirm('确定不练了？')) {
+    goBack();
+  }
+}
+</script>
+</body>
+</html>
