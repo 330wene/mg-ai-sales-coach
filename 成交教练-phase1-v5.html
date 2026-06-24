@@ -3,55 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#EBEFF5">
+<meta name="theme-color" content="#EFF3FA">
 <title>成交教练</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   成交教练 Phase1 v5 — 支付宝蓝金融科技卡片风格
+   成交教练 Phase1 v5 — 亮色·精致高级版
    设计宽度：412px 移动端
+   核心理念："上浓下淡" — 视觉重量集中在顶部得分卡
    ══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* 品牌色 */
-  --blue:        #1677FF;
-  --blue-deep:   #0E5FD8;
-  --blue-light:  #EAF2FF;
-  /* 背景 */
-  --bg-page:     #EBEFF5;
-  --bg-gradient: #E3ECF9;
-  --card-white:  #FFFFFF;
+  /* 页面 */
+  --bg-page:       #EFF3FA;
+  --card-white:    #FFFFFF;
+
   /* 文字 */
-  --ink:         #1D2129;
-  --text:        #4E5969;
-  --muted:       #8A94A6;
-  /* 分隔 */
-  --divider:     #EFF2F7;
-  /* 语义色 */
-  --green:       #00B42A;
-  --orange:      #FF7D00;
-  --red-dot:     #FA5151;
-  --gold:        #E8920A;
-  /* 卡片阴影 */
-  --card-shadow: 0 6px 22px rgba(27,67,140,.07);
-  /* 按钮阴影 */
-  --btn-shadow:  0 6px 16px rgba(22,119,255,.28);
-  /* 按钮渐变 */
-  --btn-gradient: linear-gradient(135deg, #2E8FFF, #1677FF);
-  /* 字体 */
-  --font: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --ink:           #1A2742;
+  --text:          #414E68;
+  --muted:         #9AA4B8;
+
+  /* 三色身份系统 */
+  --learn:         #5BA0F5;   /* 淡蓝 — 今日学习 */
+  --learn-deep:    #3B82F6;
+  --learn-light:   #E8F1FE;
+  --learn-text:    #2C73E0;
+
+  --practice:      #2547A6;   /* 深蓝 — 今日对练 */
+  --practice-deep: #1E3A8C;
+  --practice-light:#E3E9F8;
+
+  --champ:         #E0A23A;   /* 香槟金 — 金牌案例 */
+  --champ-deep:    #DB951E;
+  --champ-light:   #FBEDD2;
+  --champ-text:    #A9740E;
+  --champ-tag-bg:  #FBF1DC;
+
+  /* 投影 */
+  --card-shadow:   0 1px 2px rgba(20,40,90,0.05), 0 10px 26px rgba(30,58,140,0.07);
+
   /* 圆角 */
   --radius-card:   18px;
-  --radius-alert:  13px;
-  --radius-btn:    13px;
-  --radius-capsule: 22px;
-  --radius-tag:    7px;
-  --radius-bar:    3px;
+  --radius-btn:    18px;
+  --radius-tag:    6px;
+  --radius-phone:  24px;
+
+  /* 字体 */
+  --font:          -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  /* 分隔 */
+  --divider:       #EFF2F7;
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{
   min-height:100%;
-  background: linear-gradient(180deg, #E3ECF9 0%, #EBEFF5 220px);
+  background: var(--bg-page);
   font-family: var(--font);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -68,9 +74,9 @@ a{text-decoration:none;color:inherit}
   height:min(915px, calc(100vh - 36px));
   min-height:700px;
   overflow:hidden;
-  background: linear-gradient(180deg, #E3ECF9 0%, #EBEFF5 220px);
+  background: var(--bg-page);
   border:1px solid #d5dbe3;
-  border-radius:28px;
+  border-radius:var(--radius-phone);
   box-shadow:0 24px 64px rgba(20,32,52,.12);
   display:flex;
   flex-direction:column;
@@ -85,37 +91,157 @@ a{text-decoration:none;color:inherit}
 }
 .scroll::-webkit-scrollbar{display:none}
 
-/* ── Header ── */
-.header{
+/* ═══════════════════════════════════════════════════════
+   ① 顶部沉浸式得分头部
+   ═══════════════════════════════════════════════════════ */
+.score-header{
+  position:relative;
+  background: linear-gradient(168deg, #3E68DD 0%, #274FB2 52%, #172E78 100%);
+  padding: 16px 16px 34px;
+  overflow:hidden;
+}
+
+/* 质感装饰 */
+.score-header-glow{
+  position:absolute;
+  top:50%; left:50%;
+  width:230px; height:200px;
+  transform:translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(150,200,255,0.32), transparent 68%);
+  pointer-events:none;
+}
+.score-header-orb{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+.score-header-orb--tr{
+  top:-40px; right:-40px;
+  width:160px; height:160px;
+  background: rgba(255,255,255,0.06);
+}
+.score-header-orb--bl{
+  bottom:-30px; left:-30px;
+  width:96px; height:96px;
+  background: rgba(255,255,255,0.045);
+}
+
+/* 导航行 */
+.score-nav{
   display:flex;
   align-items:center;
   justify-content:center;
-  height:56px;
-  padding:0 16px;
+  height:44px;
   position:relative;
+  z-index:1;
 }
-.header-back{
+.score-back{
   position:absolute;
-  left:14px;
+  left:0;
   background:none;
   border:none;
-  font-size:20px;
-  color:var(--muted);
+  font-size:18px;
+  color: rgba(255,255,255,0.84);
   cursor:pointer;
   padding:4px;
   line-height:1;
 }
-.header-back:active{opacity:.6}
-.header-title{font-size:18px;font-weight:700;color:var(--ink)}
-
-/* ── Card base ── */
-.block{
-  margin:0 14px 14px;
-  background:var(--card-white);
-  border-radius:var(--radius-card);
-  padding:20px 18px;
-  box-shadow:var(--card-shadow);
+.score-back:active{opacity:.6}
+.score-nav-title{
+  font-size:17px;
+  font-weight:500;
+  color:#fff;
 }
+
+/* 标题行：竖线 + 今日得分 + 排名标签 */
+.score-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 0 14px;
+  position:relative;
+  z-index:1;
+}
+.score-title-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.score-title-bar{
+  width:4px;
+  height:16px;
+  border-radius:2px;
+  background:#8FC0FF;
+  flex-shrink:0;
+}
+.score-title-text{
+  font-size:16px;
+  font-weight:500;
+  color:#fff;
+}
+.score-rank{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 13px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:500;
+  color:#fff;
+  background: rgba(255,255,255,0.17);
+  white-space:nowrap;
+}
+
+/* 雷达图容器 */
+.score-radar-wrap{
+  position:relative;
+  z-index:1;
+}
+.score-radar{
+  width:100%;
+  cursor:pointer;
+}
+.score-radar svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* 详情入口 */
+.score-detail{
+  text-align:center;
+  font-size:13px;
+  color: rgba(255,255,255,0.92);
+  cursor:pointer;
+  padding-top:6px;
+  position:relative;
+  z-index:1;
+  user-select:none;
+  transition:opacity .15s;
+}
+.score-detail:active{opacity:.6}
+
+/* ═══════════════════════════════════════════════════════
+   ② 内容面板（白圆角面板上盖头部）
+   ═══════════════════════════════════════════════════════ */
+.content-panel{
+  background: var(--bg-page);
+  border-radius: 22px 22px 0 0;
+  margin-top: -20px;
+  padding: 18px 15px 20px;
+  position:relative;
+  z-index:2;
+}
+
+/* ── 卡片基底 ── */
+.block{
+  background: var(--card-white);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 14px;
+}
+.block:last-child{margin-bottom:0}
+
 .block-head{
   display:flex;
   align-items:center;
@@ -125,50 +251,172 @@ a{text-decoration:none;color:inherit}
 .block-bar{
   width:4px;
   height:17px;
-  border-radius:var(--radius-bar);
+  border-radius:3px;
   flex-shrink:0;
 }
-.block-bar.blue{background:var(--blue)}
-.block-bar.gold{background:var(--gold)}
-.block-title{font-size:17px;font-weight:700;color:var(--ink);flex:1}
-
-/* Capsule tag (排名) */
-.capsule{
-  display:inline-flex;
-  align-items:center;
-  height:28px;
-  padding:0 12px;
-  border-radius:14px;
-  font-size:13px;
+.block-title{
+  font-size:16px;
   font-weight:500;
-  color:var(--blue);
-  background:var(--blue-light);
-  white-space:nowrap;
+  color:var(--ink);
+  flex:1;
 }
 
-/* Link (右上角 / 底部) */
+/* ── 右上角链接 ── */
 .link-muted{
-  font-size:13px;
+  font-size:12px;
   color:var(--muted);
   cursor:pointer;
   white-space:nowrap;
+  user-select:none;
   transition:opacity .15s;
 }
 .link-muted:active{opacity:.6}
-.link-blue{
-  display:block;
-  text-align:center;
-  font-size:13px;
-  color:var(--blue);
-  font-weight:500;
-  cursor:pointer;
-  padding:6px 0 2px;
-  transition:opacity .15s;
-}
-.link-blue:active{opacity:.6}
 
-/* ── Expand/Collapse ── */
-.link-muted{cursor:pointer;user-select:none}
+/* ── 三色主题：竖线 ── */
+.block--learn .block-bar{background: #5BA0F5}
+.block--practice .block-bar{background: #2547A6}
+.block--champ .block-bar{background: #E0A23A}
+
+/* ═══════════════════════════════════════════════════════
+   ③ 信息列表（今日学习 / 今日对练）
+   ═══════════════════════════════════════════════════════ */
+.info-list{
+  display:flex;
+  flex-direction:column;
+}
+.info-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:10px 0;
+  font-size:14px;
+  font-weight:400;
+  color:var(--text);
+  line-height:1.55;
+}
+.info-item + .info-item{
+  border-top:1px solid var(--divider);
+}
+.info-num{
+  flex-shrink:0;
+  width:22px; height:22px;
+  border-radius:50%;
+  font-size:11px;
+  font-weight:500;
+  display:grid;
+  place-items:center;
+  margin-top:1px;
+}
+.info-text{
+  flex:1;
+  min-width:0;
+  font-size:15px;
+  font-weight:400;
+  color:var(--text);
+}
+.info-action{
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 14px;
+  font-size:12px;
+  font-weight:500;
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-btn);
+  cursor:pointer;
+  white-space:nowrap;
+  user-select:none;
+  transition:transform .12s, box-shadow .12s;
+}
+.info-action:active{transform:scale(.97)}
+
+/* 主题：今日学习（淡蓝） */
+.block--learn .info-num{background:#E8F1FE;color:#2C73E0}
+.block--learn .info-action{
+  background:linear-gradient(135deg,#5BA0F5,#3B82F6);
+  box-shadow:0 4px 12px rgba(59,130,246,0.28);
+}
+
+/* 主题：今日对练（深蓝） */
+.block--practice .info-num{background:#E3E9F8;color:#2547A6}
+.block--practice .info-action{
+  background:linear-gradient(135deg,#2E54B8,#1E3A8C);
+  box-shadow:0 4px 12px rgba(30,58,140,0.30);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ④ 金牌案例
+   ═══════════════════════════════════════════════════════ */
+.champ-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 0;
+}
+.champ-item + .champ-item{
+  border-top:1px solid var(--divider);
+}
+.champ-num{
+  flex-shrink:0;
+  width:22px; height:22px;
+  border-radius:50%;
+  font-size:11px;
+  font-weight:500;
+  display:grid;
+  place-items:center;
+  background:#FBEDD2;
+  color:#A9740E;
+}
+.champ-name{
+  font-size:14px;
+  font-weight:400;
+  color:var(--ink);
+  white-space:nowrap;
+}
+.champ-tag{
+  display:inline-flex;
+  align-items:center;
+  padding:2px 8px;
+  font-size:11px;
+  font-weight:400;
+  color:#A9740E;
+  background:#FBF1DC;
+  border-radius:var(--radius-tag);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.champ-play{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  flex-shrink:0;
+  margin-left:auto;
+  padding:6px 14px;
+  font-size:12px;
+  font-weight:500;
+  color:#fff;
+  background:linear-gradient(135deg,#EFB154,#DB951E);
+  border:none;
+  border-radius:var(--radius-btn);
+  box-shadow:0 4px 12px rgba(224,162,58,0.32);
+  cursor:pointer;
+  user-select:none;
+  white-space:nowrap;
+  transition:transform .12s, box-shadow .12s;
+}
+.champ-play:active{transform:scale(.97)}
+.champ-play.playing{
+  color:#FA5151;
+  background:#FFF1F0;
+  box-shadow:none;
+}
+.champ-play svg{width:12px;height:12px;fill:currentColor;flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════════
+   ⑤ 展开/收起
+   ═══════════════════════════════════════════════════════ */
 .link-arrow{
   display:inline-block;
   font-size:15px;
@@ -184,185 +432,23 @@ a{text-decoration:none;color:inherit}
 }
 .expand-target.open{max-height:800px}
 
-/* ── Info list (今日学习 / 今日对练条目) ── */
-.info-list{
-  display:flex;
-  flex-direction:column;
-}
-.info-item{
-  display:flex;
-  align-items:flex-start;
-  gap:8px;
-  padding:9px 0;
+/* ═══════════════════════════════════════════════════════
+   ⑥ 底部链接
+   ═══════════════════════════════════════════════════════ */
+.footer-record{
+  padding:14px 0 8px;
+  text-align:center;
   font-size:14px;
   font-weight:500;
-  color:var(--ink);
-  line-height:1.55;
-}
-.info-item + .info-item{
-  border-top:1px solid var(--divider);
-}
-.info-num{
-  flex-shrink:0;
-  width:18px;height:18px;
-  border-radius:50%;
-  font-size:10px;font-weight:700;
-  display:grid;place-items:center;
-  background:var(--blue-light);
-  color:var(--blue);
-  margin-top:2px;
-}
-.info-text{
-  flex:1;
-  min-width:0;
-}
-.info-action{
-  flex-shrink:0;
-  display:inline-flex;
-  align-items:center;
-  gap:3px;
-  padding:5px 12px;
-  font-size:12px;
-  font-weight:600;
-  color:var(--blue);
-  background:var(--blue-light);
-  border:1px solid #C5DCFB;
-  border-radius:var(--radius-capsule);
-  cursor:pointer;
-  white-space:nowrap;
-  user-select:none;
-  transition:background .15s, transform .12s;
-}
-.info-action:active{
-  background:#D6E8FF;
-  transform:scale(.97);
-}
-
-/* ── Main button (渐变蓝按钮) ── */
-.btn-primary{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:48px;
-  font-size:16px;
-  font-weight:600;
-  color:#fff;
-  background:var(--btn-gradient);
-  border-radius:var(--radius-btn);
-  box-shadow:var(--btn-shadow);
+  color:#2C5AD0;
   cursor:pointer;
   user-select:none;
-  transition: transform .12s, box-shadow .12s;
-}
-.btn-primary:active{
-  transform:translateY(1px) scale(.985);
-  box-shadow:0 3px 10px rgba(22,119,255,.22);
-}
-@media(prefers-reduced-motion:reduce){
-  .btn-primary{transition:none}
-}
-
-/* ── 今日得分卡 ── */
-.score-center{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:0 0 4px;
-}
-.score-radar{
-  width:100%;
-  max-width:348px;
-  aspect-ratio:348/260;
-  position:relative;
-  cursor:pointer;
-}
-.score-radar svg{width:100%;height:100%;display:block}
-
-/* 图例 */
-.legend-row{
-  display:flex;
-  justify-content:center;
-  gap:24px;
-  padding:10px 0 14px;
-  font-size:12px;
-  color:var(--text);
-  user-select:none;
-}
-.legend-row span{display:inline-flex;align-items:center;gap:5px}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.legend-dot.green{background:var(--green)}
-.legend-dot.blue{background:var(--blue)}
-.legend-dot.orange{background:var(--orange)}
-
-/* ── 金牌案例卡 ── */
-.champ-item{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px 0;
-}
-.champ-item + .champ-item{border-top:1px solid var(--divider)}
-.champ-left{display:flex;align-items:center;gap:8px}
-.champ-tag{
-  display:inline-flex;
-  align-items:center;
-  padding:3px 8px;
-  font-size:11px;
-  font-weight:500;
-  color:var(--blue);
-  background:var(--blue-light);
-  border-radius:var(--radius-tag);
-  white-space:nowrap;
-}
-.champ-name{font-size:14px;font-weight:600;color:var(--ink)}
-.champ-play{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  flex-shrink:0;
-  margin-left:auto;
-  padding:7px 14px;
-  font-size:12px;
-  font-weight:600;
-  color:var(--blue);
-  background:var(--blue-light);
-  border:1px solid #C5DCFB;
-  border-radius:var(--radius-capsule);
-  cursor:pointer;
-  user-select:none;
-  white-space:nowrap;
-  transition:background .15s, transform .12s;
-}
-.champ-play:active{
-  background:#D6E8FF;
-  transform:scale(.97);
-}
-.champ-play.playing{
-  color:var(--red-dot);
-  background:#FFF1F0;
-  border-color:#FFCCC7;
-}
-.champ-play svg{width:12px;height:12px;fill:currentColor;flex-shrink:0}
-@media(prefers-reduced-motion:reduce){
-  .champ-play{transition:none}
-}
-
-/* ── Footer ── */
-.footer-record{
-  padding:10px 0 28px;
-  margin:0 14px;
-  text-align:center;
-  font-size:13px;
-  font-weight:500;
-  color:var(--blue);
-  border-top:1px solid var(--divider);
-  cursor:pointer;
+  transition:opacity .15s;
 }
 .footer-record:active{opacity:.6}
 
 /* ═══════════════════════════════════════════════════════
-   Dim Overlay (五维详情)
+   ⑦ 五维详情 Overlay
    ═══════════════════════════════════════════════════════ */
 .dim-overlay{
   position:absolute;inset:0;z-index:50;
@@ -392,7 +478,7 @@ a{text-decoration:none;color:inherit}
   line-height:1;
 }
 .dim-back:active{opacity:.6}
-.dim-title{font-size:18px;font-weight:700;color:var(--ink)}
+.dim-title{font-size:17px;font-weight:500;color:var(--ink)}
 .dim-body{flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch}
 .dim-card{
   background:var(--card-white);
@@ -405,10 +491,10 @@ a{text-decoration:none;color:inherit}
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:16px;
 }
-.dim-card-head h3{font-size:15px;font-weight:600;color:var(--ink)}
+.dim-card-head h3{font-size:15px;font-weight:500;color:var(--ink)}
 .dim-card-sub{font-size:12px;color:var(--muted);margin-top:3px}
 .dim-big-score{
-  font-size:30px;font-weight:700;
+  font-size:30px;font-weight:500;
   padding:6px 16px;border-radius:10px;
   background:#F7F8FA;color:var(--ink);
 }
@@ -422,14 +508,14 @@ a{text-decoration:none;color:inherit}
 .dim-row-label{font-size:13px;font-weight:500;color:var(--text);min-width:56px}
 .dim-track{flex:1;height:6px;background:#EFF2F7;border-radius:3px;overflow:hidden}
 .dim-fill{height:100%;border-radius:3px;transition:width .5s ease}
-.dim-row-score{font-size:13px;font-weight:700;min-width:26px;text-align:right}
+.dim-row-score{font-size:13px;font-weight:500;min-width:26px;text-align:right}
 .dim-row-arrow{font-size:13px;color:var(--muted)}
 .dim-tip{
   background:var(--card-white);
   border-radius:14px;padding:16px;margin-bottom:10px;
   box-shadow:var(--card-shadow);
 }
-.dim-tip h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.dim-tip h4{font-size:14px;font-weight:500;margin-bottom:10px;color:var(--ink)}
 .dim-tip-item{
   display:flex;gap:8px;padding:9px 0;
   border-bottom:1px solid var(--divider);
@@ -439,13 +525,13 @@ a{text-decoration:none;color:inherit}
 .dim-tip-num{
   flex-shrink:0;width:20px;height:20px;
   border-radius:50%;
-  font-size:10px;font-weight:700;
+  font-size:10px;font-weight:500;
   display:grid;place-items:center;
-  background:var(--blue-light);
-  color:var(--blue);
+  background:#E8F1FE;
+  color:#2C73E0;
 }
-.dim-tip-num.green{background:#E8F8ED;color:var(--green)}
-.dim-tip-num.amber{background:#FFF7E8;color:var(--orange)}
+.dim-tip-num.green{background:#E8F8ED;color:#00B42A}
+.dim-tip-num.amber{background:#FFF7E8;color:#FF7D00}
 .dim-back-btn{
   display:block;
   background:none;
@@ -461,7 +547,7 @@ a{text-decoration:none;color:inherit}
 .phone.dim-open .scroll{overflow:hidden}
 
 /* ═══════════════════════════════════════════════════════
-   Practice Finish (练完总结)
+   ⑧ 练完总结
    ═══════════════════════════════════════════════════════ */
 .practice-finish{
   position:absolute;inset:0;z-index:70;
@@ -473,46 +559,21 @@ a{text-decoration:none;color:inherit}
 }
 .practice-finish.show{opacity:1;pointer-events:auto}
 .pf-stars{font-size:48px;margin-bottom:16px;letter-spacing:4px}
-.pf-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:8px}
+.pf-title{font-size:22px;font-weight:500;color:#fff;margin-bottom:8px}
 .pf-sub{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:32px}
 .pf-btn{
   width:100%;max-width:280px;height:48px;
-  font-size:16px;font-weight:700;color:#fff;
-  background:var(--btn-gradient);
+  font-size:16px;font-weight:500;color:#fff;
+  background:linear-gradient(135deg,#5BA0F5,#3B82F6);
   border-radius:var(--radius-btn);
-  box-shadow:var(--btn-shadow);
+  box-shadow:0 4px 12px rgba(59,130,246,0.28);
   cursor:pointer;
   transition:transform .12s, box-shadow .12s;
 }
 .pf-btn:active{transform:scale(.98);box-shadow:0 3px 10px rgba(22,119,255,.22)}
-@media(prefers-reduced-motion:reduce){
-  .pf-btn{transition:none}
-}
 
 /* ═══════════════════════════════════════════════════════
-   Radar fade-in animation
-   ═══════════════════════════════════════════════════════ */
-.radar-data-polygon{
-  transform-origin:center;
-  animation: radarIn .5s cubic-bezier(.34,1.56,.64,1) both;
-}
-@keyframes radarIn{
-  from{transform:scale(.7);opacity:.3}
-  to{transform:scale(1);opacity:1}
-}
-@media(prefers-reduced-motion:reduce){
-  .radar-data-polygon{animation:none}
-}
-
-/* ── Responsive ── */
-@media(max-width:430px){
-  .stage{padding:0}
-  .phone{width:100vw;height:100vh;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}
-  .header{padding:0 env(safe-area-inset-right,16px) 0 env(safe-area-inset-left,16px)}
-}
-
-/* ═══════════════════════════════════════════════════════
-   Listen Overlay (听销冠分享)
+   ⑨ 听销冠分享 Overlay
    ═══════════════════════════════════════════════════════ */
 .listen-overlay{
   position:absolute;inset:0;z-index:60;
@@ -565,14 +626,14 @@ a{text-decoration:none;color:inherit}
 }
 
 .listen-now-label{
-  font-size:15px;font-weight:700;color:var(--blue);
+  font-size:15px;font-weight:500;color:#2C73E0;
   display:flex;align-items:center;gap:6px;
   margin-bottom:6px;
 }
 .listen-now-label::before{
   content:'';flex:0 0 auto;
   width:8px;height:8px;border-radius:50%;
-  background:var(--green);
+  background:#00B42A;
   animation:pulseDot 1.2s ease-in-out infinite;
 }
 @keyframes pulseDot{
@@ -588,7 +649,7 @@ a{text-decoration:none;color:inherit}
   height:24px;margin-bottom:12px;
 }
 .listen-wave-bar{
-  width:4px;border-radius:2px;background:var(--blue);
+  width:4px;border-radius:2px;background:#5BA0F5;
   animation:waveAnim .8s ease-in-out infinite;
 }
 .listen-wave-bar:nth-child(1){height:10px;animation-delay:0s}
@@ -607,162 +668,202 @@ a{text-decoration:none;color:inherit}
 }
 .listen-done-btn{
   flex:1;padding:14px 0;
-  text-align:center;font-size:15px;font-weight:700;
+  text-align:center;font-size:15px;font-weight:500;
   color:#fff;
-  background:var(--btn-gradient);
+  background:linear-gradient(135deg,#5BA0F5,#3B82F6);
   border-radius:0 0 0 20px;
-  transition:background .15s;
+  transition:opacity .15s;
 }
-.listen-done-btn:active{background:var(--blue-deep)}
+.listen-done-btn:active{opacity:.8}
 .listen-next-btn{
   flex:1;padding:14px 0;
-  text-align:center;font-size:15px;font-weight:700;
-  color:var(--blue);
-  background:var(--blue-light);
+  text-align:center;font-size:15px;font-weight:500;
+  color:#2C73E0;
+  background:#E8F1FE;
   border-radius:0 0 20px 0;
   transition:background .15s;
 }
 .listen-next-btn:active{background:#D6E8FF}
+
+/* ═══════════════════════════════════════════════════════
+   ⑩ 雷达图动画
+   ═══════════════════════════════════════════════════════ */
+.radar-data-polygon{
+  transform-origin:center;
+  animation: radarIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes radarIn{
+  from{transform:scale(.7);opacity:.3}
+  to{transform:scale(1);opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  .radar-data-polygon{animation:none}
+  .btn-primary,.pf-btn{transition:none}
+}
+
+/* ── Responsive ── */
+@media(max-width:430px){
+  .stage{padding:0}
+  .phone{width:100vw;height:100vh;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}
+  .score-header{padding:16px env(safe-area-inset-right,16px) 34px env(safe-area-inset-left,16px)}
+  .content-panel{padding:18px env(safe-area-inset-right,15px) 20px env(safe-area-inset-left,15px)}
+}
 </style>
 </head>
 <body>
 <main class="stage">
 <div class="phone">
 
-<header class="header">
-  <button class="header-back" onclick="location.href='index.html'">←</button>
-  <span class="header-title">成交教练</span>
-</header>
-
 <div class="scroll">
 
-<!-- ① 今日得分 -->
-<section class="block">
-  <div class="block-head">
-    <span class="block-bar blue"></span>
-    <span class="block-title">今日得分</span>
-    <span class="capsule">门店第3名</span>
+<!-- ═══════════════════════════════════════════════════════
+   ① 顶部沉浸式得分头部（深蓝渐变，通栏铺满）
+   ═══════════════════════════════════════════════════════ -->
+<div class="score-header">
+  <!-- 质感装饰 -->
+  <div class="score-header-glow"></div>
+  <div class="score-header-orb score-header-orb--tr"></div>
+  <div class="score-header-orb score-header-orb--bl"></div>
+
+  <!-- 导航行 -->
+  <div class="score-nav">
+    <button class="score-back" onclick="location.href='index.html'">←</button>
+    <span class="score-nav-title">成交教练</span>
   </div>
-  <div class="score-center">
+
+  <!-- 标题行 -->
+  <div class="score-title-row">
+    <div class="score-title-left">
+      <span class="score-title-bar"></span>
+      <span class="score-title-text">今日得分</span>
+    </div>
+    <span class="score-rank">🏆 门店第3名</span>
+  </div>
+
+  <!-- 五维雷达图 -->
+  <div class="score-radar-wrap">
     <div class="score-radar" onclick="openDim('overview')" id="radar"></div>
   </div>
-  <span class="link-blue" onclick="openDim('overview')">五维总分详情 ›</span>
-</section>
 
-<!-- ② 今日学习 -->
-<section class="block">
-  <div class="block-head">
-    <span class="block-bar blue"></span>
-    <span class="block-title">今日学习</span>
-    <span class="link-muted" onclick="location.href='index.html#learn-range'" style="cursor:pointer">更多学习资料 ›</span>
-  </div>
-  <div class="info-list">
-    <div class="info-item"><span class="info-num">1</span><span class="info-text">知识点：MG4·续航资料</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
-    <div class="info-item"><span class="info-num">2</span><span class="info-text">知识点：MG4·竞品对比资料</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
-  </div>
-</section>
-
-<!-- ③ 今日对练 -->
-<section class="block">
-  <div class="block-head">
-    <span class="block-bar blue"></span>
-    <span class="block-title">今日对练</span>
-    <span class="link-muted" onclick="toggleExpand('expandPractice',this)" data-label="更多对练">更多对练 <span class="link-arrow">›</span></span>
-  </div>
-  <div class="info-list">
-    <div class="info-item"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-    <div class="info-item"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-  </div>
-  <div class="expand-target" id="expandPractice">
-    <div class="info-list">
-      <div class="info-item"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-      <div class="info-item"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-      <div class="info-item"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-      <div class="info-item"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-      <div class="info-item"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ④ 金牌案例 -->
-<section class="block">
-  <div class="block-head">
-    <span class="block-bar gold"></span>
-    <span class="block-title">金牌案例</span>
-    <span class="link-muted" onclick="toggleExpand('expandChamp',this)" data-label="更多金牌案例">更多金牌案例 <span class="link-arrow">›</span></span>
-  </div>
-  <div class="champ-item">
-    <div class="champ-left">
-      <span class="champ-tag">宝安店</span>
-      <span class="champ-name">小李</span>
-    </div>
-    <span class="champ-play" data-idx="0" data-tts="小李的成交分享。销冠支招：接待宝妈客户时，不聊枯燥配置，专门聊她带娃出门的难处。客户觉得被理解了，主动问怎么订车，当场成交。" onclick="startListen(0)">
-      <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-    </span>
-  </div>
-  <div class="champ-item">
-    <div class="champ-left">
-      <span class="champ-tag">宝安店</span>
-      <span class="champ-name">李晨</span>
-    </div>
-    <span class="champ-play" data-idx="1" data-tts="李晨的成交分享。销冠支招：遇到不爱说话的客户，先聊家里几口人、平时去哪玩。等客户放松了，才愿意讲真实需求，后面推荐车型完全不踩雷。" onclick="startListen(1)">
-      <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-    </span>
-  </div>
-  <div class="expand-target" id="expandChamp">
-    <div class="champ-item">
-      <div class="champ-left">
-        <span class="champ-tag">福田店</span>
-        <span class="champ-name">王芳</span>
-      </div>
-      <span class="champ-play" data-idx="2" data-tts="王芳的成交分享。销冠支招：客户纠结颜色时别催，直接带客户到停车场看实车颜色，阳光下和展厅里完全不同，客户当场就定了。" onclick="startListen(2)">
-        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-      </span>
-    </div>
-    <div class="champ-item">
-      <div class="champ-left">
-        <span class="champ-tag">南山店</span>
-        <span class="champ-name">张伟</span>
-      </div>
-      <span class="champ-play" data-idx="3" data-tts="张伟的成交分享。销冠支招：客户说再考虑考虑时，我直接打开手机给他看库存表，告诉他这配置只剩2台，下周涨价。紧迫感是真实的不必编造。" onclick="startListen(3)">
-        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-      </span>
-    </div>
-    <div class="champ-item">
-      <div class="champ-left">
-        <span class="champ-tag">龙岗店</span>
-        <span class="champ-name">陈静</span>
-      </div>
-      <span class="champ-play" data-idx="4" data-tts="陈静的成交分享。销冠支招：遇到全家来看车的，重点照顾决策者——通常是管钱的太太。先让她坐驾驶位，再讲安全配置，成交率翻倍。" onclick="startListen(4)">
-        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-      </span>
-    </div>
-    <div class="champ-item">
-      <div class="champ-left">
-        <span class="champ-tag">罗湖店</span>
-        <span class="champ-name">刘洋</span>
-      </div>
-      <span class="champ-play" data-idx="5" data-tts="刘洋的成交分享。销冠支招：竞品对比不要贬低对手，先承认对方优势，再用数据说话。客户觉得你客观可信，反而更容易被说服。" onclick="startListen(5)">
-        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-      </span>
-    </div>
-    <div class="champ-item">
-      <div class="champ-left">
-        <span class="champ-tag">龙华店</span>
-        <span class="champ-name">赵鑫</span>
-      </div>
-      <span class="champ-play" data-idx="6" data-tts="赵鑫的成交分享。销冠支招：客户说预算不够时，不急着推低配，先算分期月供，再对比打车成本。客户发现月供比打车还便宜，果断升级配置。" onclick="startListen(6)">
-        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>点击听销冠分享
-      </span>
-    </div>
-  </div>
-</section>
-
-<div class="footer-record" onclick="location.href='index.html#learn-record'">我的学习记录 ›</div>
-
+  <!-- 详情入口 -->
+  <div class="score-detail" onclick="openDim('overview')">五维总分详情 ›</div>
 </div>
 
-<!-- 五维详情 -->
+<!-- ═══════════════════════════════════════════════════════
+   ② 内容面板（白圆角面板上盖头部）
+   ═══════════════════════════════════════════════════════ -->
+<div class="content-panel">
+
+  <!-- 卡片 A — 今日学习（淡蓝） -->
+  <section class="block block--learn">
+    <div class="block-head">
+      <span class="block-bar"></span>
+      <span class="block-title">今日学习</span>
+      <span class="link-muted" onclick="location.href='index.html#learn-range'" style="cursor:pointer">更多学习资料 ›</span>
+    </div>
+    <div class="info-list">
+      <div class="info-item"><span class="info-num">1</span><span class="info-text">知识点：MG4续航讲解要点</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
+      <div class="info-item"><span class="info-num">2</span><span class="info-text">知识点：竞品对比讲解要点</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
+    </div>
+  </section>
+
+  <!-- 卡片 B — 今日对练（深蓝） -->
+  <section class="block block--practice">
+    <div class="block-head">
+      <span class="block-bar"></span>
+      <span class="block-title">今日对练</span>
+      <span class="link-muted" onclick="toggleExpand('expandPractice',this)" data-label="更多对练">更多对练 <span class="link-arrow">›</span></span>
+    </div>
+    <div class="info-list">
+      <div class="info-item"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      <div class="info-item"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+    </div>
+    <div class="expand-target" id="expandPractice">
+      <div class="info-list">
+        <div class="info-item"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+        <div class="info-item"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+        <div class="info-item"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+        <div class="info-item"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+        <div class="info-item"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 卡片 C — 金牌案例（香槟金） -->
+  <section class="block block--champ">
+    <div class="block-head">
+      <span class="block-bar"></span>
+      <span class="block-title">金牌案例</span>
+      <span class="link-muted" onclick="toggleExpand('expandChamp',this)" data-label="更多金牌案例">更多金牌案例 <span class="link-arrow">›</span></span>
+    </div>
+    <div class="champ-item">
+      <span class="champ-num">1</span>
+      <span class="champ-name">小李</span>
+      <span class="champ-tag">宝安店</span>
+      <span class="champ-play" data-idx="0" data-tts="小李的成交分享。销冠支招：接待宝妈客户时，不聊枯燥配置，专门聊她带娃出门的难处。客户觉得被理解了，主动问怎么订车，当场成交。" onclick="startListen(0)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+      </span>
+    </div>
+    <div class="champ-item">
+      <span class="champ-num">2</span>
+      <span class="champ-name">李晨</span>
+      <span class="champ-tag">宝安店</span>
+      <span class="champ-play" data-idx="1" data-tts="李晨的成交分享。销冠支招：遇到不爱说话的客户，先聊家里几口人、平时去哪玩。等客户放松了，才愿意讲真实需求，后面推荐车型完全不踩雷。" onclick="startListen(1)">
+        <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+      </span>
+    </div>
+    <div class="expand-target" id="expandChamp">
+      <div class="champ-item">
+        <span class="champ-num">3</span>
+        <span class="champ-name">王芳</span>
+        <span class="champ-tag">福田店</span>
+        <span class="champ-play" data-idx="2" data-tts="王芳的成交分享。销冠支招：客户纠结颜色时别催，直接带客户到停车场看实车颜色，阳光下和展厅里完全不同，客户当场就定了。" onclick="startListen(2)">
+          <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+        </span>
+      </div>
+      <div class="champ-item">
+        <span class="champ-num">4</span>
+        <span class="champ-name">张伟</span>
+        <span class="champ-tag">南山店</span>
+        <span class="champ-play" data-idx="3" data-tts="张伟的成交分享。销冠支招：客户说再考虑考虑时，我直接打开手机给他看库存表，告诉他这配置只剩2台，下周涨价。紧迫感是真实的不必编造。" onclick="startListen(3)">
+          <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+        </span>
+      </div>
+      <div class="champ-item">
+        <span class="champ-num">5</span>
+        <span class="champ-name">陈静</span>
+        <span class="champ-tag">龙岗店</span>
+        <span class="champ-play" data-idx="4" data-tts="陈静的成交分享。销冠支招：遇到全家来看车的，重点照顾决策者——通常是管钱的太太。先让她坐驾驶位，再讲安全配置，成交率翻倍。" onclick="startListen(4)">
+          <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+        </span>
+      </div>
+      <div class="champ-item">
+        <span class="champ-num">6</span>
+        <span class="champ-name">刘洋</span>
+        <span class="champ-tag">罗湖店</span>
+        <span class="champ-play" data-idx="5" data-tts="刘洋的成交分享。销冠支招：竞品对比不要贬低对手，先承认对方优势，再用数据说话。客户觉得你客观可信，反而更容易被说服。" onclick="startListen(5)">
+          <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+        </span>
+      </div>
+      <div class="champ-item">
+        <span class="champ-num">7</span>
+        <span class="champ-name">赵鑫</span>
+        <span class="champ-tag">龙华店</span>
+        <span class="champ-play" data-idx="6" data-tts="赵鑫的成交分享。销冠支招：客户说预算不够时，不急着推低配，先算分期月供，再对比打车成本。客户发现月供比打车还便宜，果断升级配置。" onclick="startListen(6)">
+          <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部链接 -->
+  <div class="footer-record" onclick="location.href='index.html#learn-record'">我的学习记录 ›</div>
+
+</div><!-- /content-panel -->
+
+</div><!-- /scroll -->
+
+<!-- 五维详情 Overlay -->
 <div class="dim-overlay" id="dimOverlay">
   <header class="dim-head">
     <button class="dim-back" onclick="closeDim()">←</button>
@@ -805,7 +906,7 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-</div>
+</div><!-- /phone -->
 </main>
 
 <script>
@@ -868,85 +969,78 @@ var D={
 };
 
 /* ═══════════════════════════════════════════════════════
-   五维雷达图（完全重写）
-   viewBox 348×330，正五边形从正上方顺时针
+   五维雷达图（深蓝底 · 亮色精致版）
+   viewBox 300×245，深度个性化
    ═══════════════════════════════════════════════════════ */
 (function(){
-  var d=D.overview, subs=d.subs, n=subs.length;
+  var vbW=300, vbH=245;
+  var cx=150, cy=130;
 
-  // SVG 坐标系（紧凑版）
-  var vbW=348, vbH=260;
-  var cx=174, cy=135;
-  var R=75;           // 100% 数据半径
-  var lblR=R+36;     // 标签半径
+  // 数据多边形顶点（实际得分连线）
+  var dataV=[
+    {x:150,y:94},
+    {x:190,y:117},
+    {x:184,y:177},
+    {x:123,y:167},
+    {x:100,y:114}
+  ];
 
-  // 顶点坐标 helper：angle 从正上方顺时针（-90° + i*72°）
-  function vtx(r,i){
-    var a = -Math.PI/2 + i*2*Math.PI/n;
-    return {x:cx+r*Math.cos(a), y:cy+r*Math.sin(a)};
-  }
-
-  // 数据得分点坐标
-  var dp=[];
-  for(var i=0;i<n;i++){
-    dp.push(vtx(R * subs[i].score/100, i));
+  // 画五边形路径
+  function pentaPath(verts){
+    return verts.map(function(v,i){
+      return (i?'L':'M')+v.x.toFixed(2)+','+v.y.toFixed(2);
+    }).join(' ')+'Z';
   }
 
   var s='<svg viewBox="0 0 '+vbW+' '+vbH+'" xmlns="http://www.w3.org/2000/svg">';
 
-  // Defs — 径向渐变（中心 0.30 → 边缘 0.10）
+  // Defs
   s+='<defs>';
-  s+='<radialGradient id="rgrad" cx="50%" cy="50%" r="50%">';
-  s+='<stop offset="0%" stop-color="#1677FF" stop-opacity="0.30"/>';
-  s+='<stop offset="100%" stop-color="#1677FF" stop-opacity="0.10"/>';
-  s+='</radialGradient>';
+  s+='<linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">';
+  s+='<stop offset="0%" stop-color="#AEDCFF" stop-opacity="0.9"/>';
+  s+='<stop offset="100%" stop-color="#5C97FF" stop-opacity="0.5"/>';
+  s+='</linearGradient>';
+  s+='<filter id="glow"><feDropShadow dx="0" dy="2" stdDeviation="10" flood-color="rgba(170,210,255,0.7)"/></filter>';
   s+='</defs>';
 
-  // ── 背景网格：3 圈（40% / 70% / 100%） ──
-  var levels=[
-    {r:R,     fill:'#F5F9FF', stroke:'#DBE5F3', sw:0.8},
-    {r:R*0.7, fill:'none',    stroke:'#DBE5F3', sw:0.5},
-    {r:R*0.4, fill:'none',    stroke:'#DBE5F3', sw:0.5}
+  // 内层网格（三层精确坐标）
+  s+='<path d="M150,55 L221,107 L194,191 L106,191 L79,107 Z" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linejoin="round"/>';
+  s+='<path d="M150,80 L197,115 L179,170 L121,170 L103,115 Z" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-linejoin="round"/>';
+  s+='<path d="M150,105 L173,122 L165,150 L135,150 L127,122 Z" fill="none" stroke="rgba(255,255,255,0.11)" stroke-width="1" stroke-linejoin="round"/>';
+
+  // 轴线（中心 → 外层顶点）
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="150" y2="55" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>';
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="221" y2="107" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>';
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="194" y2="191" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>';
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="106" y2="191" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>';
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="79" y2="107" stroke="rgba(255,255,255,0.11)" stroke-width="1"/>';
+
+  // 数据多边形
+  s+='<path class="radar-data-polygon" d="'+pentaPath(dataV)+'" fill="url(#dg)" stroke="#DCEEFF" stroke-width="2" stroke-linejoin="round"/>';
+
+  // 数据顶点圆点（白底 + 维度色填充 + 白描边）
+  var dotColors=['#FFC062','#FFC062','#4EE6AC','#4EE6AC','#8FBBFF'];
+  for(var i=0;i<5;i++){
+    s+='<circle cx="'+dataV[i].x+'" cy="'+dataV[i].y+'" r="4" fill="'+dotColors[i]+'" stroke="#fff" stroke-width="1.5"/>';
+  }
+
+  // 中心总分
+  s+='<text x="'+cx+'" y="135" text-anchor="middle" font-size="42" fill="#fff" font-weight="500" filter="url(#glow)" font-family="-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif">76</text>';
+  s+='<text x="'+cx+'" y="153" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.74)" font-weight="400" font-family="-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif">五维总分</text>';
+
+  // 维度标签（外侧：维度名在上 / 分数在下）
+  var dims=[
+    {name:'产品专业',score:48,color:'#FFCB80',nx:150,ny:30,sx:150,sy:45},
+    {name:'需求分析',score:56,color:'#FFCB80',nx:262,ny:103,sx:262,sy:119},
+    {name:'服务满意',score:78,color:'#6BEBBE',nx:232,ny:212,sx:232,sy:228},
+    {name:'竞品应对',score:61,color:'#6BEBBE',nx:68,ny:212,sx:68,sy:228},
+    {name:'客户跟进',score:70,color:'#AECFFF',nx:38,ny:103,sx:38,sy:119}
   ];
-  for(var li=0;li<levels.length;li++){
-    var lv=levels[li];
-    var pts='';
-    for(var i=0;i<n;i++){
-      var v=vtx(lv.r,i);
-      pts+=(i?'L':'M')+v.x.toFixed(2)+','+v.y.toFixed(2)+' ';
-    }
-    s+='<path d="'+pts+'Z" fill="'+lv.fill+'" stroke="'+lv.stroke+'" stroke-width="'+lv.sw+'" stroke-linejoin="round"/>';
+  for(var i=0;i<dims.length;i++){
+    var d=dims[i];
+    s+='<text x="'+d.nx+'" y="'+d.ny+'" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.84)" font-weight="400" font-family="-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif">'+d.name+'</text>';
+    s+='<text x="'+d.sx+'" y="'+d.sy+'" text-anchor="middle" font-size="15" fill="'+d.color+'" font-weight="500" font-family="-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif">'+d.score+'</text>';
   }
-
-  // ── 辐射线：中心 → 各顶点 ──
-  for(var i=0;i<n;i++){
-    var v=vtx(R,i);
-    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+v.x.toFixed(2)+'" y2="'+v.y.toFixed(2)+'" stroke="#DBE5F3" stroke-width="0.5" stroke-dasharray="4,5"/>';
-  }
-
-  // ── 数据多边形（带动画 class） ──
-  var dpPath='';
-  for(var i=0;i<n;i++) dpPath+=(i?'L':'M')+dp[i].x.toFixed(2)+','+dp[i].y.toFixed(2)+' ';
-  s+='<path class="radar-data-polygon" d="'+dpPath+'Z" fill="url(#rgrad)" stroke="#1677FF" stroke-width="2.2" stroke-linejoin="round"/>';
-
-  // ── 数据顶点圆点（白底 + 档位色描边） ──
-  for(var i=0;i<n;i++){
-    s+='<circle cx="'+dp[i].x.toFixed(2)+'" cy="'+dp[i].y.toFixed(2)+'" r="4.5" fill="#fff" stroke="'+subs[i].color+'" stroke-width="2.2"/>';
-  }
-
-  // ── 标签：外侧，维度名在上 / 分数在下 ──
-  var names=['产品专业','需求分析','服务满意','竞品应对','客户跟进'];
-  for(var i=0;i<n;i++){
-    var v=vtx(lblR,i);
-    // 维度名（弱色 12.5px）
-    s+='<text x="'+v.x.toFixed(1)+'" y="'+(v.y-8).toFixed(1)+'" text-anchor="middle" font-size="12.5" fill="#8A94A6" font-weight="400" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif">'+names[i]+'</text>';
-    // 分数（档位色 18px/800）
-    s+='<text x="'+v.x.toFixed(1)+'" y="'+(v.y+18).toFixed(1)+'" text-anchor="middle" font-size="18" fill="'+subs[i].color+'" font-weight="800" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif">'+subs[i].score+'</text>';
-  }
-
-  // ── 中心总分 ──
-  s+='<text x="'+cx+'" y="'+(cy-3)+'" text-anchor="middle" font-size="36" fill="#1677FF" font-weight="700" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif" letter-spacing="-0.5">76</text>';
-  s+='<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-size="11" fill="#8A94A6" font-weight="500" font-family="-apple-system, \'PingFang SC\', \'Microsoft YaHei\', sans-serif">五维分</text>';
 
   s+='</svg>';
   document.getElementById('radar').innerHTML = s;
