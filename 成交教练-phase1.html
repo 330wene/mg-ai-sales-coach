@@ -1078,6 +1078,39 @@
         document.getElementById('dimOverlay').classList.remove('open');
         document.querySelector('.phone').classList.remove('dim-open');
       };
+
+      // 直接跳转到最终完成页（URL 参数 ?finish=1）
+      (function checkFinishDemo() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('finish') === '1') {
+          var g = GROUPS[0];
+          CoachPractice.init({
+            container: document.querySelector('.phone'),
+            onExit: function () {
+              document.querySelector('.phone').classList.remove('dp-open');
+            },
+            onComplete: function (results) {
+              document.getElementById('btnPractice').textContent = '已练，再来一次';
+              document.getElementById('btnPractice').classList.add('done');
+            },
+            onRetry: function () {
+              var others = [0,1,2,3].filter(function(i){ return i !== 0; });
+              var pick = others[Math.floor(Math.random() * others.length)];
+              startDeepPractice(pick);
+            }
+          });
+          _dpInited = true;
+          setTimeout(function() {
+            CoachPractice.showEndState({
+              title: '产品讲解对练',
+              scene: '今日 ' + g.time + ' 到店 · ' + g.note,
+              customerName: g.name,
+              customerAvatar: '👤',
+              rounds: PRACTICE_DATA[0].map(function(r) { return { customer: r.customer }; })
+            });
+          }, 300);
+        }
+      })();
     })();
   </script>
 </body>

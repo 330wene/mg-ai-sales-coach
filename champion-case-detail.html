@@ -309,7 +309,7 @@
 
         <!-- ===== NAV ===== -->
         <nav class="detail-nav">
-          <a class="detail-back" href="成交教练.html?tab=B" aria-label="返回销冠话术列表">‹</a>
+          <a class="detail-back" href="成交教练-phase1-v2.html" aria-label="返回销冠话术列表">‹</a>
           <h1 class="detail-nav-title" id="navTitle">销冠案例详情</h1>
         </nav>
 
@@ -332,7 +332,7 @@
       // ====== 案例数据 ======
       var CASES = {
         '1': {
-          navTitle: '小李 · 场景化讲解案例',
+          navTitle: '销冠小李案例分享',
           closeTime: '18 分钟',
           quickSteps: [
             { signal: '客户一直问空间、全程没问价格', move: '是不是经常带小朋友出门？' },
@@ -461,27 +461,12 @@
 
       // 标题行
       html += '<div class="quick-header">';
-      html += '<h2 class="quick-title">1 分钟速览</h2>';
+      html += '<h2 class="quick-title">记住两点</h2>';
       html += '<span class="time-badge">到店 ' + data.closeTime + ' 成交</span>';
-      html += '</div>';
-
-      // 关键三步
-      html += '<div class="quick-steps">';
-      html += '<div class="quick-label">关键三步</div>';
-      for (var i = 0; i < data.quickSteps.length; i++) {
-        var qs = data.quickSteps[i];
-        html += '<div class="quick-step-item">';
-        html += '<span class="quick-step-num">' + CIRCLE_NUMS[i] + '</span>';
-        html += '<div class="quick-step-body">';
-        html += '<div class="quick-step-up"><span class="quick-step-tag">客户问</span>' + qs.signal + '</div>';
-        html += '<div class="quick-step-down"><span class="quick-step-tag">销冠回</span>' + qs.move + '</div>';
-        html += '</div></div>';
-      }
       html += '</div>';
 
       // 记住两点
       html += '<div class="quick-learn">';
-      html += '<div class="quick-label">记住两点</div>';
       for (var j = 0; j < data.quickLearn.length; j++) {
         html += '<div class="quick-learn-item">';
         html += '<span class="quick-learn-num">' + (j + 1) + '</span>';
@@ -493,9 +478,8 @@
       html += '</section>';
 
       // ===== 展开按钮 =====
-      var coachName = data.navTitle.split('·')[0].trim();
       html += '<div class="expand-bar" id="expandBar" role="button" aria-expanded="false">';
-      html += '<span class="expand-bar-collapsed">展开看 ' + coachName + ' 每一步怎么接的 + 练一次</span>';
+      html += '<span class="expand-bar-collapsed">展开看销冠小李成交详解</span>';
       html += '<span class="expand-bar-expanded">收起完整拆解</span>';
       html += '<span class="expand-bar-arrow">▼</span>';
       html += '</div>';

@@ -496,13 +496,23 @@
     if(!c) return;
     if(b) b.style.display='none';
 
-    var total=totalStars(), n=totalRounds(), stars='';
-    for (var s=0;s<total;s++) stars+='<div class="cp-finish-star" style="animation-delay:'+(s*.08)+'s">'+STAR_S.replace(/currentColor/g,'#f59e0b')+'</div>';
+    // 隐藏顶栏和左侧树
+    var topbar = document.querySelector('.cp-overlay .cp-topbar');
+    if (topbar) topbar.style.display = 'none';
+    var tree = document.querySelector('.cp-overlay .cp-tree');
+    if (tree) tree.style.display = 'none';
+    // 内容区撑满
+    if (c) { c.style.padding = '0 24px'; c.style.width = '100%'; }
 
-    var title,sub;
-    if (total>=n*2.5)      { title='太棒了，产品讲解很扎实！'; sub=total+' 颗星 · 明天进店就这么讲'; }
-    else if (total>=n*1.8) { title='不错，再练练会更稳'; sub=total+' 颗星 · 场景翻译的感觉出来了'; }
-    else                   { title='别灰心，方向是对的'; sub=total+' 颗星 · 下次把参数翻译成画面会更好'; }
+    var n=totalRounds();
+    // 固定 3 星
+    var stars='';
+    for (var s=0;s<3;s++) stars+='<div class="cp-finish-star" style="animation-delay:'+(s*.12)+'s">'+STAR_S.replace(/currentColor/g,'#f59e0b')+'</div>';
+
+    var title='不错，再练练会更稳', sub='场景翻译的感觉出来了';
+
+    // 教练点评：针对薄弱点
+    var coachReview = '今天对练中，你明显在克制「直接报参数」的习惯，几次客户问到空间和配置，你都先问了需求再回答——这是对的。但有 1-2 次遇到客户追问时，还是滑回了报数据的旧模式。<br><br>记住：客户问什么，先反问一个「为什么」，把答案放进她的生活画面里。下一轮继续练这个点，把它彻底改掉。';
 
     c.innerHTML=
       '<div class="cp-finish show">'+
@@ -511,9 +521,13 @@
       ' <div class="cp-finish-stars">'+stars+'</div>'+
       ' <div class="cp-finish-title">'+title+'</div>'+
       ' <div class="cp-finish-sub">'+sub+'</div>'+
-      ' <div class="cp-finish-actions">'+
+      ' <div class="cp-review-card" style="margin:20px 0 0;text-align:left;">'+
+      '  <div class="cp-review-badge">'+CROWN.replace(/currentColor/g,'rgba(245,166,35,.75)')+' 教练点评</div>'+
+      '  <div class="cp-review-text">'+coachReview+'</div>'+
+      ' </div>'+
+      ' <div class="cp-finish-actions" style="margin-top:28px;">'+
       '  <button class="cp-btn-ghost" id="cpExitBtn">掌握了，回去</button>'+
-      '  <button class="cp-btn-gold" id="cpRetryBtn">再练 5 组</button>'+
+      '  <button class="cp-btn-gold" id="cpRetryBtn">继续练新场景</button>'+
       ' </div>'+
       '</div>';
     c.scrollTop=0;
@@ -609,6 +623,12 @@
 
   function exit() {
     clearTimer(); stopListening(); stopSpeak();
+    // 恢复顶栏和左侧树（防止从完成页退出后残留隐藏状态）
+    var topbar = document.querySelector('.cp-overlay .cp-topbar');
+    if (topbar) topbar.style.display = '';
+    var tree = document.querySelector('.cp-overlay .cp-tree');
+    if (tree) tree.style.display = '';
+    var c = $('cpContent'); if (c) { c.style.padding = ''; c.style.width = ''; }
     $('cpOverlay').classList.remove('show');
     if (!S.container) document.body.style.overflow='';
     if (S.opts.onExit) S.opts.onExit();
@@ -618,7 +638,12 @@
     clearTimer(); stopListening(); stopSpeak();
     S.roundIdx=0; S.phase='speaking'; S.results=[]; S.locked=false;
 
-    var c=$('cpContent'); if(c) c.innerHTML='';
+    // 恢复顶栏和左侧树
+    var topbar = document.querySelector('.cp-overlay .cp-topbar');
+    if (topbar) topbar.style.display = '';
+    var tree = document.querySelector('.cp-overlay .cp-tree');
+    if (tree) tree.style.display = '';
+    var c=$('cpContent'); if(c) { c.innerHTML=''; c.style.padding = ''; c.style.width = ''; }
     var b=$('cpBottom'); if(b) b.style.display='';
 
     buildTree(); updateTree(); updateBtn();
@@ -711,7 +736,36 @@
 
     exit: exit,
     _handleTap: handleTap,
-    _nextRound: nextRound
+    _nextRound: nextRound,
+
+    /**
+     * showEndState(data) — 直接跳到最终星星完成页（预览/截图用）
+     * data: { title, scene, rounds: [{ customer }, ...] }
+     */
+    showEndState: function(data) {
+      data = data || DEFAULT_DATA;
+      S.data = data; S.roundIdx = data.rounds.length;
+      S.phase = 'finish'; S.locked = false;
+      clearTimer(); stopSpeak();
+
+      // 构造模拟结果
+      S.results = [];
+      for (var i = 0; i < data.rounds.length; i++) {
+        S.results.push({ stars: 2, comment: '', championScript: '', userText: '' });
+      }
+
+      $('cpOverlay').classList.add('show');
+      if (!S.container) document.body.style.overflow = 'hidden';
+
+      var title = $('cpTopTitle'); if (title) title.textContent = data.title || '';
+
+      buildTree(); updateTree();
+
+      // 直接显示完成页
+      var c = $('cpContent'), b = $('cpBottom');
+      if (c) c.innerHTML = ''; if (b) b.style.display = '';
+      showFinish();
+    }
   };
 
   // resize 时重绘连线
