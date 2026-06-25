@@ -433,22 +433,7 @@ a{text-decoration:none;color:inherit}
 .expand-target.open{max-height:800px}
 
 /* ═══════════════════════════════════════════════════════
-   ⑥ 底部链接
-   ═══════════════════════════════════════════════════════ */
-.footer-record{
-  padding:14px 0 8px;
-  text-align:center;
-  font-size:14px;
-  font-weight:500;
-  color:#2C5AD0;
-  cursor:pointer;
-  user-select:none;
-  transition:opacity .15s;
-}
-.footer-record:active{opacity:.6}
-
-/* ═══════════════════════════════════════════════════════
-   ⑦ 五维详情 Overlay
+   ⑥ 五维详情 Overlay
    ═══════════════════════════════════════════════════════ */
 .dim-overlay{
   position:absolute;inset:0;z-index:50;
@@ -547,7 +532,7 @@ a{text-decoration:none;color:inherit}
 .phone.dim-open .scroll{overflow:hidden}
 
 /* ═══════════════════════════════════════════════════════
-   ⑧ 练完总结
+   ⑦ 练完总结
    ═══════════════════════════════════════════════════════ */
 .practice-finish{
   position:absolute;inset:0;z-index:70;
@@ -573,7 +558,7 @@ a{text-decoration:none;color:inherit}
 .pf-btn:active{transform:scale(.98);box-shadow:0 3px 10px rgba(22,119,255,.22)}
 
 /* ═══════════════════════════════════════════════════════
-   ⑨ 听销冠分享 Overlay
+   ⑧ 听销冠分享 Overlay
    ═══════════════════════════════════════════════════════ */
 .listen-overlay{
   position:absolute;inset:0;z-index:60;
@@ -686,7 +671,7 @@ a{text-decoration:none;color:inherit}
 .listen-next-btn:active{background:#D6E8FF}
 
 /* ═══════════════════════════════════════════════════════
-   ⑩ 雷达图动画
+   ⑨ 雷达图动画
    ═══════════════════════════════════════════════════════ */
 .radar-data-polygon{
   transform-origin:center;
@@ -855,6 +840,8 @@ a{text-decoration:none;color:inherit}
     </div>
   </section>
 
+  <!-- 底部：我的学习记录 -->
+  <div style="padding:14px 0 8px;text-align:center;font-size:14px;font-weight:500;color:#2C5AD0;cursor:pointer" onclick="location.href='learn-record.html'">我的学习记录 ›</div>
 
 </div><!-- /content-panel -->
 
@@ -863,7 +850,7 @@ a{text-decoration:none;color:inherit}
 <!-- 五维详情 Overlay -->
 <div class="dim-overlay" id="dimOverlay">
   <header class="dim-head">
-    <button class="dim-back" onclick="closeDim()">←</button>
+    <button class="dim-back" onclick="dimBack()">←</button>
     <span class="dim-title" id="dimTitle">五维能力</span>
   </header>
   <div class="dim-body" id="dimBody"></div>
@@ -914,54 +901,57 @@ var D={
   overview:{name:'五维能力',score:76,color:'#1D2129',
     subs:[
       {key:'product', name:'产品专业', score:48, color:'#FF7D00'},
-      {key:'needs',   name:'需求分析', score:56, color:'#FF7D00'},
-      {key:'service', name:'服务满意', score:78, color:'#00B42A'},
+      {key:'customer',name:'客户经营', score:56, color:'#FF7D00'},
+      {key:'service', name:'服务满意度', score:78, color:'#00B42A'},
       {key:'compete', name:'竞品应对', score:61, color:'#1677FF'},
       {key:'followup',name:'客户跟进', score:70, color:'#1677FF'}
     ],
     strengths:[
-      {title:'服务意识突出',desc:'接待礼仪和试驾体验均超75分，客户到店体验好。'},
-      {title:'跟进节奏在线',desc:'知道约定下次联系时间，能主动给出带家人到店的钩子。'}
+      {title:'服务体验突出',desc:'全流程标准执行和情绪管理均超75分，客户到店体验好，具备销冠的服务底色。'},
+      {title:'跟进节奏在线',desc:'跟进时效把握到位，能主动约定下次联系时间并给出带家人到店的钩子。'}
     ],
     improvements:[
-      {title:'从「报参数」转向「讲场景」',desc:'多组客户在聊生活需求时，你直接跳到车辆数据。先共情、再追问、最后用参数佐证。'},
+      {title:'从「报参数」转向「讲场景」',desc:'多组客户在聊生活需求时，直接跳到车辆数据。先共情、再追问、最后用参数佐证。'},
       {title:'竞品对比要有具体锚点',desc:'不要泛泛说"我们更好"，准备3个核心差异点，用数字和场景讲故事。'}
     ]
   },
   product:{name:'产品专业',score:48,color:'#FF7D00',subs:[
-    ['车辆参数知识',52],['竞品对比能力',41],['技术讲解转化',38],['配置适配推荐',55]
+    ['品牌基因与定位传达',52],['核心卖点场景化讲解',45],['新能源/动力技术解析',42],['试乘试驾动态演示',55]
   ],suggestions:[
-    '客户问油耗，先反问"您每天开多少公里？"再用油费帮客户算账。',
-    '竞品对比不回避，先认同再转移："秦确实省油，我们的优势在于底盘和智能座舱。"',
-    '每个参数对应用户利益——「540L」→「婴儿车竖放，旁边还能塞两箱牛奶」。'
+    '客户问油耗，先反问"您每天开多少公里？"再用油费帮客户算账，而不是直接报官方数据。',
+    '练习「参数→场景」转化：每个参数对应一个客户利益点——「540L后备厢」→「婴儿车竖放，旁边还能塞两箱牛奶」。',
+    '竞品对比不回避，先认同再转移："秦确实省油，我们的优势在于底盘质感和智能座舱。"',
+    '试驾路线提前规划，结合客户用车场景设计记忆点，在动态体验中强化产品优势。'
   ]},
-  needs:{name:'需求分析',score:56,color:'#FF7D00',subs:[
-    ['倾听理解',62],['提问挖掘',48],['需求确认',55],['家庭决策洞察',42]
+  customer:{name:'客户经营',score:56,color:'#FF7D00',subs:[
+    ['客户画像与场景挖掘',60],['需求引导与车型匹配',50],['成交信号与意向判断',55],['客户信息收集与跟进',58]
   ],suggestions:[
-    '客户问"坐不坐得下"先反问"您家几口人？"再带他上车感受。',
-    '培养追问习惯：客户每说一个需求，至少追问一个"为什么"。',
-    '学会做需求确认：总结"李哥您主要关注空间、油耗、保养，对吗？"'
+    '客户问"坐不坐得下"先反问"您家几口人？常带老人不？"再带他上车实际感受。',
+    '培养追问习惯：客户每说一个需求，至少追问一个"为什么"——"您看重后排空间，是经常全家出游吗？"',
+    '学会做需求确认：总结"李哥我理解您主要关注三点：空间、油耗、保养，对吗？"',
+    '识别成交信号：客户已经在考虑车适不适合自家时，就是最佳逼单时机，别继续介绍车。'
   ]},
-  service:{name:'服务满意',score:78,color:'#00B42A',subs:[
-    ['接待礼仪',82],['试驾体验',75],['问题响应',80],['交车服务',72]
+  service:{name:'服务满意度',score:78,color:'#00B42A',subs:[
+    ['全流程标准执行',80],['沟通规范与合规风控',75],['情绪管理与体验优化',78]
   ],suggestions:[
-    '保持现有接待水准，这是核心优势。',
-    '交车后回访个性化，结合试驾时客户最在意的点做针对性跟进。',
-    '试驾加入「惊喜时刻」：提前调好空调备好水，小细节拉开差距。'
+    '保持现有接待水准，这是核心优势。继续做到提前准备、主动引导、让客户感到被重视。',
+    '注意合规红线：避免夸大智驾级别、违规承诺、贬低竞品，确保每句话经得起推敲。',
+    '感知客户犹豫或不满情绪时，调整节奏邀请体验静态展示或预约深度试驾，不要继续施压。'
   ]},
   compete:{name:'竞品应对',score:61,color:'#1677FF',subs:[
-    ['竞品知识储备',65],['优势转化能力',55],['异议化解',58],['价值塑造',68]
+    ['核心竞品知识储备',65],['差异化优势攻防话术',58],['场景化对比分析',55],['价格与价值异议处理',62]
   ],suggestions:[
-    '提前准备3个核心竞品的3个关键差异点。',
-    '客户提价格优势，具体说"我们多了X、Y、Z三个配置，算下来更划算"。',
-    '先认同再转移：肯定竞品优势，自然过渡到自己差异化。'
+    '提前准备3个核心竞品（秦PLUS、宋Pro、长安UNI-Z）的关键差异点：底盘调校、智能座舱、全球安全标准。',
+    '客户提价格优势时，具体说"我们多了X、Y、Z三个配置，算下来更划算"，用数字和场景讲故事。',
+    '针对客户关注的「空间/续航/价格/智能化」，进行MG优势场景对比（如开得爽、安全性高）。',
+    '化解"性价比/保值率"疑虑，强化MG技术平权、高配低价及驾驶价值，先认同再转移。'
   ]},
   followup:{name:'客户跟进',score:70,color:'#1677FF',subs:[
-    ['跟进及时性',75],['个性化沟通',62],['成交信号捕捉',68],['老客户维系',72]
+    ['跟进时效与内容针对性',72],['客户粘性与转介绍',65],['客户档案与线索管理',70]
   ],suggestions:[
-    '保持「约定下次联系时间」的好习惯。',
-    '等待期间别沉默：发一条个性化信息给客户。',
-    '客户说"回去商量"，当场帮他梳理需要商量的点。'
+    '保持「约定下次联系时间」的好习惯，这是成交闭环的第一步，很多销售输在没约定。',
+    '传递MG改装文化、车主社群活动、年轻生活方式，促进老带新转介绍。',
+    '记录客户纠结点（如选三厢还是两厢、选纯电还是燃油），确保信息不遗漏，便于精准跟进。'
   ]}
 };
 
@@ -1028,8 +1018,8 @@ var D={
   // 维度标签（外侧：维度名在上 / 分数在下）
   var dims=[
     {name:'产品专业',score:48,color:'#FFCB80',nx:150,ny:30,sx:150,sy:45},
-    {name:'需求分析',score:56,color:'#FFCB80',nx:262,ny:103,sx:262,sy:119},
-    {name:'服务满意',score:78,color:'#6BEBBE',nx:232,ny:212,sx:232,sy:228},
+    {name:'客户经营',score:56,color:'#FFCB80',nx:262,ny:103,sx:262,sy:119},
+    {name:'服务满意度',score:78,color:'#6BEBBE',nx:232,ny:212,sx:232,sy:228},
     {name:'竞品应对',score:61,color:'#6BEBBE',nx:68,ny:212,sx:68,sy:228},
     {name:'客户跟进',score:70,color:'#AECFFF',nx:38,ny:103,sx:38,sy:119}
   ];
@@ -1074,8 +1064,10 @@ window.exitPracticeFinish=function(){
 /* ═══════════════════════════════════════════════════════
    五维详情 Overlay
    ═══════════════════════════════════════════════════════ */
+var _currentDimKey = '';
 window.openDim=function(k){
   var d=D[k];if(!d)return;
+  _currentDimKey = k;
   document.getElementById('dimTitle').textContent=d.name;
   var b='';
   if(k==='overview'){
@@ -1096,6 +1088,13 @@ window.openDim=function(k){
   document.getElementById('dimBody').innerHTML=b;
   document.getElementById('dimOverlay').classList.add('open');
   document.querySelector('.phone').classList.add('dim-open');
+};
+window.dimBack=function(){
+	if(_currentDimKey && _currentDimKey!=='overview'){
+		openDim('overview');
+	}else{
+		closeDim();
+	}
 };
 window.closeDim=function(){
   document.getElementById('dimOverlay').classList.remove('open');

@@ -3,357 +3,730 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#EFF3FA">
   <title>学习记录</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      min-height: 100%; background: #dfe4ec;
-      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+    /* ══════════════════════════════════════════════════════════════
+       学习记录 — 上浓下淡 · 深蓝 hero + 白卡面板
+       设计宽度：330px 移动端
+       设计系统与 成交教练-phase1-v5 统一
+       ══════════════════════════════════════════════════════════════ */
+
+    :root {
+      --bg-page:       #EFF3FA;
+      --card-white:    #FFFFFF;
+      --ink:           #1A2742;
+      --text:          #414E68;
+      --muted:         #9AA4B8;
+
+      --learn:         #5BA0F5;
+      --learn-deep:    #3B82F6;
+      --learn-light:   #E8F1FE;
+      --learn-text:    #2C73E0;
+
+      --practice:      #2547A6;
+      --champ:         #E0A23A;
+
+      --card-shadow:   0 1px 2px rgba(20,40,90,0.05), 0 10px 26px rgba(30,58,140,0.07);
+      --radius-card:   18px;
+      --radius-btn:    18px;
+      --radius-tag:    6px;
+      --radius-phone:  24px;
+      --font:          -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --divider:       #EEF1F6;
     }
 
-    .stage { min-height: 100vh; display: grid; place-items: center; padding: 18px; }
-    .phone {
-      width: min(412px, 100vw); height: min(844px, calc(100vh - 36px));
-      min-height: 700px; overflow: hidden;
-      background: linear-gradient(180deg, #E3ECF9 0px, #EBEFF5 200px);
-      border: 1px solid #cfd6e1; border-radius: 28px;
-      box-shadow: 0 24px 64px rgba(20,32,52,.2);
-      display: flex; flex-direction: column;
-    }
-    .scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .scroll::-webkit-scrollbar { display: none; }
-
-    /* ── 导航 56px ── */
-    .nav {
-      height: 56px; display: flex; align-items: center; justify-content: center;
-      position: relative; flex-shrink: 0;
-    }
-    .back-btn {
-      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-      display: flex; align-items: center; gap: 2px;
-      color: #1677FF; font-size: 15px;
-      background: none; border: none; cursor: pointer;
-      font-family: inherit; padding: 0;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{
+      min-height:100%;
+      background: var(--bg-page);
+      font-family: var(--font);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
     }
-    .back-btn:active { opacity: 0.6; }
-    .nav-title { font-size: 18px; font-weight: 700; color: #1D2129; }
+    button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 
-    /* ── 内容 ── */
-    .content { padding: 0 16px 24px; }
-
-    /* ── 卡片 ── */
-    .card { border-radius: 20px; padding: 20px; }
-    .card + .card { margin-top: 16px; }
-
-    .card-title {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 16px; font-weight: 700; color: #1677FF;
-      margin-bottom: 20px;
+    .stage{min-height:100vh;display:grid;place-items:center;padding:18px}
+    .phone{
+      position:relative;
+      width:min(412px, 100vw);
+      height:min(915px, calc(100vh - 36px));
+      min-height:700px;
+      overflow:hidden;
+      background: var(--bg-page);
+      border:1px solid #d5dbe3;
+      border-radius:var(--radius-phone);
+      box-shadow:0 24px 64px rgba(20,32,52,.12);
+      display:flex;
+      flex-direction:column;
     }
-    .card-title::before {
-      content: ""; display: block; width: 4px; height: 16px;
-      border-radius: 2px; background: #1677FF; flex-shrink: 0;
+    .scroll{
+      flex:1;
+      min-height:0;
+      overflow-y:auto;
+      overscroll-behavior:contain;
+      scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+    }
+    .scroll::-webkit-scrollbar{display:none}
+
+    /* ═══════════════════════════════════════════════════════
+       ① 顶部沉浸式头部（深蓝渐变 hero）
+       ═══════════════════════════════════════════════════════ */
+    .hero{
+      position:relative;
+      background: linear-gradient(168deg, #3E68DD 0%, #274FB2 52%, #172E78 100%);
+      padding: 16px 16px 34px;
+      color:#fff;
+      overflow:hidden;
     }
 
-    .divider { height: 1px; background: #EEF1F6; margin: 20px 0; }
-
-    /* 3 列数据 */
-    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; }
-    .stat-val { font-size: 24px; font-weight: 800; color: #1D2129; line-height: 1.2; }
-    .stat-val.gold { color: #F59A00; }
-    .stat-sm { font-size: 14px; font-weight: 400; }
-    .stat-lbl { font-size: 12px; color: #8A94A6; margin-top: 4px; }
-
-    /* ====== 今日统计卡 ====== */
-    .card.today {
-      background: linear-gradient(140deg, #EAF3FF, #DFE9FE);
-      border: 1px solid rgba(22,119,255,.12);
-      box-shadow: 0 2px 12px rgba(22,119,255,.06);
+    /* 光感装饰 */
+    .hero-glow{
+      position:absolute;
+      top:50%; left:50%;
+      width:200px; height:180px;
+      transform:translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(150,200,255,0.28), transparent 68%);
+      pointer-events:none;
+    }
+    .hero-orb{
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+    .hero-orb--tr{
+      top:-40px; right:-40px;
+      width:160px; height:160px;
+      background: rgba(255,255,255,0.06);
+    }
+    .hero-orb--bl{
+      bottom:-30px; left:-30px;
+      width:96px; height:96px;
+      background: rgba(255,255,255,0.045);
     }
 
-    /* 星星主角 */
-    .star-hero {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 12px 0 8px;
+    /* 导航行 */
+    .hero-nav{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:44px;
+      position:relative;
+      z-index:1;
     }
-    .star-hero .big-star {
-      font-size: 36px; line-height: 1; color: #FFA51F;
-      text-shadow: 0 2px 12px rgba(255,165,31,.35);
-      margin-bottom: 4px;
+    .hero-back{
+      position:absolute;
+      left:0;
+      background:none;
+      border:none;
+      font-size:15px;
+      color: rgba(255,255,255,0.84);
+      cursor:pointer;
+      padding:4px;
+      line-height:1;
+      display:flex;
+      align-items:center;
+      gap:2px;
     }
-    .star-hero .big-num {
-      font-size: 48px; font-weight: 800; color: #F59A00; line-height: 1.1;
+    .hero-back:active{opacity:.6}
+    .hero-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0}
+    .hero-nav-title{
+      font-size:17px;
+      font-weight:500;
+      color:#fff;
     }
-    .star-hero .big-label { font-size: 13px; color: #8A94A6; margin-top: 4px; }
 
-    /* 进度条 */
-    .progress-info { font-size: 12px; color: #8A94A6; margin-bottom: 8px; }
-    .progress-info strong { color: #1D2129; font-weight: 600; }
-    .progress-info .pct { color: #1677FF; font-weight: 600; }
-    .progress-bar { height: 8px; background: #D5E2F7; border-radius: 4px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #1677FF, #3D8FFF); }
-
-    /* ====== 本周统计卡 ====== */
-    .card.week { background: #FFFFFF; box-shadow: 0 6px 22px rgba(27,67,140,.07); }
-    .week-header {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: 20px;
+    /* 标题行 */
+    .hero-title-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 0 16px;
+      position:relative;
+      z-index:1;
     }
-    .week-header .card-title { margin-bottom: 0; }
-    .week-summary { font-size: 12.5px; color: #8A94A6; flex-shrink: 0; }
-
-    /* 集星墙 */
-    .star-wall { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-    .sw-cell {
-      background: #F4F7FC; border-radius: 13px; padding: 12px 4px;
-      display: flex; flex-direction: column; align-items: center; gap: 5px;
-      border: 1.5px solid transparent;
+    .hero-title-bar{
+      width:4px;
+      height:16px;
+      border-radius:2px;
+      background:#8FC0FF;
+      flex-shrink:0;
     }
-    .sw-cell.today { background: #EAF3FF; border-color: #1677FF; }
-    .sw-star { font-size: 16px; line-height: 1; color: #FFA51F; }
-    .sw-cell.rest .sw-star { color: #D0D5DD; }
-    .sw-num  { font-size: 17px; font-weight: 800; color: #F59A00; line-height: 1; }
-    .sw-cell.rest .sw-num { font-size: 13px; font-weight: 400; color: #B0B8C5; }
-    .sw-day  { font-size: 12px; color: #8A94A6; }
-    .sw-cell.today .sw-day { color: #1677FF; font-weight: 700; }
-
-    /* ====== 每日明细 ====== */
-    .detail-wrap { text-align: center; padding: 20px 0 0; }
-    .detail-toggle {
-      font-size: 13px; color: #8A94A6; cursor: pointer;
-      background: none; border: none; font-family: inherit;
-      padding: 8px 16px; -webkit-tap-highlight-color: transparent;
+    .hero-title-text{
+      font-size:16px;
+      font-weight:500;
+      color:#fff;
     }
-    .detail-toggle:active { color: #4E5969; }
 
-    .detail-list { display: none; }
-    .detail-list.open { display: block; }
+    /* 星星英雄区 */
+    .star-hero{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:4px 0 0;
+      position:relative;
+      z-index:1;
+    }
+    .star-hero .star-icon{
+      font-size:34px;
+      line-height:1;
+      color:#FFC062;
+      filter:drop-shadow(0 2px 10px rgba(255,180,60,0.5));
+      margin-bottom:2px;
+    }
+    .star-hero .star-num{
+      font-size:44px;
+      font-weight:500;
+      color:#FFC470;
+      line-height:1.1;
+      filter:drop-shadow(0 2px 12px rgba(255,180,60,0.4));
+    }
+    .star-hero .star-label{
+      font-size:12px;
+      color:rgba(255,255,255,0.74);
+      margin-top:4px;
+    }
 
-    .day-card {
-      background: #FFFFFF; border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.04); padding: 14px 16px; margin-top: 10px;
+    /* 分隔线 */
+    .hero-divider{
+      height:1px;
+      background:rgba(255,255,255,0.15);
+      margin:14px 0;
+      position:relative;
+      z-index:1;
     }
-    .day-card-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
-    .day-date { font-size: 14px; font-weight: 600; color: #1D2129; }
-    .day-info { font-size: 12px; color: #8A94A6; }
 
-    .day-card-body { border-top: 1px solid #F5F5F5; padding-top: 6px; }
-    .log-item {
-      display: flex; align-items: center; justify-content: space-between; padding: 8px 0;
+    /* 三项统计 */
+    .hero-stats{
+      display:flex;
+      justify-content:center;
+      text-align:center;
+      position:relative;
+      z-index:1;
     }
-    .log-item + .log-item { border-top: 1px solid #F5F5F5; }
-    .log-left { min-width: 0; display: flex; align-items: baseline; gap: 8px; }
-    .log-title { font-size: 13px; color: #1D2129; line-height: 1.4; }
-    .log-type {
-      font-size: 10px; color: #8A94A6; flex-shrink: 0;
-      background: #F5F5F5; padding: 1px 6px; border-radius: 4px;
+    .hero-stat{
+      flex:1;
     }
-    .log-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 12px; }
-    .log-time { font-size: 12px; color: #8A94A6; white-space: nowrap; }
-    .log-stars { display: flex; gap: 1px; font-size: 11px; line-height: 1; }
-    .star-on  { color: #FFA51F; }
-    .star-off { color: #E8E8E8; }
-    .star-score {
-      display: inline-flex; align-items: baseline; gap: 1px;
-      color: #F59A00; font-weight: 600; white-space: nowrap;
+    .hero-stat-num{
+      font-size:21px;
+      font-weight:500;
+      color:#fff;
+      line-height:1.2;
     }
-    .star-score .sc-num { font-size: 13px; font-weight: 700; }
-    .star-score .sc-of  { font-size: 10px; color: #8A94A6; font-weight: 400; }
-    .day-empty { font-size: 13px; color: #B0B8C5; padding: 8px 0 4px; }
+    .hero-stat-num .inner-sm{
+      font-size:14px;
+      font-weight:400;
+    }
+    .hero-stat-lbl{
+      font-size:11px;
+      color:rgba(255,255,255,0.7);
+      margin-top:4px;
+    }
 
-    @media (max-width: 430px) {
-      .stage { padding: 0; }
-      .phone { width: 100vw; height: 100vh; height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }
+    /* 进度区域 */
+    .hero-progress-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:8px;
+      position:relative;
+      z-index:1;
+    }
+    .hero-progress-label{
+      font-size:13px;
+      color:rgba(255,255,255,0.85);
+    }
+    .hero-progress-pct{
+      font-size:14px;
+      font-weight:500;
+      color:#FFD08A;
+    }
+    .hero-progress-bar{
+      height:8px;
+      border-radius:5px;
+      background:rgba(255,255,255,0.2);
+      overflow:hidden;
+      position:relative;
+      z-index:1;
+    }
+    .hero-progress-fill{
+      height:100%;
+      border-radius:5px;
+      width:25%;
+      background:linear-gradient(90deg,#BFE0FF,#7FB0FF);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ② 内容面板（白圆角上盖头部）
+       ═══════════════════════════════════════════════════════ */
+    .content-panel{
+      background: var(--bg-page);
+      border-radius: 22px 22px 0 0;
+      margin-top: -20px;
+      padding: 18px 15px 20px;
+      position:relative;
+      z-index:2;
+    }
+
+    /* ── 白卡 ── */
+    .card{
+      background: var(--card-white);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .card-head{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .card-bar{
+      width:4px;
+      height:17px;
+      border-radius:2px;
+      flex-shrink:0;
+      background: #5BA0F5;
+    }
+    .card-title{
+      font-size:16px;
+      font-weight:500;
+      color:var(--ink);
+      flex:1;
+    }
+    .card-sub{
+      font-size:12px;
+      color:var(--muted);
+      flex-shrink:0;
+    }
+
+    /* ── 每日星星条（7格） ── */
+    .star-wall{
+      display:flex;
+      gap:5px;
+    }
+    .sw-cell{
+      flex:1;
+      background:#F2F5FB;
+      border-radius:11px;
+      padding:9px 0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      border:1.5px solid transparent;
+      min-width:0;
+    }
+    .sw-cell .sw-star{
+      font-size:13px;
+      line-height:1;
+      color:#EFA82B;
+    }
+    .sw-cell .sw-num{
+      font-size:14px;
+      font-weight:500;
+      color:#E8941A;
+      line-height:1;
+    }
+    .sw-cell .sw-day{
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    /* 休息格 */
+    .sw-cell.rest{
+      background:#F4F5F7;
+    }
+    .sw-cell.active .sw-num{
+      color:#2563EB;
+    }
+    .sw-cell.active .sw-day{
+      color:#2563EB;
+    }
+
+    .card-divider{
+      height:1px;
+      background:var(--divider);
+      margin:18px 0;
+    }
+
+    /* 三项汇总 */
+    .card-stats{
+      display:flex;
+      justify-content:center;
+      text-align:center;
+    }
+    .card-stat{
+      flex:1;
+    }
+    .card-stat-num{
+      font-size:21px;
+      font-weight:500;
+      color:var(--ink);
+      line-height:1.2;
+    }
+    .card-stat-num.gold{
+      color:#E8941A;
+    }
+    .card-stat-lbl{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    /* ── 底部分隔 ── */
+    .card + .card{
+      margin-top:14px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ③ 每日明细
+       ═══════════════════════════════════════════════════════ */
+    .detail-wrap{
+      text-align:center;
+      padding:20px 0 0;
+    }
+    .detail-toggle{
+      font-size:14px;
+      color:#7486A6;
+      cursor:pointer;
+      background:none;
+      border:none;
+      font-family:inherit;
+      padding:8px 16px;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .detail-toggle:active{opacity:.6}
+
+    .detail-list{
+      display:none;
+    }
+    .detail-list.open{
+      display:block;
+    }
+
+    .day-card{
+      background: var(--card-white);
+      border-radius:16px;
+      box-shadow:0 1px 3px rgba(0,0,0,.04);
+      padding:14px 16px;
+      margin-top:10px;
+    }
+    .day-card-head{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+    .day-date{
+      font-size:14px;
+      font-weight:500;
+      color:var(--ink);
+    }
+
+    .day-card-body{
+      border-top:1px solid #F5F5F5;
+      padding-top:6px;
+    }
+    .log-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:8px 0;
+    }
+    .log-item + .log-item{
+      border-top:1px solid #F5F5F5;
+    }
+    .log-left{
+      min-width:0;
+      display:flex;
+      align-items:baseline;
+      gap:8px;
+    }
+    .log-title{
+      font-size:13px;
+      color:var(--ink);
+      line-height:1.4;
+    }
+    .log-type{
+      font-size:10px;
+      color:var(--muted);
+      flex-shrink:0;
+      background:#F5F5F5;
+      padding:1px 6px;
+      border-radius:4px;
+    }
+    .log-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+      margin-left:12px;
+    }
+    .log-time{
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .log-stars{
+      display:flex;
+      gap:1px;
+      font-size:11px;
+      line-height:1;
+    }
+    .star-on{color:#FFA51F}
+    .star-off{color:#E8E8E8}
+
+    /* ── Responsive ── */
+    @media(max-width:430px){
+      .stage{padding:0}
+      .phone{width:100vw;height:100vh;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}
+      .hero{padding:16px env(safe-area-inset-right,16px) 34px env(safe-area-inset-left,16px)}
+      .content-panel{padding:18px env(safe-area-inset-right,15px) 20px env(safe-area-inset-left,15px)}
     }
   </style>
 </head>
 <body>
-  <main class="stage">
-    <div class="phone">
+<main class="stage">
+<div class="phone">
 
-      <div class="nav">
-        <button class="back-btn" onclick="location.href='成交教练-phase1-v5.html'">‹ 返回</button>
-        <span class="nav-title">学习记录</span>
+<div class="scroll">
+
+  <!-- ═══════════════════════════════════════════════════════
+     ① 顶部沉浸式头部（深蓝渐变 hero）
+     ═══════════════════════════════════════════════════════ -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-orb hero-orb--tr"></div>
+    <div class="hero-orb hero-orb--bl"></div>
+
+    <!-- 导航 -->
+    <div class="hero-nav">
+      <button class="hero-back" onclick="location.href='成交教练-phase1-v5.html'">
+        <svg viewBox="0 0 24 24"><polyline points="15,4 7,12 15,20"/></svg>
+        返回
+      </button>
+      <span class="hero-nav-title">学习记录</span>
+    </div>
+
+    <!-- 标题 -->
+    <div class="hero-title-row">
+      <span class="hero-title-bar"></span>
+      <span class="hero-title-text">今日统计</span>
+    </div>
+
+    <!-- 星星英雄区 -->
+    <div class="star-hero">
+      <span class="star-icon">★</span>
+      <span class="star-num">13</span>
+      <span class="star-label">今日获得星星</span>
+    </div>
+
+    <!-- 分隔 -->
+    <div class="hero-divider"></div>
+
+    <!-- 三项统计 -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">55</div>
+        <div class="hero-stat-lbl">学习时间（分钟）</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">2</div>
+        <div class="hero-stat-lbl">学习次数</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num"><span class="inner-sm">第</span>12<span class="inner-sm">名</span></div>
+        <div class="hero-stat-lbl">门店排名</div>
+      </div>
+    </div>
+
+    <!-- 分隔 -->
+    <div class="hero-divider"></div>
+
+    <!-- 进度 -->
+    <div class="hero-progress-row">
+      <span class="hero-progress-label">今日学习进度</span>
+      <span class="hero-progress-pct">25%</span>
+    </div>
+    <div class="hero-progress-bar">
+      <div class="hero-progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+     ② 内容面板
+     ═══════════════════════════════════════════════════════ -->
+  <div class="content-panel">
+
+    <!-- 本周统计卡 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-bar"></span>
+        <span class="card-title">本周统计</span>
       </div>
 
-      <div class="scroll">
-        <div class="content">
-
-          <!-- ====== 今日统计卡 ====== -->
-          <div class="card today">
-            <div class="card-title">今日统计</div>
-
-            <!-- 星星主角区 -->
-            <div class="star-hero">
-              <span class="big-star">★</span>
-              <span class="big-num">13</span>
-              <span class="big-label">今日获得星星</span>
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- 3 列数据 -->
-            <div class="stat-row">
-              <div><div class="stat-val">55</div><div class="stat-lbl">学习时间（分钟）</div></div>
-              <div><div class="stat-val">2</div><div class="stat-lbl">学习次数</div></div>
-              <div><div class="stat-val"><span class="stat-sm">第</span>12<span class="stat-sm">名</span></div><div class="stat-lbl">门店排名</div></div>
-            </div>
-
-            <!-- 进度条 -->
-            <div class="divider"></div>
-            <div class="progress-info">
-              <span>今日学习进度 <span class="pct">25%</span></span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
-          </div>
-
-          <!-- ====== 本周统计卡 ====== -->
-          <div class="card week">
-            <div class="week-header">
-              <div class="card-title">本周统计</div>
-              <span class="week-summary">共推送 29 · 已学 9 项</span>
-            </div>
-
-            <!-- 集星墙 -->
-            <div class="star-wall">
-              <div class="sw-cell">
-                <span class="sw-star">★</span><span class="sw-num">1</span><span class="sw-day">周二</span>
-              </div>
-              <div class="sw-cell">
-                <span class="sw-star">★</span><span class="sw-num">3</span><span class="sw-day">周三</span>
-              </div>
-              <div class="sw-cell">
-                <span class="sw-star">★</span><span class="sw-num">1</span><span class="sw-day">周四</span>
-              </div>
-              <div class="sw-cell">
-                <span class="sw-star">★</span><span class="sw-num">2</span><span class="sw-day">周五</span>
-              </div>
-              <div class="sw-cell">
-                <span class="sw-star">★</span><span class="sw-num">1</span><span class="sw-day">周六</span>
-              </div>
-              <div class="sw-cell rest">
-                <span class="sw-star">★</span><span class="sw-num">休息</span><span class="sw-day">周日</span>
-              </div>
-              <div class="sw-cell today">
-                <span class="sw-star">★</span><span class="sw-num">13</span><span class="sw-day">周一</span>
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- 3 列 -->
-            <div class="stat-row">
-              <div><div class="stat-val">245</div><div class="stat-lbl">总时长（分钟）</div></div>
-              <div><div class="stat-val gold">21</div><div class="stat-lbl">本周星星</div></div>
-              <div><div class="stat-val">6</div><div class="stat-lbl">学习天数</div></div>
-            </div>
-          </div>
-
-          <!-- ====== 每日明细 ====== -->
-          <div class="detail-wrap">
-            <button class="detail-toggle" id="detailToggle" onclick="toggleDetail()">展开每日明细 ⌄</button>
-          </div>
-
-          <div class="detail-list" id="detailList">
-            <!-- 6/23 周一 — 13星 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月23日 周一</span><span class="day-info">55分钟</span></div>
-              <div class="day-card-body">
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">MG7 新品上市资料</span><span class="log-type">PDF</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
-                </div>
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">成交话术演练</span><span class="log-type">对练</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-score"><span class="sc-num">12</span><span class="sc-of">/15</span></span></span><span class="log-time">25分钟</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- 6/22 周日 — 休息 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月22日 周日</span><span class="day-info">休息</span></div>
-              <div class="day-empty">暂无学习记录</div>
-            </div>
-            <!-- 6/21 周六 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月21日 周六</span><span class="day-info">20分钟</span></div>
-              <div class="day-card-body">
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">留资开口标准话术</span><span class="log-type">PPT</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">20分钟</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- 6/20 周五 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月20日 周五</span><span class="day-info">45分钟</span></div>
-              <div class="day-card-body">
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">MG4 产品核心卖点讲解</span><span class="log-type">PDF</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
-                </div>
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">竞品对比分析 — 秦 PLUS vs MG4</span><span class="log-type">Word</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">15分钟</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- 6/19 周四 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月19日 周四</span><span class="day-info">35分钟</span></div>
-              <div class="day-card-body">
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">金融方案推荐技巧</span><span class="log-type">PPT</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">35分钟</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- 6/18 周三 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月18日 周三</span><span class="day-info">60分钟</span></div>
-              <div class="day-card-body">
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">试驾邀约标准流程</span><span class="log-type">视频</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">25分钟</span></div>
-                </div>
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">MG Cyberster 展厅接待攻略</span><span class="log-type">PDF</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span><span class="star-on">★</span></span><span class="log-time">35分钟</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- 6/17 周二 -->
-            <div class="day-card">
-              <div class="day-card-head"><span class="day-date">6月17日 周二</span><span class="day-info">30分钟</span></div>
-              <div class="day-card-body">
-                <div class="log-item">
-                  <div class="log-left"><span class="log-title">MG7 半固态电池核心技术</span><span class="log-type">PDF</span></div>
-                  <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+      <!-- 每日星星墙 -->
+      <div class="star-wall">
+        <div class="sw-cell">
+          <span class="sw-star">★</span>
+          <span class="sw-num">1</span>
+          <span class="sw-day">周二</span>
+        </div>
+        <div class="sw-cell">
+          <span class="sw-star">★</span>
+          <span class="sw-num">3</span>
+          <span class="sw-day">周三</span>
+        </div>
+        <div class="sw-cell">
+          <span class="sw-star">★</span>
+          <span class="sw-num">1</span>
+          <span class="sw-day">周四</span>
+        </div>
+        <div class="sw-cell">
+          <span class="sw-star">★</span>
+          <span class="sw-num">2</span>
+          <span class="sw-day">周五</span>
+        </div>
+        <div class="sw-cell">
+          <span class="sw-star">★</span>
+          <span class="sw-num">1</span>
+          <span class="sw-day">周六</span>
+        </div>
+        <div class="sw-cell">
+          <span class="sw-star">★</span>
+          <span class="sw-num">0</span>
+          <span class="sw-day">周日</span>
+        </div>
+        <div class="sw-cell active">
+          <span class="sw-star">★</span>
+          <span class="sw-num">13</span>
+          <span class="sw-day">周一</span>
         </div>
       </div>
 
-    </div>
-  </main>
+      <!-- 分隔 -->
+      <div class="card-divider"></div>
 
-  <script>
-    function toggleDetail() {
-      var list = document.getElementById('detailList');
-      var btn = document.getElementById('detailToggle');
-      if (list.classList.contains('open')) {
-        list.classList.remove('open');
-        btn.innerHTML = '展开每日明细 ⌄';
-      } else {
-        list.classList.add('open');
-        btn.innerHTML = '收起每日明细 ⌃';
-      }
+      <!-- 三项汇总 -->
+      <div class="card-stats">
+        <div class="card-stat">
+          <div class="card-stat-num">245</div>
+          <div class="card-stat-lbl">总时长（分钟）</div>
+        </div>
+        <div class="card-stat">
+          <div class="card-stat-num gold">21</div>
+          <div class="card-stat-lbl">本周星星</div>
+        </div>
+        <div class="card-stat">
+          <div class="card-stat-num">6</div>
+          <div class="card-stat-lbl">学习天数</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 每日明细 -->
+    <div class="detail-wrap">
+      <button class="detail-toggle" id="detailToggle" onclick="toggleDetail()">展开每日明细 ⌄</button>
+    </div>
+
+    <div class="detail-list" id="detailList">
+      <!-- 6/23 周一 -->
+      <div class="day-card">
+        <div class="day-card-head"><span class="day-date">6月23日 周一</span></div>
+        <div class="day-card-body">
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">MG7 新品上市资料</span><span class="log-type">PDF</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
+          </div>
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">成交话术演练</span><span class="log-type">对练</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">25分钟</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 6/21 周六 -->
+      <div class="day-card">
+        <div class="day-card-head"><span class="day-date">6月21日 周六</span></div>
+        <div class="day-card-body">
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">留资开口标准话术</span><span class="log-type">PPT</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">20分钟</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 6/20 周五 -->
+      <div class="day-card">
+        <div class="day-card-head"><span class="day-date">6月20日 周五</span></div>
+        <div class="day-card-body">
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">MG4 产品核心卖点讲解</span><span class="log-type">PDF</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
+          </div>
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">竞品对比分析 — 秦 PLUS vs MG4</span><span class="log-type">Word</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">15分钟</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 6/19 周四 -->
+      <div class="day-card">
+        <div class="day-card-head"><span class="day-date">6月19日 周四</span></div>
+        <div class="day-card-body">
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">金融方案推荐技巧</span><span class="log-type">PPT</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">35分钟</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 6/18 周三 -->
+      <div class="day-card">
+        <div class="day-card-head"><span class="day-date">6月18日 周三</span></div>
+        <div class="day-card-body">
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">试驾邀约标准流程</span><span class="log-type">视频</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">25分钟</span></div>
+          </div>
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">MG Cyberster 展厅接待攻略</span><span class="log-type">PDF</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">35分钟</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 6/17 周二 -->
+      <div class="day-card">
+        <div class="day-card-head"><span class="day-date">6月17日 周二</span></div>
+        <div class="day-card-body">
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">MG7 半固态电池核心技术</span><span class="log-type">PDF</span></div>
+            <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-panel -->
+
+</div><!-- /scroll -->
+
+</div><!-- /phone -->
+</main>
+
+<script>
+  function toggleDetail() {
+    var list = document.getElementById('detailList');
+    var btn = document.getElementById('detailToggle');
+    if (list.classList.contains('open')) {
+      list.classList.remove('open');
+      btn.innerHTML = '展开每日明细 ⌄';
+    } else {
+      list.classList.add('open');
+      btn.innerHTML = '收起每日明细 ⌃';
     }
-  </script>
+  }
+</script>
 </body>
 </html>
