@@ -10,7 +10,7 @@ var LEARN_RECORD_DATA = [
   { date: '2026-06-23', dayLabel: '6月23日', weekday: '周一', totalMinutes: 55, sessions: 2, assignedCount: 8,
     items: [
       { title: 'MG7 新品上市资料',       type: 'PDF',  minutes: 30, stars: 1 },
-      { title: '成交话术演练',           type: '对练', minutes: 25, stars: 12, maxStars: 15 }
+      { title: '成交话术演练',           type: '对练', minutes: 25, stars: 1 }
     ]
   },
   // 周日 — 休息
@@ -38,7 +38,7 @@ var LEARN_RECORD_DATA = [
   { date: '2026-06-18', dayLabel: '6月18日', weekday: '周三', totalMinutes: 60, sessions: 2, assignedCount: 6,
     items: [
       { title: '试驾邀约标准流程',            type: '视频', minutes: 25, stars: 1 },
-      { title: 'MG Cyberster 展厅接待攻略', type: 'PDF',  minutes: 35, stars: 2 }
+      { title: 'MG Cyberster 展厅接待攻略', type: 'PDF',  minutes: 35, stars: 1 }
     ]
   },
   // 周二 — 1 星
@@ -272,7 +272,6 @@ var LEARN_RECORD_CSS = '' +
 '    margin-bottom: 16px;' +
 '  }' +
 '  .lr-week-header .lr-card-title { margin-bottom: 0; }' +
-'  .lr-week-summary { font-size: 12px; color: #9AA4B8; flex-shrink: 0; }' +
 
 '  /* ── 集星墙（7 格） ── */' +
 '  .lr-star-wall {' +
@@ -309,15 +308,6 @@ var LEARN_RECORD_CSS = '' +
 '  .lr-sw-cell.today .lr-sw-num  { color: #2563EB; }' +
 '  .lr-sw-cell.today .lr-sw-day  { color: #2563EB; }' +
 
-'  /* 休息格 */' +
-'  .lr-sw-cell.rest { background: #F4F5F7; }' +
-'  .lr-sw-cell.rest .lr-sw-star { color: #C7CCD6; }' +
-'  .lr-sw-cell.rest .lr-sw-num  {' +
-'    font-size: 11px; font-weight: 500;' +
-'    color: #AAB2C0;' +
-'  }' +
-'  .lr-sw-cell.rest .lr-sw-day  { color: #AAB2C0; }' +
-
 '  /* ===== 每日明细 ===== */' +
 '  .lr-detail-wrap {' +
 '    text-align: center; padding: 20px 0 0;' +
@@ -346,7 +336,6 @@ var LEARN_RECORD_CSS = '' +
 '    margin-bottom: 10px;' +
 '  }' +
 '  .lr-day-date { font-size: 14px; font-weight: 500; color: #1A2742; }' +
-'  .lr-day-info { font-size: 12px; color: #9AA4B8; }' +
 
 '  .lr-day-card-body {' +
 '    border-top: 1px solid #EEF1F6;' +
@@ -370,13 +359,6 @@ var LEARN_RECORD_CSS = '' +
 '  /* 星星 */' +
 '  .lr-log-stars { display: flex; gap: 1px; font-size: 11px; line-height: 1; }' +
 '  .lr-star-on  { color: #EFA82B; }' +
-'  .lr-star-off { color: #E8E8E8; }' +
-'  .lr-star-score {' +
-'    display: inline-flex; align-items: baseline; gap: 1px;' +
-'    color: #E8941A; font-weight: 500; white-space: nowrap;' +
-'  }' +
-'  .lr-star-score .lr-sc-num { font-size: 13px; font-weight: 500; }' +
-'  .lr-star-score .lr-sc-of  { font-size: 10px; color: #8A94A6; font-weight: 400; }' +
 
 '  .lr-day-empty {' +
 '    font-size: 13px; color: #B0B8C5; padding: 8px 0 4px;' +
@@ -397,16 +379,8 @@ function lrDayTotalStars(day) {
   return t;
 }
 
-function lrRenderStars(n, max) {
-  max = max || 3;
-  if (max > 5) {
-    return '<span class="lr-star-score"><span class="lr-sc-num">' + n + '</span><span class="lr-sc-of">/' + max + '</span></span>';
-  }
-  var h = '';
-  for (var i = 1; i <= max; i++) {
-    h += '<span class="' + (i <= n ? 'lr-star-on' : 'lr-star-off') + '">★</span>';
-  }
-  return h;
+function lrRenderStars() {
+  return '<span class="lr-star-on">★</span>';
 }
 
 /** 集星墙（7 格，最旧→最新，今天在最后） */
@@ -417,13 +391,12 @@ function lrRenderStarWall(weekBars, todayIndex) {
     var isToday = (i === todayIndex);
     var stars = lrDayTotalStars(day);
     var isRest = (day.items.length === 0);
-    var cls = isRest ? ' rest' : '';
-    if (isToday) cls = ' today';
+    var cls = isToday ? ' today' : '';
 
     h += '<div class="lr-sw-cell' + cls + '">';
     h += '<span class="lr-sw-star">★</span>';
     if (isRest) {
-      h += '<span class="lr-sw-num">休息</span>';
+      h += '<span class="lr-sw-num"></span>';
     } else {
       h += '<span class="lr-sw-num">' + stars + '</span>';
     }
@@ -466,16 +439,13 @@ function renderLearnRecordPage() {
   var weekBars = LEARN_RECORD_DATA.slice().reverse();  // 周二…周一
   var todayBarIndex = weekBars.length - 1;              // 周一在末尾
 
-  var weekMinutes = 0, weekStars = 0, weekCompleted = 0, weekAssigned = 0, weekDays = 0;
+  var weekMinutes = 0, weekStars = 0, weekDays = 0;
   for (var w = 0; w < LEARN_RECORD_DATA.length; w++) {
     var d = LEARN_RECORD_DATA[w];
     weekMinutes += d.totalMinutes;
     weekStars += lrDayTotalStars(d);
-    weekCompleted += d.items.length;
-    weekAssigned += d.assignedCount;
     if (d.items.length > 0) weekDays++;
   }
-  // weekMinutes=245, weekStars=21, weekCompleted=9, weekAssigned=29, weekDays=6
 
   // ── 构建 HTML ──
   var html = LEARN_RECORD_CSS;
@@ -532,7 +502,7 @@ function renderLearnRecordPage() {
   html += '<div class="lr-card week">';
   html += '<div class="lr-week-header">';
   html += '<div class="lr-card-title">本周统计</div>';
-  html += '<span class="lr-week-summary">共推送 ' + weekAssigned + ' · 已学 ' + weekCompleted + ' 项</span>';
+  // 不再显示「共推送 · 已学」
   html += '</div>';
 
   // 集星墙
@@ -556,12 +526,12 @@ function renderLearnRecordPage() {
 
   html += '<div class="lr-detail-list" id="lrDetailList">';
 
-  for (var dd = 0; dd < LEARN_RECORD_DATA.length; dd++) {
+  for (var dd = 0; dd < Math.min(LEARN_RECORD_DATA.length, 7); dd++) {
     var dayData = LEARN_RECORD_DATA[dd];
     html += '<div class="lr-day-card">';
     html += '<div class="lr-day-card-head">';
     html += '<span class="lr-day-date">' + dayData.dayLabel + ' ' + dayData.weekday + '</span>';
-    html += '<span class="lr-day-info">' + (dayData.totalMinutes > 0 ? dayData.totalMinutes + '分钟' : '休息') + '</span>';
+    // 不再显示时长统计
     html += '</div>';
 
     if (dayData.items.length > 0) {
@@ -573,7 +543,7 @@ function renderLearnRecordPage() {
         html += '<span class="lr-log-type">' + item.type + '</span>';
         html += '</div>';
         html += '<div class="lr-log-right">';
-        html += '<span class="lr-log-stars">' + lrRenderStars(item.stars, item.maxStars) + '</span>';
+        html += '<span class="lr-log-stars">' + lrRenderStars() + '</span>';
         html += '<span class="lr-log-time">' + item.minutes + '分钟</span>';
         html += '</div>';
         html += '</div>';

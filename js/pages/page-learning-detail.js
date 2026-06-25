@@ -26,7 +26,6 @@ var RANGE_RECOMMENDED = [
 
 // ====== 分类浏览 ======
 var RANGE_CATEGORIES = ['产品知识','销售话术','销售流程','竞品对比','活动营销','金融保险','门店管理','客户管理','新人入职','合规制度'];
-var RANGE_SIDEBAR = ['今日重点'].concat(RANGE_CATEGORIES);
 
 var RANGE_BROWSE = [
   { id:'b1', title:'MG4 产品核心卖点讲解',         cat:'产品知识', type:'PDF',  learners:45  },
@@ -93,17 +92,6 @@ var LEARN_CSS = '' +
   /* ═══════════ Left sidebar 90px ═══════════ */
 '  .t-side{width:90px;flex-shrink:0;background:#E7ECF5;overflow-y:auto;scrollbar-width:none;padding:8px 7px 0;}' +
 '  .t-side::-webkit-scrollbar{display:none;}' +
-  /* Hero card */
-'  .t-side-hero{background:linear-gradient(150deg,#3E78E8,#2356C8);border-radius:12px;padding:12px 10px;margin-bottom:6px;box-shadow:0 5px 14px rgba(40,90,200,0.32);cursor:pointer;}' +
-'  .t-side-hero:active{opacity:.9;}' +
-'  .t-side-hero-title{font-size:14px;font-weight:600;color:#fff;}' +
-'  .t-side-hero-sub{font-size:10px;color:rgba(255,255,255,0.82);margin-top:5px;}' +
-'  .t-side-hero-bar{height:4px;border-radius:3px;background:rgba(255,255,255,0.25);margin-top:6px;overflow:hidden;}' +
-'  .t-side-hero-fill{width:33%;height:4px;border-radius:3px;background:#fff;}' +
-  /* Divider */
-'  .t-side-divider{height:1px;background:#D3DAE6;margin:8px 4px 4px;}' +
-  /* 知识库 */
-'  .t-side-label{font-size:10px;color:#A2ABBC;padding:2px 5px 4px;}' +
   /* Tabs */
 '  .t-side-tab{display:flex;align-items:center;justify-content:center;width:100%;padding:10px 5px;font-size:13px;font-weight:400;color:#7C8AA6;text-align:center;line-height:1.25;border:none;background:none;cursor:pointer;font-family:var(--lr-font);position:relative;transition:color .12s;}' +
 '  .t-side-tab:active{opacity:.7;}' +
@@ -113,14 +101,6 @@ var LEARN_CSS = '' +
   /* ═══════════ Right content ═══════════ */
 '  .t-main{flex:1;overflow-y:auto;scrollbar-width:none;padding:14px 12px 16px;-webkit-overflow-scrolling:touch;}' +
 '  .t-main::-webkit-scrollbar{display:none;}' +
-'' +
-  /* 分组标题 + 来源色点 */
-'  .t-group-label{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:#1A2742;padding:0 0 10px 2px;}' +
-'  .t-group-label+.t-group-label{padding-top:6px;}' +
-'  .t-group-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}' +
-'  .t-group-dot.blue{background:#3B82F6;}' +
-'  .t-group-dot.deepblue{background:#1E3A8C;}' +
-'  .t-group-dot.gold{background:#E0A23A;}' +
 '' +
   /* 资料卡片 */
 '  .t-card{background:#fff;border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:0 1px 2px rgba(20,40,90,.04),0 6px 18px rgba(30,58,140,.06);cursor:pointer;transition:box-shadow .12s,transform .12s;}' +
@@ -155,22 +135,11 @@ var LEARN_CSS = '' +
 '  .t-overlay-body{flex:1;overflow-y:auto;padding:16px 14px;background:#EFF3FA;-webkit-overflow-scrolling:touch;}' +
 '  .t-overlay-body::-webkit-scrollbar{display:none;}' +
 '' +
-  /* Overlay: 共用白卡 (18px 圆角 + 双层阴影) */
-'  .t-summary{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(20,40,90,.05),0 10px 26px rgba(30,58,140,.07);}' +
-'  .t-summary-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}' +
-'  .t-summary-gold-badge{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFE0A3,#F5B945);display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
-'  .t-summary-label{font-size:16px;font-weight:500;color:#1A2742;}' +
-'  .t-summary-text{font-size:14px;line-height:1.7;color:#5A6680;}' +
-'' +
-  /* Overlay: KP 要点 */
-'  .t-kp{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #EDF0F5;font-size:13px;line-height:1.65;}' +
-'  .t-kp:last-child{border-bottom:none;}' +
-'  .t-kp-num{flex-shrink:0;width:20px;height:20px;background:#E7F0FD;color:#3B82F6;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}' +
-'  .t-kp-text{color:#5A6680;}' +
-'' +
   /* Overlay: 课件文档 card */
 '  .t-content{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(20,40,90,.05),0 10px 26px rgba(30,58,140,.07);}' +
 '  .t-content-title{font-size:16px;font-weight:500;color:#1A2742;margin-bottom:13px;}' +
+'  .t-summary-text{font-size:14px;line-height:1.7;color:#5A6680;}' +
+'  .t-pdf-embed{width:100%;height:420px;border:1px solid #EAEEF4;border-radius:10px;background:#fafafa;}' +
   /* 课件缩略图 */
 '  .t-thumb{border-radius:12px;border:1px solid #EAEEF4;overflow:hidden;}' +
 '  .t-thumb-cover{height:120px;background:linear-gradient(135deg,#3C5A4E,#22382F);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}' +
@@ -216,26 +185,7 @@ var LEARN_CSS = '' +
   /* 通用白卡 */
 '  .d-card{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(20,40,90,.05),0 10px 26px rgba(30,58,140,.07);}' +
 '  .d-card-title{font-size:16px;font-weight:500;color:#1A2742;margin-bottom:13px;}' +
-'' +
-  /* 金色闪电徽章 */
-'  .d-gold-badge{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFE0A3,#F5B945);display:flex;align-items:center;justify-content:center;flex-shrink:0;}' +
-'  .d-summary-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}' +
-'  .d-summary-label{font-size:16px;font-weight:500;color:#1A2742;}' +
 '  .d-summary-text{font-size:14px;line-height:1.7;color:#5A6680;}' +
-'' +
-  /* 课件缩略图 */
-'  .d-thumb{border-radius:12px;border:1px solid #EAEEF4;overflow:hidden;}' +
-'  .d-thumb-cover{height:120px;background:linear-gradient(135deg,#3C5A4E,#22382F);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}' +
-'  .d-thumb-cover::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.12),transparent 60%);}' +
-'  .d-thumb-cover-title{font-size:18px;font-weight:600;color:#fff;position:relative;z-index:1;}' +
-'  .d-thumb-cover-date{font-size:11px;color:rgba(255,255,255,.7);position:relative;z-index:1;}' +
-'  .d-thumb-body{background:#fff;padding:12px 13px;}' +
-'  .d-thumb-bar{height:8px;background:#EDF0F5;border-radius:4px;margin-bottom:8px;}' +
-'  .d-thumb-bar.w70{width:70%;}' +
-'  .d-thumb-bar.w90{width:90%;}' +
-'  .d-thumb-blocks{display:flex;gap:8px;}' +
-'  .d-thumb-block{flex:1;height:34px;background:#F3F6FA;border-radius:6px;}' +
-'  .d-thumb-hint{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:12px;font-size:13px;color:#7486A6;}' +
 '' +
   /* 主按钮 */
 '  .d-btn{display:block;width:100%;padding:15px 0;text-align:center;font-size:16px;font-weight:500;color:#fff;background:linear-gradient(135deg,#5BA0F5,#2E6FE0);border:none;border-radius:16px;box-shadow:0 8px 20px rgba(46,111,224,.32);cursor:pointer;font-family:var(--lr-font);margin-top:auto;}' +
@@ -247,12 +197,11 @@ var LEARN_CSS = '' +
 
 // ====== SVG ======
 var LEARN_ARROW_LEFT_SVG = '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M12.5 4L7 10l5.5 6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-var LEARN_BOLT_SVG = '<svg width="17" height="17" viewBox="0 0 17 17"><path d="M9.5 1.5L4 9h4l-1.5 6.5L13 8H9l.5-6.5z" fill="#fff"/></svg>';
 var LEARN_FILE_TEXT_SVG = '<svg width="14" height="14" viewBox="0 0 14 14"><path d="M8 1H3.5A1.5 1.5 0 002 2.5v9A1.5 1.5 0 003.5 13h7a1.5 1.5 0 001.5-1.5V5L8 1z" stroke="#7486A6" stroke-width="1.2" fill="none"/><path d="M8 1v4h4" stroke="#7486A6" stroke-width="1.2" fill="none"/><line x1="5" y1="8" x2="9" y2="8" stroke="#7486A6" stroke-width="0.8" stroke-linecap="round"/><line x1="5" y1="10" x2="8" y2="10" stroke="#7486A6" stroke-width="0.8" stroke-linecap="round"/></svg>';
 var LEARN_CHEVRON_RIGHT_SVG = '<svg width="15" height="15" viewBox="0 0 15 15"><path d="M5.5 3L10 7.5 5.5 12" stroke="#C2CAD8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 // ====== 状态 ======
-var _tab = '今日重点';
+var _tab = RANGE_CATEGORIES[0];
 
 function getLearnMaterial(mid) { return LEARN_MATERIALS[mid] || LEARN_MATERIALS[LEARN_DEFAULT_MATERIAL]; }
 function tTc(t) { var m={'PDF':'pdf','视频':'video','课程':'course','PPT':'ppt','Word':'word'}; return m[t]||'pdf'; }
@@ -270,46 +219,17 @@ window.learnMarkComplete = function(mid) {
 window.tSelect = function(tab) { _tab = tab; tRender(); tUpdateSide(); };
 function tUpdateSide() {
   var els = document.querySelectorAll('.t-side-tab');
-  els.forEach(function(el){ el.classList.toggle('focus', el.textContent.trim().replace(/[0-9]/g,'') === _tab); });
+  els.forEach(function(el){ el.classList.toggle('focus', el.textContent.trim() === _tab); });
 }
 
 // ====== 渲染内容 ======
 function tRender() {
   var ct = document.getElementById('tMain'); if (!ct) return;
   var h = '';
-
-  if (_tab === '今日重点') {
-    var groups = [
-      { label:'系统推荐', dotClass:'blue', items:RANGE_RECOMMENDED.filter(function(r){return r.group==='系统推荐';}) },
-      { label:'总部定向', dotClass:'deepblue',items:RANGE_RECOMMENDED.filter(function(r){return r.group==='总部定向';}) },
-      { label:'店长内训', dotClass:'gold',  items:RANGE_RECOMMENDED.filter(function(r){return r.group==='店长内训';}) }
-    ];
-    groups.forEach(function(g){
-      if (!g.items.length) return;
-      h += '<div class="t-group-label"><span class="t-group-dot '+g.dotClass+'"></span>'+g.label+'</div>';
-      g.items.forEach(function(it){ h += tRecCard(it); });
-    });
-  } else {
-    var list = RANGE_BROWSE.filter(function(m){return m.cat===_tab;});
-    if (!list.length) { h += '<div class="t-empty">暂无资料</div>'; }
-    else { list.forEach(function(m){ h += tBrowseCard(m); }); }
-  }
-
+  var list = RANGE_BROWSE.filter(function(m){return m.cat===_tab;});
+  if (!list.length) { h += '<div class="t-empty">暂无资料</div>'; }
+  else { list.forEach(function(m){ h += tBrowseCard(m); }); }
   ct.innerHTML = h;
-}
-
-// 推荐卡片（无来源标签，最多 2 个主题标签）
-function tRecCard(it) {
-  var tc = tTc(it.type);
-  var topicTags = it.tags.slice(0, 2);
-  var h = '<div class="t-card" onclick="window.tOpenRec(\''+it.id+'\')">';
-  h += '<div class="t-card-row1"><span class="t-card-title">'+it.title+'</span>'+LEARN_CHEVRON_RIGHT_SVG+'</div>';
-  h += '<div class="t-card-row2"><span class="t-tag t-tag-type '+tc+'">'+it.type+'</span>';
-  for (var i=0;i<topicTags.length;i++) h += '<span class="t-tag t-tag-topic">'+topicTags[i]+'</span>';
-  h += '</div>';
-  h += '<div class="t-card-row3">'+it.date+' 更新</div>';
-  h += '</div>';
-  return h;
 }
 
 // 浏览卡片
@@ -328,12 +248,8 @@ window.tOpenRec = function(rid) {
   var it = RANGE_RECOMMENDED.find(function(r){return r.id===rid;}); if (!it) return;
   document.getElementById('tOverlayTitle').textContent = it.title;
   var b = '';
-  b += '<div class="t-summary"><div class="t-summary-head"><div class="t-summary-gold-badge">'+LEARN_BOLT_SVG+'</div><span class="t-summary-label">1 分钟重点提炼</span></div><div class="t-summary-text">'+it.summary+'</div></div>';
-  if (it.type==='视频' && it.videoLabel) {
-    b += '<div class="t-content"><div class="t-content-title">视频讲解</div><div class="t-video-wrap"><div class="t-video-inner"><div class="t-video-play"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M0 0l18 10L0 20z" fill="#fff"/></svg></div><span class="t-video-label">'+it.videoLabel+' · '+it.videoDuration+'</span></div></div></div>';
-  } else if (it.pdfPath) {
-    b += '<div class="t-content"><div class="t-content-title">课件文档</div><div class="t-thumb"><div class="t-thumb-cover"><div class="t-thumb-cover-title">MG7 2025款培训</div><div class="t-thumb-cover-date">2024.11</div></div><div class="t-thumb-body"><div class="t-thumb-bar w70"></div><div class="t-thumb-bar w90"></div><div class="t-thumb-blocks"><div class="t-thumb-block"></div><div class="t-thumb-block"></div><div class="t-thumb-block"></div></div></div></div><div class="t-thumb-hint">'+LEARN_FILE_TEXT_SVG+'<span>共 12 页 · 点击查看完整课件</span></div></div>';
-  }
+  b += '<div class="t-content"><div class="t-content-title">资料</div><div class="t-thumb"><div class="t-thumb-cover"><div class="t-thumb-cover-title">MG7 2025款培训</div><div class="t-thumb-cover-date">2024.11</div></div><div class="t-thumb-body"><div class="t-thumb-bar w70"></div><div class="t-thumb-bar w90"></div><div class="t-thumb-blocks"><div class="t-thumb-block"></div><div class="t-thumb-block"></div><div class="t-thumb-block"></div></div></div></div><div class="t-thumb-hint">'+LEARN_FILE_TEXT_SVG+'<span>共 12 页 · 点击查看完整课件</span></div></div>';
+  b += '<div class="t-content"><div class="t-content-title">视频讲解</div><div class="t-video-wrap"><div class="t-video-inner"><div class="t-video-play"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M0 0l18 10L0 20z" fill="#fff"/></svg></div><span class="t-video-label">MG7 核心卖点解析 · 4分钟</span></div></div></div>';
   b += '<button class="t-done-btn" onclick="window.tMarkDone()">我学完了</button>';
   document.getElementById('tOverlayBody').innerHTML = b;
   document.getElementById('tOverlay').classList.add('open');
@@ -342,13 +258,8 @@ window.tOpenRec = function(rid) {
 window.tOpenBrowse = function(mid) {
   var m = RANGE_BROWSE.find(function(it){return it.id===mid;}); if (!m) return;
   document.getElementById('tOverlayTitle').textContent = m.title;
-  var kps = RANGE_BROWSE_KP[mid]; var b = '';
-  if (kps && kps.length) {
-    b += '<div class="t-summary"><div class="t-summary-head"><div class="t-summary-gold-badge">'+LEARN_BOLT_SVG+'</div><span class="t-summary-label">成交教练为你提炼以下重点</span></div>';
-    for (var i=0;i<kps.length;i++) b += '<div class="t-kp"><span class="t-kp-num">'+(i+1)+'</span><span class="t-kp-text">'+kps[i]+'</span></div>';
-    b += '</div>';
-  }
-  b += '<div class="t-content"><div class="t-content-title">原始资料</div><div class="t-thumb"><div class="t-thumb-cover"><div class="t-thumb-cover-title">MG7 2025款培训</div><div class="t-thumb-cover-date">2024.11</div></div><div class="t-thumb-body"><div class="t-thumb-bar w70"></div><div class="t-thumb-bar w90"></div><div class="t-thumb-blocks"><div class="t-thumb-block"></div><div class="t-thumb-block"></div><div class="t-thumb-block"></div></div></div></div><div class="t-thumb-hint">'+LEARN_FILE_TEXT_SVG+'<span>共 12 页 · 点击查看完整课件</span></div></div>';
+  var b = '';
+  b += '<div class="t-content"><iframe class="t-pdf-embed" src="assets/课件：MG7 25款上市培训.pdf#toolbar=0&navpanes=0" frameborder="0"></iframe></div>';
   b += '<button class="t-done-btn" onclick="window.tMarkDone()">我学完了</button>';
   document.getElementById('tOverlayBody').innerHTML = b;
   document.getElementById('tOverlay').classList.add('open');
@@ -373,13 +284,8 @@ function renderLearnPage() {
     html += '<div class="t-body">';
     // 左栏
     html += '<div class="t-side">';
-    // Hero 卡片
-    html += '<div class="t-side-hero" onclick="window.tSelect(\'今日重点\')"><div class="t-side-hero-title">今日重点</div><div class="t-side-hero-sub">已学 2/6</div><div class="t-side-hero-bar"><div class="t-side-hero-fill"></div></div></div>';
-    // 分割线 + 知识库
-    html += '<div class="t-side-divider"></div><div class="t-side-label">知识库</div>';
-    // 分类列表(跳过"今日重点")
-    for (var i=1;i<RANGE_SIDEBAR.length;i++) {
-      var tab = RANGE_SIDEBAR[i];
+    for (var i=0;i<RANGE_CATEGORIES.length;i++) {
+      var tab = RANGE_CATEGORIES[i];
       var focusCls = tab === _tab ? ' focus' : '';
       html += '<button class="t-side-tab'+focusCls+'" onclick="window.tSelect(\''+tab+'\')">'+tab+'</button>';
     }
@@ -398,13 +304,13 @@ function renderLearnPage() {
     return html;
   }
 
-  // ── 培训详情页 ──
+  // ── 学习详情页（从首页进入） ──
   html += '<div class="learn-page">';
   html += '<div class="d-header"><button class="d-header-back" onclick="window.learnGoBack()">'+LEARN_ARROW_LEFT_SVG+'</button><span class="d-header-title">'+material.title+'</span></div>';
   html += '<div class="d-content">';
-  var summaryText = material.summaryPoints.join('；');
-  html += '<div class="d-card"><div class="d-summary-head"><div class="d-gold-badge">'+LEARN_BOLT_SVG+'</div><span class="d-summary-label">1 分钟重点提炼</span></div><div class="d-summary-text">'+summaryText+'</div></div>';
-  html += '<div class="d-card"><div class="d-card-title">课件文档</div><div class="d-thumb"><div class="d-thumb-cover"><div class="d-thumb-cover-title">'+material.title+'</div><div class="d-thumb-cover-date">2024.11</div></div><div class="d-thumb-body"><div class="d-thumb-bar w70"></div><div class="d-thumb-bar w90"></div><div class="d-thumb-blocks"><div class="d-thumb-block"></div><div class="d-thumb-block"></div><div class="d-thumb-block"></div></div></div></div><div class="d-thumb-hint">'+LEARN_FILE_TEXT_SVG+'<span>共 12 页 · 点击查看完整课件</span></div></div>';
+  html += '<div class="d-card"><div class="d-card-title">视频讲解</div><div class="t-video-wrap"><div class="t-video-inner"><div class="t-video-play"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M0 0l18 10L0 20z" fill="#fff"/></svg></div><span class="t-video-label">'+material.videoLabel+' · '+material.videoDuration+'</span></div></div></div>';
+  var desc = material.summaryPoints.join('；');
+  html += '<div class="d-card"><div class="d-summary-text">'+desc+'</div></div>';
   html += '<button class="d-btn" onclick="window.learnMarkComplete(\''+material.materialId+'\')">我学完了</button>';
   html += '</div>';
   html += '<div class="d-home"></div>';
