@@ -774,16 +774,16 @@ a{text-decoration:none;color:inherit}
       <span class="link-muted" onclick="toggleExpand('expandPractice',this)" data-label="更多对练">更多对练 <span class="link-arrow">›</span></span>
     </div>
     <div class="info-list">
-      <div class="info-item"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-      <div class="info-item"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+      <div class="info-item"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+      <div class="info-item"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
     </div>
     <div class="expand-target" id="expandPractice">
       <div class="info-list">
-        <div class="info-item"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-        <div class="info-item"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-        <div class="info-item"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-        <div class="info-item"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
-        <div class="info-item"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-action" onclick="location.href='scenario-practice.html'">再练一次</span></div>
+        <div class="info-item"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+        <div class="info-item"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+        <div class="info-item"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+        <div class="info-item"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+        <div class="info-item"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
       </div>
     </div>
   </section>
@@ -855,8 +855,6 @@ a{text-decoration:none;color:inherit}
     </div>
   </section>
 
-  <!-- 底部链接 -->
-  <div class="footer-record" onclick="location.href='index.html#learn-record'">我的学习记录 ›</div>
 
 </div><!-- /content-panel -->
 
@@ -1086,14 +1084,14 @@ window.openDim=function(k){
       var s=d.subs[i];
       b+='<div class="dim-row" onclick="openDim(\''+s.key+'\')"><span class="dim-row-label">'+s.name+'</span><div class="dim-track"><div class="dim-fill" style="width:'+s.score+'%;background:'+s.color+'"></div></div><span class="dim-row-score" style="color:'+s.color+'">'+s.score+'</span><span class="dim-row-arrow">›</span></div>';
     }
-    b+='</div><div class="dim-tip"><h4 style="color:#00B42A">核心优势</h4>'+d.strengths.map(function(s){return'<div class="dim-tip-item"><span class="dim-tip-num green">✓</span><span><strong>'+s.title+'</strong>：'+s.desc+'</span></div>';}).join('')+'</div><div class="dim-tip"><h4 style="color:#FF7D00">待提升</h4>'+d.improvements.map(function(s){return'<div class="dim-tip-item"><span class="dim-tip-num amber">•</span><span><strong>'+s.title+'</strong>：'+s.desc+'</span></div>';}).join('')+'</div><button class="dim-back-btn" onclick="closeDim()">← 返回成交教练首页</button>';
+    b+='</div><div class="dim-tip"><h4 style="color:#00B42A">核心优势</h4>'+d.strengths.map(function(s){return'<div class="dim-tip-item"><span class="dim-tip-num green">✓</span><span><strong>'+s.title+'</strong>：'+s.desc+'</span></div>';}).join('')+'</div><div class="dim-tip"><h4 style="color:#FF7D00">待提升</h4>'+d.improvements.map(function(s){return'<div class="dim-tip-item"><span class="dim-tip-num amber">•</span><span><strong>'+s.title+'</strong>：'+s.desc+'</span></div>';}).join('')+'</div>';
   }else{
     b='<div class="dim-card"><div class="dim-card-head"><div><h3>'+d.name+'</h3><p class="dim-card-sub">子维度得分</p></div><div class="dim-big-score" style="background:'+(d.score<60?'#FFF1F0':'#F7F8FA')+';color:'+d.color+'">'+d.score+'</div></div>';
     for(var i=0;i<d.subs.length;i++){
       var sub=d.subs[i], sc=sub[1], bc=sc<60?'#FF7D00':d.color;
       b+='<div class="dim-row"><span class="dim-row-label">'+sub[0]+'</span><div class="dim-track"><div class="dim-fill" style="width:'+sc+'%;background:'+bc+'"></div></div><span class="dim-row-score" style="color:'+bc+'">'+sc+'</span></div>';
     }
-    b+='</div><div class="dim-tip"><h4>改进建议</h4>'+d.suggestions.map(function(t,i){return'<div class="dim-tip-item"><span class="dim-tip-num">'+(i+1)+'</span><span>'+t+'</span></div>';}).join('')+'</div><button class="dim-back-btn" onclick="openDim(\'overview\')">← 返回五维总览</button><button class="dim-back-btn" onclick="closeDim()">← 返回成交教练首页</button>';
+    b+='</div><div class="dim-tip"><h4>改进建议</h4>'+d.suggestions.map(function(t,i){return'<div class="dim-tip-item"><span class="dim-tip-num">'+(i+1)+'</span><span>'+t+'</span></div>';}).join('')+'</div><button class="dim-back-btn" onclick="openDim(\'overview\')">← 返回五维总览</button>';
   }
   document.getElementById('dimBody').innerHTML=b;
   document.getElementById('dimOverlay').classList.add('open');
