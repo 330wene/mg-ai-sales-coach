@@ -3,24 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>精准学 · MG7 学习详情</title>
+<title>精准学 · 学习详情</title>
 <style>
   :root {
-    --blue: #1677FF;
-    --text: #1c1c1e;
-    --t2: #3a3a3c;
-    --t3: #8e8e93;
-    --line: #e5e5ea;
-    --card-bg: #f7f8fa;
-    --page-bg: #f5f6f8;
-    --white: #ffffff;
+    --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
     height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: var(--font);
     background: #e4e6ea;
     -webkit-font-smoothing: antialiased;
   }
@@ -32,243 +25,201 @@
     padding: 28px 20px 48px;
   }
 
-
-  /* ── Phone shell ── */
+  /* ── Container ── */
   .device {
-    width: 375px;
-    height: 780px;
-    background: var(--page-bg);
-    border-radius: 30px;
+    width: 412px;
+    background: #EFF3FA;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow:
-      0 0 0 0.5px rgba(0,0,0,0.06),
-      0 12px 40px rgba(0,0,0,0.08),
-      0 4px 12px rgba(0,0,0,0.04);
+    box-shadow: 0 12px 36px rgba(20,50,100,0.2);
     display: flex;
     flex-direction: column;
     position: relative;
   }
 
-  /* ── Status bar ── */
-  .sb {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 13px 26px 5px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    flex-shrink: 0;
-    background: var(--page-bg);
-  }
-  .sb-icons { display: flex; gap: 6px; align-items: center; }
-
-  /* ── Nav ── */
-  .nav {
+  /* ── Header (深蓝渐变) ── */
+  .header {
     display: flex;
     align-items: center;
-    padding: 2px 14px 10px;
-    gap: 6px;
+    padding: 16px;
+    background: linear-gradient(168deg, #3E68DD 0%, #274FB2 60%, #1B3380 100%);
     flex-shrink: 0;
-    background: var(--page-bg);
+    gap: 8px;
   }
-  .nav .back-btn {
+  .header-back {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    cursor: pointer;
     background: none;
     border: none;
     padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
   }
-  .nav .title {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text);
+  .header-back:active { opacity: 0.7; }
+  .header-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
     line-height: 1.3;
+    flex: 1;
   }
 
-  /* ── Scroll area ── */
-  .scroll {
+  /* ── Content ── */
+  .content {
     flex: 1;
     overflow-y: auto;
-    padding: 0 16px 20px;
+    padding: 16px 14px;
     display: flex;
     flex-direction: column;
   }
-  .scroll::-webkit-scrollbar { display: none; }
+  .content::-webkit-scrollbar { display: none; }
 
-  /* ── 1分钟概要解读 ── */
-  .summary-card {
-    background: var(--white);
-    border-radius: 14px;
-    padding: 18px 16px;
+  /* ── White card (18px round + double shadow) ── */
+  .card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px;
     margin-bottom: 14px;
+    box-shadow: 0 1px 2px rgba(20,40,90,0.05), 0 10px 26px rgba(30,58,140,0.07);
   }
-  .summary-header {
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1A2742;
+    margin-bottom: 13px;
+  }
+
+  /* ── Gold bolt badge ── */
+  .summary-head {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
   }
-  .summary-icon {
-    width: 22px;
-    height: 22px;
-    background: #FFF7E6;
-    border-radius: 6px;
+  .gold-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #FFE0A3, #F5B945);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
     flex-shrink: 0;
   }
   .summary-label {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .summary-badge {
-    font-size: 11px;
-    color: #FA8C16;
-    background: #FFF7E6;
-    padding: 2px 8px;
-    border-radius: 10px;
+    font-size: 16px;
     font-weight: 500;
+    color: #1A2742;
   }
-  .summary-points {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .summary-point {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
+  .summary-text {
     font-size: 14px;
-    line-height: 1.5;
-    color: var(--t2);
-  }
-  .summary-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--blue);
-    flex-shrink: 0;
-    margin-top: 7px;
+    line-height: 1.7;
+    color: #5A6680;
   }
 
-  /* ── 课件 PDF ── */
-  .section-card {
-    background: var(--white);
-    border-radius: 14px;
-    padding: 18px 16px;
-    margin-bottom: 14px;
-  }
-  .section-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-  .pdf-embed {
-    width: 100%;
-    height: 420px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: #fafafa;
-  }
-
-  /* ── 视频 ── */
-  .video-wrapper {
-    width: 100%;
-    border-radius: 10px;
+  /* ── Thumbnail ── */
+  .thumb {
+    border-radius: 12px;
+    border: 1px solid #EAEEF4;
     overflow: hidden;
-    position: relative;
-    background: #1a1a2e;
-    aspect-ratio: 16 / 9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
-  .video-placeholder {
+  .thumb-cover {
+    height: 120px;
+    background: linear-gradient(135deg, #3C5A4E, #22382F);
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    color: #fff;
+    justify-content: center;
+    gap: 6px;
   }
-  .play-btn {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(8px);
+  .thumb-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.12), transparent 60%);
+  }
+  .thumb-cover-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+  .thumb-cover-date {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    position: relative;
+    z-index: 1;
+  }
+  .thumb-body {
+    background: #fff;
+    padding: 12px 13px;
+  }
+  .thumb-bar {
+    height: 8px;
+    background: #EDF0F5;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .thumb-bar.w70 { width: 70%; }
+  .thumb-bar.w90 { width: 90%; }
+  .thumb-blocks {
+    display: flex;
+    gap: 8px;
+  }
+  .thumb-block {
+    flex: 1;
+    height: 34px;
+    background: #F3F6FA;
+    border-radius: 6px;
+  }
+  .thumb-hint {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    border: 1.5px solid rgba(255,255,255,0.3);
-    transition: background 0.15s;
-  }
-  .play-btn:hover {
-    background: rgba(255,255,255,0.28);
-  }
-  .video-label {
+    gap: 5px;
+    margin-top: 12px;
     font-size: 13px;
-    font-weight: 500;
-    opacity: 0.85;
-  }
-  .video-duration {
-    font-size: 12px;
-    color: var(--blue);
-    background: rgba(22,119,255,0.1);
-    padding: 2px 10px;
-    border-radius: 10px;
-    font-weight: 500;
+    color: #7486A6;
   }
 
-  /* ── 底部按钮 ── */
-  .btn-solid {
+  /* ── Primary button ── */
+  .btn-primary {
     display: block;
     width: 100%;
-    padding: 14px 0;
+    padding: 15px 0;
     text-align: center;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     color: #fff;
-    background: #0A2463;
+    background: linear-gradient(135deg, #5BA0F5, #2E6FE0);
     border: none;
-    border-radius: 12px;
-    letter-spacing: 0.4px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(46,111,224,0.32);
     cursor: pointer;
-    font-family: inherit;
-    transition: opacity 0.2s;
+    font-family: var(--font);
+    margin-top: auto;
+    transition: transform 0.12s;
   }
-  .btn-solid:active {
-    opacity: 0.85;
+  .btn-primary:active {
+    transform: scale(0.985);
   }
 
   /* ── Home indicator ── */
-  .home {
-    width: 134px; height: 4px;
-    background: var(--text);
+  .home-indicator {
+    width: 134px;
+    height: 4px;
+    background: #1A2742;
     border-radius: 100px;
     flex-shrink: 0;
     opacity: 0.14;
-    margin: 6px auto 10px;
+    margin: 8px auto 10px;
   }
 
-  /* ── 底部安全区 ── */
-  .bottom-bar {
-    padding: 0 16px 20px;
-    flex-shrink: 0;
-    background: var(--page-bg);
-  }
-
-  /* ── 星星奖励弹层 ── */
+  /* ── Reward overlay ── */
   .reward-overlay {
     position: fixed;
     inset: 0;
@@ -309,25 +260,25 @@
   .reward-text {
     font-size: 18px;
     font-weight: 700;
-    color: var(--text);
+    color: #1A2742;
     margin: 12px 0 4px;
   }
   .reward-sub {
     font-size: 14px;
-    color: var(--t3);
+    color: #8e8e93;
     margin-bottom: 6px;
   }
   .reward-stats {
     font-size: 12px;
-    color: var(--t3);
-    background: var(--card-bg);
+    color: #8e8e93;
+    background: #F3F6FA;
     border-radius: 8px;
     padding: 8px 12px;
     margin: 12px 0 4px;
     line-height: 1.6;
   }
   .reward-stats span {
-    color: var(--t2);
+    color: #5A6680;
     font-weight: 500;
   }
 </style>
@@ -336,77 +287,59 @@
 
 <div class="device">
 
-  <!-- 状态栏 -->
-  <div class="sb">
-    <span>9:41</span>
-    <span class="sb-icons">
-      <svg width="15" height="10" viewBox="0 0 15 10"><rect x="0" y="5" width="2" height="5" rx="0.5" fill="#1c1c1e"/><rect x="3.5" y="3" width="2" height="7" rx="0.5" fill="#1c1c1e"/><rect x="7" y="1" width="2" height="9" rx="0.5" fill="#1c1c1e"/><rect x="10.5" y="0" width="2" height="10" rx="0.5" fill="#1c1c1e"/></svg>
-      <svg width="15" height="11" viewBox="0 0 15 11"><rect x="0" y="0" width="13" height="11" rx="2.5" fill="none" stroke="#1c1c1e" stroke-width="1"/><rect x="1.5" y="1.5" width="3" height="8" rx="0.5" fill="#1c1c1e"/><rect x="5.5" y="1.5" width="3" height="8" rx="0.5" fill="#1c1c1e"/><rect x="9.5" y="1.5" width="3" height="8" rx="0.5" fill="#1c1c1e"/><rect x="13.5" y="3" width="1.8" height="5" rx="0.9" fill="#1c1c1e" opacity="0.25"/></svg>
-    </span>
-  </div>
-
-  <!-- 导航 -->
-  <div class="nav">
-    <button class="back-btn" onclick="history.back()">
-      <svg width="9" height="16" viewBox="0 0 9 16"><path d="M7.5 1L1 8l6.5 7" stroke="#007AFF" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <!-- Header -->
+  <div class="header">
+    <button class="header-back" onclick="history.back()">
+      <svg width="20" height="20" viewBox="0 0 20 20"><path d="M12.5 4L7 10l5.5 6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <span class="title">MG7 新品上市培训</span>
+    <span class="header-title">车辆续航里程官方标准答复话术</span>
   </div>
 
-  <!-- 滚动区 -->
-  <div class="scroll">
+  <!-- Content -->
+  <div class="content" id="scrollArea">
 
-    <!-- 1分钟概要解读 -->
-    <div class="summary-card">
-      <div class="summary-header">
-        <span class="summary-icon">⚡</span>
-        <span class="summary-label">1 分钟概要解读</span>
-        <span class="summary-badge">约 1 分钟</span>
+    <!-- Card ①: 1 分钟重点提炼 -->
+    <div class="card">
+      <div class="summary-head">
+        <div class="gold-badge">
+          <svg width="17" height="17" viewBox="0 0 17 17"><path d="M9.5 1.5L4 9h4l-1.5 6.5L13 8H9l.5-6.5z" fill="#fff"/></svg>
+        </div>
+        <span class="summary-label">1 分钟重点提炼</span>
       </div>
-      <div class="summary-points">
-        <div class="summary-point">
-          <span class="summary-dot"></span>
-          <span>半固态电池版 CLTC 续航 537km，日常通勤一周一充，长途无焦虑</span>
-        </div>
-        <div class="summary-point">
-          <span class="summary-dot"></span>
-          <span>XDS 弯道动态控制同级独有，过弯极限提升 12%，驾控感受远超同级</span>
-        </div>
-        <div class="summary-point">
-          <span class="summary-dot"></span>
-          <span>后排纯平地板 + 540° 影像，接「给家里人开」的客户用得上</span>
-        </div>
-      </div>
+      <div class="summary-text">官方标准话术模板，涵盖 CLTC 续航定义、电池容量换算、同价位对比核心数据，直接用于客户答疑。</div>
     </div>
 
-    <!-- 课件 PDF -->
-    <div class="section-card">
-      <div class="section-title">课件</div>
-      <embed class="pdf-embed" src="assets/课件：MG7 25款上市培训.pdf#toolbar=0&navpanes=0" type="application/pdf">
-    </div>
-
-    <!-- 视频 -->
-    <div class="section-card">
-      <div class="section-title">视频讲解</div>
-      <div class="video-wrapper">
-        <div class="video-placeholder">
-          <div class="play-btn">
-            <svg width="18" height="20" viewBox="0 0 18 20"><path d="M0 0l18 10L0 20z" fill="#fff"/></svg>
+    <!-- Card ②: 课件文档 -->
+    <div class="card">
+      <div class="card-title">课件文档</div>
+      <div class="thumb">
+        <div class="thumb-cover">
+          <div class="thumb-cover-title">MG7 2025款培训</div>
+          <div class="thumb-cover-date">2024.11</div>
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-bar w70"></div>
+          <div class="thumb-bar w90"></div>
+          <div class="thumb-blocks">
+            <div class="thumb-block"></div>
+            <div class="thumb-block"></div>
+            <div class="thumb-block"></div>
           </div>
-          <span class="video-label">MG7 核心卖点解析</span>
         </div>
+      </div>
+      <div class="thumb-hint">
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M8 1H3.5A1.5 1.5 0 002 2.5v9A1.5 1.5 0 003.5 13h7a1.5 1.5 0 001.5-1.5V5L8 1z" stroke="#7486A6" stroke-width="1.2" fill="none"/><path d="M8 1v4h4" stroke="#7486A6" stroke-width="1.2" fill="none"/><line x1="5" y1="8" x2="9" y2="8" stroke="#7486A6" stroke-width="0.8" stroke-linecap="round"/><line x1="5" y1="10" x2="8" y2="10" stroke="#7486A6" stroke-width="0.8" stroke-linecap="round"/></svg>
+        <span>共 12 页 · 点击查看完整课件</span>
       </div>
     </div>
 
-  </div>
+    <!-- Button -->
+    <button class="btn-primary" id="doneBtn">我学完了</button>
 
-  <!-- 底部按钮 -->
-  <div class="bottom-bar">
-    <button class="btn-solid" id="doneBtn">我学完了</button>
   </div>
 
   <!-- Home indicator -->
-  <div class="home"></div>
+  <div class="home-indicator"></div>
 
 </div>
 
@@ -415,7 +348,7 @@
   const pageEnterTime = Date.now();
   let maxScroll = 0;
 
-  const scrollEl = document.querySelector('.scroll');
+  const scrollEl = document.getElementById('scrollArea');
   scrollEl.addEventListener('scroll', () => {
     const scrolled = scrollEl.scrollTop + scrollEl.clientHeight;
     const total = scrollEl.scrollHeight;
@@ -435,7 +368,6 @@
   document.getElementById('doneBtn').addEventListener('click', () => {
     const readDuration = Date.now() - pageEnterTime;
 
-    // 构建奖励弹层
     const overlay = document.createElement('div');
     overlay.className = 'reward-overlay';
     overlay.innerHTML = `
@@ -450,12 +382,10 @@
     `;
     document.body.appendChild(overlay);
 
-    // 点击任意位置关闭并返回首页
     overlay.addEventListener('click', () => {
       window.location.href = '成交教练-phase1-v2.html';
     });
 
-    // 2.5 秒后自动返回首页
     setTimeout(() => {
       window.location.href = '成交教练-phase1-v2.html';
     }, 2500);
