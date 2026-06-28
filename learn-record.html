@@ -459,6 +459,43 @@
       padding:1px 6px;
       border-radius:4px;
     }
+    /* 对练音频播放按钮 */
+    .log-audio-btn{
+      flex-shrink:0;
+      width:22px; height:22px;
+      border-radius:50%;
+      background:#EEF1F6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:11px;
+      line-height:1;
+      color:#5BA0F5;
+      transition: background .15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .log-audio-btn:active{background:#DDE3F0}
+    .log-audio-btn.playing{
+      background:#5BA0F5;
+      color:#fff;
+    }
+    .log-audio-btn.no-recording{
+      color:#C5CDD8;
+      cursor:default;
+      pointer-events:none;
+    }
+    .log-audio-timer{
+      display:none;
+      font-size:11px;
+      font-weight:500;
+      color:#5BA0F5;
+      font-variant-numeric:tabular-nums;
+      min-width:34px;
+      text-align:left;
+      flex-shrink:0;
+    }
+    .log-audio-timer.visible{display:inline}
     .log-right{
       display:flex;
       align-items:center;
@@ -643,7 +680,7 @@
             <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">30分钟</span></div>
           </div>
           <div class="log-item">
-            <div class="log-left"><span class="log-title">成交话术演练</span><span class="log-type">对练</span></div>
+            <div class="log-left"><span class="log-title">成交话术演练</span><span class="log-type">对练</span><button class="log-audio-btn" onclick="toggleAudio(this)" data-duration="230" aria-label="播放对练录音">▶</button><span class="log-audio-timer"></span></div>
             <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">25分钟</span></div>
           </div>
         </div>
@@ -679,6 +716,10 @@
           <div class="log-item">
             <div class="log-left"><span class="log-title">金融方案推荐技巧</span><span class="log-type">PPT</span></div>
             <div class="log-right"><span class="log-stars"><span class="star-on">★</span></span><span class="log-time">35分钟</span></div>
+          </div>
+          <div class="log-item">
+            <div class="log-left"><span class="log-title">需求挖掘对练</span><span class="log-type">对练</span><button class="log-audio-btn no-recording" aria-label="录音未保存" disabled>▶</button></div>
+            <div class="log-right"><span class="log-stars"><span class="star-off">★</span></span><span class="log-time">20分钟</span></div>
           </div>
         </div>
       </div>
@@ -726,6 +767,100 @@
       list.classList.add('open');
       btn.innerHTML = '收起每日明细 ⌃';
     }
+  }
+
+  /* ── 对练音频播放 ── */
+  var _audioCtx = null;
+  var _currentOsc = null;
+  var _currentBtn = null;
+  var _timerInterval = null;
+  var _timerLeft = 0;
+
+  function getAudioCtx() {
+    if (!_audioCtx) {
+      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return _audioCtx;
+  }
+
+  function fmtTime(s) {
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function toggleAudio(btn) {
+    if (btn.classList.contains('no-recording')) return;
+
+    // 正在播放 → 暂停
+    if (btn.classList.contains('playing')) {
+      stopAudio();
+      return;
+    }
+
+    // 停止其他
+    stopAudio();
+
+    // 开始播放
+    var timer = btn.parentNode.querySelector('.log-audio-timer');
+    var duration = parseInt(btn.dataset.duration) || 0;
+
+    btn.classList.add('playing');
+    btn.textContent = '⏸';
+    _currentBtn = btn;
+
+    // 倒计时
+    _timerLeft = duration;
+    if (timer && duration > 0) {
+      timer.textContent = fmtTime(_timerLeft);
+      timer.classList.add('visible');
+      _timerInterval = setInterval(function () {
+        _timerLeft--;
+        if (_timerLeft <= 0) {
+          stopAudio();
+          return;
+        }
+        timer.textContent = fmtTime(_timerLeft);
+      }, 1000);
+    }
+
+    // Demo：用 Web Audio 发声
+    var ctx = getAudioCtx();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = 440;
+    gain.gain.value = 0.08;
+    osc.start();
+    _currentOsc = osc;
+
+    // 到达时长自动停
+    if (duration > 0) {
+      setTimeout(function () {
+        if (_currentBtn === btn) stopAudio();
+      }, duration * 1000);
+    }
+  }
+
+  function stopAudio() {
+    if (_currentOsc) {
+      try { _currentOsc.stop(); } catch (e) {}
+      _currentOsc = null;
+    }
+    if (_timerInterval) {
+      clearInterval(_timerInterval);
+      _timerInterval = null;
+    }
+    if (_currentBtn) {
+      _currentBtn.classList.remove('playing');
+      _currentBtn.textContent = '▶';
+      var timer = _currentBtn.parentNode.querySelector('.log-audio-timer');
+      if (timer) timer.classList.remove('visible');
+      _currentBtn = null;
+    }
+    _timerLeft = 0;
   }
 </script>
 </body>

@@ -308,14 +308,17 @@ a{text-decoration:none;color:inherit}
   margin-top:1px;
 }
 .info-text{
-  flex:1;
   min-width:0;
   font-size:15px;
   font-weight:400;
   color:var(--text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .info-action{
   flex-shrink:0;
+  margin-left:auto;
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -407,12 +410,138 @@ a{text-decoration:none;color:inherit}
   transition:transform .12s, box-shadow .12s;
 }
 .champ-play:active{transform:scale(.97)}
-.champ-play.playing{
-  color:#FA5151;
-  background:#FFF1F0;
-  box-shadow:none;
+/* 金牌案例 — 正在听内联态 */
+.champ-item.listening{
+  background:#FFF9EE;
+  border:1px solid #F4E3C2;
+  border-radius:12px;
+  padding:9px 11px;
 }
+.champ-item.listening .champ-play,
+.champ-item.listening .champ-done-tag{
+  display:none;
+}
+
+/* 内联播放控件容器 */
+.champ-inline-listen{
+  display:none;
+  align-items:center;
+  gap:11px;
+  flex-shrink:0;
+  margin-left:auto;
+}
+.champ-item.listening .champ-inline-listen{
+  display:flex;
+}
+
+/* 波浪 + 时间 竖向组 */
+.champ-listen-group{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+}
+
+/* 5 根波浪竖条 */
+.champ-listen-waves{
+  display:flex;
+  align-items:flex-end;
+  gap:2.5px;
+  height:18px;
+  padding:0 1px;
+}
+.champ-listen-wave-bar{
+  width:3px;
+  border-radius:2px;
+  background:linear-gradient(180deg,#F4BC52,#DB951E);
+  transform-origin:center;
+  animation:wvbounce 0.9s ease-in-out infinite;
+}
+.champ-listen-wave-bar:nth-child(1){height:10px;animation-delay:0s}
+.champ-listen-wave-bar:nth-child(2){height:18px;animation-delay:.18s}
+.champ-listen-wave-bar:nth-child(3){height:8px;animation-delay:.36s}
+.champ-listen-wave-bar:nth-child(4){height:14px;animation-delay:.12s}
+.champ-listen-wave-bar:nth-child(5){height:10px;animation-delay:.3s}
+
+@keyframes wvbounce{
+  0%,100%{transform:scaleY(0.35)}
+  50%{transform:scaleY(1)}
+}
+
+/* 正在听 0:48 */
+.champ-listen-time{
+  font-size:10px;
+  font-weight:500;
+  color:#B5790F;
+  white-space:nowrap;
+  user-select:none;
+}
+
+/* 进度环 + ✕ */
+.champ-listen-ring{
+  width:36px;height:36px;
+  flex-shrink:0;
+  cursor:pointer;
+  user-select:none;
+}
+.champ-listen-ring:active{opacity:.75}
 .champ-play svg{width:12px;height:12px;fill:currentColor;flex-shrink:0}
+
+/* 今日对练 — 正在听内联态（深蓝 · 复用 wvbounce 动画 + HTML 结构） */
+.info-item[data-module="practice"].listening{
+  background:#EEF3FD;
+  border:1px solid #C5D2F0;
+  border-radius:12px;
+  padding:9px 11px;
+}
+.info-item[data-module="practice"].listening .info-action,
+.info-item[data-module="practice"].listening .info-done-tag{
+  display:none;
+}
+.practice-inline-listen{
+  display:none;
+  align-items:center;
+  gap:11px;
+  flex-shrink:0;
+  margin-left:auto;
+}
+.info-item[data-module="practice"].listening .practice-inline-listen{
+  display:flex;
+}
+/* 蓝版颜色覆写 */
+.info-item[data-module="practice"] .champ-listen-wave-bar{
+  background:linear-gradient(180deg,#3B64C8,#2547A6);
+}
+.info-item[data-module="practice"] .champ-listen-time{
+  color:#2547A6;
+}
+.info-item[data-module="practice"] .champ-listen-ring svg circle:first-of-type{
+  stroke:#D0DAF0;
+}
+.info-item[data-module="practice"] .champ-progress-arc{
+  stroke:#3B64C8;
+}
+.info-item[data-module="practice"] .champ-listen-ring svg line{
+  stroke:#2547A6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ④½ 已完成态：浅灰小字标签
+   ═══════════════════════════════════════════════════════ */
+.info-done-tag,
+.champ-done-tag{
+  display:none;
+  flex-shrink:0;
+  font-size:11px;
+  color:var(--muted);
+  white-space:nowrap;
+  user-select:none;
+  margin-top:3px;
+}
+.info-item.is-done .info-done-tag,
+.champ-item.is-done .champ-done-tag{
+  display:inline;
+}
 
 /* ═══════════════════════════════════════════════════════
    ⑤ 展开/收起
@@ -558,119 +687,6 @@ a{text-decoration:none;color:inherit}
 .pf-btn:active{transform:scale(.98);box-shadow:0 3px 10px rgba(22,119,255,.22)}
 
 /* ═══════════════════════════════════════════════════════
-   ⑧ 听销冠分享 Overlay
-   ═══════════════════════════════════════════════════════ */
-.listen-overlay{
-  position:absolute;inset:0;z-index:60;
-  background:rgba(0,0,0,0);
-  pointer-events:none;
-  transition:background .35s ease;
-}
-.listen-overlay.active{
-  background:rgba(0,0,0,.5);
-  pointer-events:auto;
-}
-
-.listen-panel{
-  position:absolute;bottom:0;left:0;right:0;z-index:61;
-  background:#fff;border-radius:20px 20px 0 0;
-  box-shadow:0 -8px 40px rgba(0,0,0,.12);
-  transform:translateY(100%);
-  transition:transform .42s cubic-bezier(.22,.61,.36,1);
-  overflow:visible;
-}
-.listen-overlay.active .listen-panel{transform:translateY(0)}
-
-.listen-card-inner{
-  display:flex;align-items:flex-start;gap:0;
-  padding:12px 24px 0;
-  position:relative;
-}
-
-.listen-figure-col{
-  flex:0 0 80px;
-  position:relative;
-  margin-top:-56px;
-  margin-right:4px;
-}
-.listen-figure-img{
-  display:block;
-  width:80px;height:auto;
-  margin-left:-4px;
-  filter:drop-shadow(0 2px 12px rgba(0,0,0,.2));
-  opacity:0;transform:translateY(20px);
-  transition:all .45s cubic-bezier(.22,.61,.36,1) .1s;
-}
-.listen-overlay.active .listen-figure-img{
-  opacity:1;transform:translateY(0);
-}
-
-.listen-content-col{
-  flex:1;min-width:0;
-  padding-top:2px;
-}
-
-.listen-now-label{
-  font-size:15px;font-weight:500;color:#2C73E0;
-  display:flex;align-items:center;gap:6px;
-  margin-bottom:6px;
-}
-.listen-now-label::before{
-  content:'';flex:0 0 auto;
-  width:8px;height:8px;border-radius:50%;
-  background:#00B42A;
-  animation:pulseDot 1.2s ease-in-out infinite;
-}
-@keyframes pulseDot{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:.3;transform:scale(.6)}
-}
-.listen-duration{
-  font-weight:400;color:var(--muted);font-size:13px;
-}
-
-.listen-waves{
-  display:flex;align-items:center;gap:4px;
-  height:24px;margin-bottom:12px;
-}
-.listen-wave-bar{
-  width:4px;border-radius:2px;background:#5BA0F5;
-  animation:waveAnim .8s ease-in-out infinite;
-}
-.listen-wave-bar:nth-child(1){height:10px;animation-delay:0s}
-.listen-wave-bar:nth-child(2){height:20px;animation-delay:.1s}
-.listen-wave-bar:nth-child(3){height:14px;animation-delay:.2s}
-.listen-wave-bar:nth-child(4){height:22px;animation-delay:.3s}
-.listen-wave-bar:nth-child(5){height:10px;animation-delay:.15s}
-@keyframes waveAnim{
-  0%,100%{transform:scaleY(1)}
-  50%{transform:scaleY(.4)}
-}
-
-.listen-actions{
-  margin:0 -24px;
-  display:flex;gap:0;
-}
-.listen-done-btn{
-  flex:1;padding:14px 0;
-  text-align:center;font-size:15px;font-weight:500;
-  color:#fff;
-  background:linear-gradient(135deg,#5BA0F5,#3B82F6);
-  border-radius:0 0 0 20px;
-  transition:opacity .15s;
-}
-.listen-done-btn:active{opacity:.8}
-.listen-next-btn{
-  flex:1;padding:14px 0;
-  text-align:center;font-size:15px;font-weight:500;
-  color:#2C73E0;
-  background:#E8F1FE;
-  border-radius:0 0 20px 0;
-  transition:background .15s;
-}
-.listen-next-btn:active{background:#D6E8FF}
-
-/* ═══════════════════════════════════════════════════════
    ⑨ 雷达图动画
    ═══════════════════════════════════════════════════════ */
 .radar-data-polygon{
@@ -746,12 +762,12 @@ a{text-decoration:none;color:inherit}
       <span class="link-muted" onclick="location.href='index.html#learn-range'" style="cursor:pointer">更多学习资料 ›</span>
     </div>
     <div class="info-list">
-      <div class="info-item"><span class="info-num">1</span><span class="info-text">知识点：MG4续航讲解要点</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
-      <div class="info-item"><span class="info-num">2</span><span class="info-text">知识点：竞品对比讲解要点</span><span class="info-action" onclick="location.href='learning-detail.html'">去学习</span></div>
+      <div class="info-item" data-module="learn" data-item="0"><span class="info-num">1</span><span class="info-text">知识点：MG4续航讲解要点</span><span class="info-done-tag">已学完</span><span class="info-action" data-default="去学习" data-done="去重看" onclick="location.href='learning-detail.html?item=0'">去学习</span></div>
+      <div class="info-item" data-module="learn" data-item="1"><span class="info-num">2</span><span class="info-text">知识点：竞品对比讲解要点</span><span class="info-done-tag">已学完</span><span class="info-action" data-default="去学习" data-done="去重看" onclick="location.href='learning-detail.html?item=1'">去学习</span></div>
     </div>
   </section>
 
-  <!-- 卡片 B — 今日对练（深蓝） -->
+    <!-- 卡片 B — 今日对练（深蓝） -->
   <section class="block block--practice">
     <div class="block-head">
       <span class="block-bar"></span>
@@ -759,83 +775,383 @@ a{text-decoration:none;color:inherit}
       <span class="link-muted" onclick="toggleExpand('expandPractice',this)" data-label="更多对练">更多对练 <span class="link-arrow">›</span></span>
     </div>
     <div class="info-list">
-      <div class="info-item"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
-      <div class="info-item"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+      <div class="info-item" data-module="practice" data-item="0"><span class="info-num">1</span><span class="info-text">王先生 · 试乘试驾未完成</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=0'">练一次</span>
+      <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+      </div>
+      <div class="info-item" data-module="practice" data-item="1"><span class="info-num">2</span><span class="info-text">刘先生 · 产品介绍后离开</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=1'">练一次</span>
+      <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+      </div>
     </div>
     <div class="expand-target" id="expandPractice">
       <div class="info-list">
-        <div class="info-item"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
-        <div class="info-item"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
-        <div class="info-item"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
-        <div class="info-item"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
-        <div class="info-item"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-action" onclick="location.href='scenario-practice.html'">练一次</span></div>
+        <div class="info-item" data-module="practice" data-item="2"><span class="info-num">3</span><span class="info-text">张女士 · 进店看车后留资未回访</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=2'">练一次</span>
+        <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+        </div>
+        <div class="info-item" data-module="practice" data-item="3"><span class="info-num">4</span><span class="info-text">赵先生 · 对比竞品后未回复微信</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=3'">练一次</span>
+        <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+        </div>
+        <div class="info-item" data-module="practice" data-item="4"><span class="info-num">5</span><span class="info-text">陈先生 · 试驾后说回去商量无下文</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=4'">练一次</span>
+        <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+        </div>
+        <div class="info-item" data-module="practice" data-item="5"><span class="info-num">6</span><span class="info-text">周女士 · 到店两次仍未下订</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=5'">练一次</span>
+        <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+        </div>
+        <div class="info-item" data-module="practice" data-item="6"><span class="info-num">7</span><span class="info-text">吴先生 · 明确意向但卡在价格谈判</span><span class="info-done-tag">已练完</span><span class="info-action" data-default="练一次" data-done="去重练" onclick="location.href='practice-flow.html?item=6'">练一次</span>
+        <span class="practice-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 卡片 C — 金牌案例（香槟金） -->
+<!-- 卡片 C — 金牌案例（香槟金） -->
   <section class="block block--champ">
     <div class="block-head">
       <span class="block-bar"></span>
       <span class="block-title">金牌案例</span>
       <span class="link-muted" onclick="toggleExpand('expandChamp',this)" data-label="更多金牌案例">更多金牌案例 <span class="link-arrow">›</span></span>
     </div>
-    <div class="champ-item">
+    <div class="champ-item" data-item="0">
       <span class="champ-num">1</span>
       <span class="champ-name">小李</span>
       <span class="champ-tag">宝安店</span>
+      <span class="champ-done-tag">已听完</span>
       <span class="champ-play" data-idx="0" data-tts="小李的成交分享。销冠支招：接待宝妈客户时，不聊枯燥配置，专门聊她带娃出门的难处。客户觉得被理解了，主动问怎么订车，当场成交。" onclick="startListen(0)">
         <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
       </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
     </div>
-    <div class="champ-item">
-      <span class="champ-num">2</span>
+    <div class="champ-item" data-item="1">
       <span class="champ-name">李晨</span>
       <span class="champ-tag">宝安店</span>
+      <span class="champ-done-tag">已听完</span>
       <span class="champ-play" data-idx="1" data-tts="李晨的成交分享。销冠支招：遇到不爱说话的客户，先聊家里几口人、平时去哪玩。等客户放松了，才愿意讲真实需求，后面推荐车型完全不踩雷。" onclick="startListen(1)">
         <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
       </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
     </div>
     <div class="expand-target" id="expandChamp">
-      <div class="champ-item">
+      <div class="champ-item" data-item="2">
         <span class="champ-num">3</span>
         <span class="champ-name">王芳</span>
         <span class="champ-tag">福田店</span>
+        <span class="champ-done-tag">已听完</span>
         <span class="champ-play" data-idx="2" data-tts="王芳的成交分享。销冠支招：客户纠结颜色时别催，直接带客户到停车场看实车颜色，阳光下和展厅里完全不同，客户当场就定了。" onclick="startListen(2)">
           <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
         </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
       </div>
-      <div class="champ-item">
+      <div class="champ-item" data-item="3">
         <span class="champ-num">4</span>
         <span class="champ-name">张伟</span>
         <span class="champ-tag">南山店</span>
+        <span class="champ-done-tag">已听完</span>
         <span class="champ-play" data-idx="3" data-tts="张伟的成交分享。销冠支招：客户说再考虑考虑时，我直接打开手机给他看库存表，告诉他这配置只剩2台，下周涨价。紧迫感是真实的不必编造。" onclick="startListen(3)">
           <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
         </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
       </div>
-      <div class="champ-item">
+      <div class="champ-item" data-item="4">
         <span class="champ-num">5</span>
         <span class="champ-name">陈静</span>
         <span class="champ-tag">龙岗店</span>
+        <span class="champ-done-tag">已听完</span>
         <span class="champ-play" data-idx="4" data-tts="陈静的成交分享。销冠支招：遇到全家来看车的，重点照顾决策者——通常是管钱的太太。先让她坐驾驶位，再讲安全配置，成交率翻倍。" onclick="startListen(4)">
           <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
         </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
       </div>
-      <div class="champ-item">
+      <div class="champ-item" data-item="5">
         <span class="champ-num">6</span>
         <span class="champ-name">刘洋</span>
         <span class="champ-tag">罗湖店</span>
+        <span class="champ-done-tag">已听完</span>
         <span class="champ-play" data-idx="5" data-tts="刘洋的成交分享。销冠支招：竞品对比不要贬低对手，先承认对方优势，再用数据说话。客户觉得你客观可信，反而更容易被说服。" onclick="startListen(5)">
           <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
         </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
       </div>
-      <div class="champ-item">
+      <div class="champ-item" data-item="6">
         <span class="champ-num">7</span>
         <span class="champ-name">赵鑫</span>
         <span class="champ-tag">龙华店</span>
+        <span class="champ-done-tag">已听完</span>
         <span class="champ-play" data-idx="6" data-tts="赵鑫的成交分享。销冠支招：客户说预算不够时，不急着推低配，先算分期月供，再对比打车成本。客户发现月供比打车还便宜，果断升级配置。" onclick="startListen(6)">
           <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>听分享
         </span>
+      <span class="champ-inline-listen">
+        <span class="champ-listen-group">
+          <span class="champ-listen-waves">
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+            <span class="champ-listen-wave-bar"></span>
+          </span>
+          <span class="champ-listen-time">正在听 0:00</span>
+        </span>
+        <span class="champ-listen-ring" onclick="event.stopPropagation();stopListenInline()">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F2E2BE" stroke-width="2.5"/>
+            <circle class="champ-progress-arc" cx="18" cy="18" r="15.5" fill="none" stroke="#E0951E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 97" transform="rotate(-90 18 18)"/>
+            <line x1="12" y1="12" x2="24" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="12" x2="12" y2="24" stroke="#B5790F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </span>
+
       </div>
     </div>
   </section>
@@ -863,31 +1179,6 @@ a{text-decoration:none;color:inherit}
   <div class="pf-title">今天练得不错</div>
   <div class="pf-sub">「参数 → 场景」这个方法<br>你在实战里练透了</div>
   <button class="pf-btn" onclick="exitPracticeFinish()">返回首页</button>
-</div>
-
-<!-- 听销冠分享 Overlay -->
-<div class="listen-overlay" id="listenOverlay" onclick="if(event.target===this)closeListen()">
-  <div class="listen-panel" id="listenPanel">
-    <div class="listen-card-inner">
-      <div class="listen-figure-col">
-        <img class="listen-figure-img" src="零售大师.png" alt="大师">
-      </div>
-      <div class="listen-content-col">
-        <div class="listen-now-label"><span id="listenNowLabel">销冠小李正在分享</span><span class="listen-duration" id="listenDuration"> · 约3分钟</span></div>
-        <div class="listen-waves">
-          <div class="listen-wave-bar"></div>
-          <div class="listen-wave-bar"></div>
-          <div class="listen-wave-bar"></div>
-          <div class="listen-wave-bar"></div>
-          <div class="listen-wave-bar"></div>
-        </div>
-      </div>
-    </div>
-    <div class="listen-actions">
-      <button class="listen-done-btn" onclick="closeListen()">听完了</button>
-      <button class="listen-next-btn" onclick="playNextListen()">听下一个分享</button>
-    </div>
-  </div>
 </div>
 
 </div><!-- /phone -->
@@ -1116,7 +1407,7 @@ window.showToast=function(msg){
 };
 
 /* ═══════════════════════════════════════════════════════
-   听销冠分享 — Listen Overlay
+   听销冠分享 — 金牌案例「正在听」内联交互
    ═══════════════════════════════════════════════════════ */
 var LISTEN_DATA = [
   { name:'小李', duration:'约3分钟', tts:'小李的成交分享。销冠支招：接待宝妈客户时，不聊枯燥配置，专门聊她带娃出门的难处。客户觉得被理解了，主动问怎么订车，当场成交。' },
@@ -1127,47 +1418,223 @@ var LISTEN_DATA = [
   { name:'刘洋', duration:'约2分钟', tts:'刘洋的成交分享。销冠支招：竞品对比不要贬低对手，先承认对方优势，再用数据说话。客户觉得你客观可信，反而更容易被说服。' },
   { name:'赵鑫', duration:'约3分钟', tts:'赵鑫的成交分享。销冠支招：客户说预算不够时，不急着推低配，先算分期月供，再对比打车成本。客户发现月供比打车还便宜，果断升级配置。' }
 ];
-var _listenIdx = 0;
+var PRACTICE_TTS_DATA = [
+  '王先生您好，欢迎来看车。我先带您体验一下试乘试驾，这款车的底盘调校非常好，过减速带特别稳。您坐上去感受一下座椅的包裹性……',
+  '刘先生，这款车搭载了最新的智能座舱系统，您可以语音控制导航和音乐。它的续航里程在市区通勤完全够用，充电一次可以跑一周……',
+  '张女士您好，感谢您今天来店里看车。这是我们最新的车型，空间很大，适合家庭使用。您平时主要用途是上班代步还是全家出游呢？',
+  '赵先生，关于您之前对比的竞品，我客观给您分析一下。那款车油耗确实低，但我们的优势在于安全和保值率，三年保值率比对方高百分之十五……',
+  '陈先生，试驾感觉怎么样？动力响应和转向手感都很不错吧。这款车的零百加速只要七秒多，同级别里非常出色。您回去跟家人商量一下，有任何问题随时联系我……',
+  '周女士您好，又见面了。上次您看的那款车，现在有新的金融方案，月供比之前还低。您要不再来店里坐坐，我帮您算一下具体方案？',
+  '吴先生，关于价格方面，我帮您争取到了最好的方案。除了车价优惠，还送三年保养和全车贴膜。这个价格在目前市场上已经很有竞争力了，要不今天就定下来？'
+];
+var _listenIdx = -1;
+var _listenModule = 'champ';
 var _listenUtt = null;
+var _listenTimer = null;
+var _listenStartTime = 0;
+var _listenEstDuration = 0;
+var _listenFullyPlayed = false;
 
-window.startListen = function(idx){
+window.startListen = function(idx, module){
+  module = module || 'champ';
+
+  // 同一时间只播一条：先停掉上一条
+  if(_listenIdx >= 0 && (_listenIdx !== idx || _listenModule !== module)){
+    stopPrevListen();
+  }
+
+  // 如果点击的已经是正在播的行，忽略
+  if(_listenIdx === idx && _listenModule === module && _listenUtt){
+    return;
+  }
+
   _listenIdx = idx;
-  updateListenLabel();
-  document.getElementById('listenOverlay').classList.add('active');
-  playListenTTS();
-};
+  _listenModule = module;
+  _listenFullyPlayed = false;
 
-window.playNextListen = function(){
-  _listenIdx = (_listenIdx + 1) % LISTEN_DATA.length;
-  updateListenLabel();
-  playListenTTS();
-};
+  // 根据模块查找不同的 item
+  var item, text;
+  if(module === 'practice'){
+    item = document.querySelector('.info-item[data-module="practice"][data-item="'+idx+'"]');
+    text = PRACTICE_TTS_DATA[idx] || '对练录音回放';
+  } else {
+    item = document.querySelector('.champ-item[data-item="'+idx+'"]');
+    text = LISTEN_DATA[idx] ? LISTEN_DATA[idx].tts : '';
+  }
+  if(!item) return;
 
-function updateListenLabel(){
-  var c = LISTEN_DATA[_listenIdx];
-  document.getElementById('listenNowLabel').textContent = '销冠'+c.name+'正在分享';
-  document.getElementById('listenDuration').textContent = ' · '+c.duration;
-}
+  // 清除所有行的 listening 状态（champ + practice）
+  document.querySelectorAll('.champ-item.listening, .info-item[data-module="practice"].listening').forEach(function(el){
+    el.classList.remove('listening');
+  });
 
-function playListenTTS(){
+  // 当前行进入「正在听」状态
+  item.classList.add('listening');
+  item.classList.remove('is-done');
+
+  // 估算总时长（中文 TTS 约 3 字/秒，rate 0.95 略慢）
+  _listenEstDuration = Math.max(1, Math.ceil(text.length / 3));
+
+  // 启动 TTS 播放
   stopListenTTS();
-  var u = new SpeechSynthesisUtterance(LISTEN_DATA[_listenIdx].tts);
+  var u = new SpeechSynthesisUtterance(text);
   u.lang = 'zh-CN'; u.rate = 0.95;
-  u.onend = function(){};
-  u.onerror = function(){};
+  u.onend = function(){
+    _listenFullyPlayed = true;
+    stopListenInline();
+  };
+  u.onerror = function(){
+    stopListenInline();
+  };
   _listenUtt = u;
   speechSynthesis.speak(u);
+
+  // 启动进度计时器
+  _listenStartTime = Date.now();
+  clearInterval(_listenTimer);
+  _listenTimer = setInterval(updateListenProgress, 250);
+  updateListenProgress();
+};
+
+function stopPrevListen(){
+  stopListenTTS();
+  clearInterval(_listenTimer);
 }
 
-window.closeListen = function(){
+window.stopListenInline = function(){
   stopListenTTS();
-  document.getElementById('listenOverlay').classList.remove('active');
+  clearInterval(_listenTimer);
+
+  var idx = _listenIdx;
+  var module = _listenModule;
+  if(idx < 0) return;
+
+  // 根据模块查找 item 并移除 listening 状态
+  var item;
+  if(module === 'practice'){
+    item = document.querySelector('.info-item[data-module="practice"][data-item="'+idx+'"]');
+  } else {
+    item = document.querySelector('.champ-item[data-item="'+idx+'"]');
+  }
+  if(item) item.classList.remove('listening');
+
+  if(_listenFullyPlayed){
+    // 完整播完 → 标记已完成
+    markDone(module, idx);
+    applyCompletedStates();
+  }
+  // 未播完就停 → 保持默认按钮（localStorage 已有标记，下次加载恢复）
+
+  _listenIdx = -1;
+  _listenModule = 'champ';
+  _listenFullyPlayed = false;
 };
+
+function updateListenProgress(){
+  var elapsed = Math.floor((Date.now() - _listenStartTime) / 1000);
+  var mins = Math.floor(elapsed / 60);
+  var secs = elapsed % 60;
+  var timeStr = mins + ':' + (secs < 10 ? '0' : '') + secs;
+
+  // 根据模块查找 item
+  var item;
+  if(_listenModule === 'practice'){
+    item = document.querySelector('.info-item[data-module="practice"][data-item="'+_listenIdx+'"]');
+  } else {
+    item = document.querySelector('.champ-item[data-item="'+_listenIdx+'"]');
+  }
+  if(!item) return;
+
+  // 更新「正在听 0:48」文本
+  var timeEl = item.querySelector('.champ-listen-time');
+  if(timeEl) timeEl.textContent = '正在听 ' + timeStr;
+
+  // 更新进度环 stroke-dasharray
+  var progress = Math.min(elapsed / _listenEstDuration, 1);
+  var arc = item.querySelector('.champ-progress-arc');
+  if(arc){
+    var circum = 2 * Math.PI * 15.5; // ≈ 97.39
+    var dash = Math.round(circum * progress);
+    arc.setAttribute('stroke-dasharray', dash + ' ' + Math.round(circum));
+  }
+}
 
 function stopListenTTS(){
   speechSynthesis.cancel();
   _listenUtt = null;
 }
+
+/* ═══════════════════════════════════════════════════════
+   已完成状态管理（localStorage）
+   ═══════════════════════════════════════════════════════ */
+var COMPLETED_KEY = 'v5_completed';
+
+function getCompleted(){
+  try {
+    return JSON.parse(localStorage.getItem(COMPLETED_KEY)) || { learn:[], practice:[], champ:[] };
+  } catch(e){
+    return { learn:[], practice:[], champ:[] };
+  }
+}
+
+function setCompleted(data){
+  localStorage.setItem(COMPLETED_KEY, JSON.stringify(data));
+}
+
+function markDone(module, index){
+  var data = getCompleted();
+  if(data[module].indexOf(index) === -1){
+    data[module].push(index);
+    setCompleted(data);
+  }
+}
+
+function applyCompletedStates(){
+  var data = getCompleted();
+
+  // 今日学习
+  data.learn.forEach(function(idx){
+    var el = document.querySelector('.info-item[data-module="learn"][data-item="'+idx+'"]');
+    if(!el) return;
+    el.classList.add('is-done');
+    var btn = el.querySelector('.info-action');
+    if(btn) btn.textContent = btn.getAttribute('data-done') || '去重看';
+  });
+
+  // 今日对练
+  data.practice.forEach(function(idx){
+    var el = document.querySelector('.info-item[data-module="practice"][data-item="'+idx+'"]');
+    if(!el) return;
+    el.classList.add('is-done');
+    var btn = el.querySelector('.info-action');
+    if(!btn) return;
+    // 有录音 →「听对练」（行内播放）；无录音 →「去重练」（跳转重练）
+    if(localStorage.getItem('v5_practice_audio_' + idx) === '1'){
+      btn.textContent = '听对练';
+      btn.setAttribute('onclick', "startListen("+idx+",'practice')");
+    } else {
+      btn.textContent = btn.getAttribute('data-done') || '去重练';
+      btn.setAttribute('onclick', "location.href='practice-flow.html?item="+idx+"'");
+    }
+  });
+
+  // 金牌案例
+  data.champ.forEach(function(idx){
+    var el = document.querySelector('.champ-item[data-item="'+idx+'"]');
+    if(!el) return;
+    el.classList.add('is-done');
+    var btn = el.querySelector('.champ-play');
+    if(!btn) return;
+    // 保留 SVG 图标，替换文字为「去重听」
+    var svg = btn.querySelector('svg');
+    btn.innerHTML = '';
+    if(svg) btn.appendChild(svg.cloneNode(true));
+    btn.appendChild(document.createTextNode('去重听'));
+  });
+}
+
+// 页面启动时应用已完成状态
+applyCompletedStates();
 </script>
 </body>
 </html>

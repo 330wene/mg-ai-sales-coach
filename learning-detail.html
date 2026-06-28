@@ -340,6 +340,20 @@
   document.getElementById('doneBtn').addEventListener('click', () => {
     const readDuration = Date.now() - pageEnterTime;
 
+    // 写 localStorage 标记该条目已完成
+    var params = new URLSearchParams(window.location.search);
+    var itemIdx = parseInt(params.get('item'), 10);
+    if (!isNaN(itemIdx)) {
+      try {
+        var key = 'v5_completed';
+        var data = JSON.parse(localStorage.getItem(key)) || { learn:[], practice:[], champ:[] };
+        if (data.learn.indexOf(itemIdx) === -1) {
+          data.learn.push(itemIdx);
+          localStorage.setItem(key, JSON.stringify(data));
+        }
+      } catch(e) {}
+    }
+
     const overlay = document.createElement('div');
     overlay.className = 'reward-overlay';
     overlay.innerHTML = `
@@ -355,11 +369,11 @@
     document.body.appendChild(overlay);
 
     overlay.addEventListener('click', () => {
-      window.location.href = '成交教练-phase1-v2.html';
+      window.location.href = '成交教练-phase1-v5.html';
     });
 
     setTimeout(() => {
-      window.location.href = '成交教练-phase1-v2.html';
+      window.location.href = '成交教练-phase1-v5.html';
     }, 2500);
   });
 </script>
