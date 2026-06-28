@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#EFF3FA">
+<title>整单对练 — 成交教练</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   整单对练 v3 — 引导(四环节诊断) → 录音(四步连讲) → 点评(总评)
+   设计宽度：412px 移动端
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg-page:       #EFF3FA;
+  --card-white:    #FFFFFF;
+  --ink:           #1A2742;
+  --text:          #414E68;
+  --muted:         #9AA4B8;
+  --card-shadow:   0 1px 2px rgba(20,40,90,0.05), 0 10px 26px rgba(30,58,140,0.07);
+  --card-shadow-sm: 0 1px 2px rgba(20,40,90,0.05), 0 8px 20px rgba(30,58,140,0.06);
+  --font:          -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  min-height:100%;
+  background: var(--bg-page);
+  font-family: var(--font);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+a{text-decoration:none;color:inherit}
+
+/* ── Stage & Phone ── */
+.stage{min-height:100vh;display:grid;place-items:center;padding:18px}
+.phone{
+  position:relative;
+  width:min(412px, 100vw);
+  height:min(915px, calc(100vh - 36px));
+  min-height:700px;
+  overflow:hidden;
+  background: var(--bg-page);
+  border:1px solid #d5dbe3;
+  border-radius:24px;
+  box-shadow:0 24px 64px rgba(20,32,52,.12);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   面板容器
+   ══════════════════════════════════════════════════════════════ */
+.panel{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition: opacity .28s ease;
+  overflow:hidden;
+}
+.panel.active{opacity:1;pointer-events:auto;z-index:1}
+
+.scroll{
+  flex:1; min-height:0;
+  overflow-y:auto; overscroll-behavior:contain;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ══════════════════════════════════════════════════════════════
+   通用：深蓝头部
+   ══════════════════════════════════════════════════════════════ */
+.header-deep{
+  position:relative;
+  background: linear-gradient(168deg, #3E68DD 0%, #274FB2 60%, #1B3380 100%);
+  color:#fff; overflow:hidden; flex-shrink:0;
+}
+.header-deep-glow{
+  position:absolute; top:50%; left:50%;
+  width:230px; height:200px;
+  transform:translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(150,200,255,0.2), transparent 70%);
+  pointer-events:none;
+}
+.header-deep--guide{padding:15px 16px 22px}
+.header-deep--record{padding:15px 16px 16px}
+.header-deep--review{padding:15px 16px 28px}
+
+/* ── 导航行 ── */
+.nav-row{
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; z-index:1;
+}
+.nav-row--centered{justify-content:center}
+.nav-left{display:flex; align-items:center; gap:3px}
+.nav-center-col{
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+}
+.nav-back{
+  background:none; border:none;
+  font-size:20px; color:rgba(255,255,255,0.84);
+  cursor:pointer; padding:4px; line-height:1;
+  display:flex; align-items:center; flex-shrink:0;
+  position:absolute; left:0; z-index:2;
+}
+.nav-back:active{opacity:.6}
+.nav-name{font-size:17px;font-weight:500;color:#fff}
+
+/* ══════════════════════════════════════════════════════════════
+   通用：亮色内容面板 + 白卡
+   ══════════════════════════════════════════════════════════════ */
+.content-panel{
+  background: var(--bg-page);
+  border-radius:20px 20px 0 0;
+  margin-top:-12px; padding:16px 14px 18px;
+  position:relative; z-index:2;
+  flex-shrink:0;
+}
+.white-card{
+  background: var(--card-white);
+  border-radius:16px;
+  box-shadow: var(--card-shadow);
+  position:relative;
+}
+
+/* ── 主按钮 ── */
+.btn-primary{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  width:100%; padding:14px 0;
+  font-size:16px; font-weight:500; color:#fff;
+  background:linear-gradient(135deg,#2E54B8,#1B2F6E);
+  border:none; border-radius:16px;
+  box-shadow:0 8px 20px rgba(27,47,110,0.32);
+  cursor:pointer; user-select:none;
+  transition:transform .12s, box-shadow .12s;
+}
+.btn-primary:active{transform:scale(.98);box-shadow:0 4px 14px rgba(27,47,110,0.24)}
+
+/* ── 次按钮（描边） ── */
+.btn-outline{
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  width:100%; padding:12px 0;
+  font-size:15px; font-weight:500; color:#2C5AD0;
+  background:#fff; border:1.5px solid #C9D6EC;
+  border-radius:14px;
+  cursor:pointer; user-select:none;
+  transition:background .15s;
+}
+
+/* ── 按钮左右并排 ── */
+.btn-row{
+  display:flex; gap:11px;
+}
+.btn-row .btn-primary,
+.btn-row .btn-outline{
+  flex:1; width:auto;
+}
+
+/* ── 底部文字链接 ── */
+.text-links{
+  display:flex; align-items:center; justify-content:center; gap:24px;
+  margin-top:16px;
+}
+.text-link{
+  font-size:13px; color:#2C5AD0; cursor:pointer; user-select:none;
+  transition:opacity .12s;
+}
+.text-link:active{opacity:.6}
+.btn-outline:active{background:#F5F7FB}
+
+/* ══════════════════════════════════════════════════════════════
+   【面板 ①】引导练习页 — 四环节诊断
+   ══════════════════════════════════════════════════════════════ */
+
+/* 状态胶囊 */
+.status-capsule{
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:12px; color:rgba(255,255,255,0.85);
+  background:rgba(255,120,90,0.18);
+  border-radius:20px; padding:3px 10px;
+  white-space:nowrap; flex-shrink:0;
+}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#FF7A5A;flex-shrink:0}
+
+/* 定调句 */
+.guide-lead{
+  font-size:14px; color:#46506E; line-height:1.6;
+  margin:0 2px 16px;
+}
+
+/* 小标题 */
+.guide-section-title{
+  font-size:15px; font-weight:600; color:#1A2742;
+  margin:0 2px 10px;
+}
+
+/* 环节白卡 */
+.diag-card{padding:2px 14px}
+.diag-row{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 0; cursor:pointer; user-select:none;
+  transition:opacity .12s;
+}
+.diag-row:active{opacity:.65}
+.diag-row + .diag-row{border-top:1px solid #F3F5F9}
+
+/* 方块序号 */
+.diag-num{
+  flex-shrink:0; width:22px; height:22px; border-radius:6px;
+  display:grid; place-items:center;
+  background:#E8F1FE; color:#2563EB;
+  font-size:13px; font-weight:600;
+}
+
+/* 环节名 */
+.diag-name{flex-shrink:0;font-size:14px;color:#1A2742}
+
+/* 合并标签 */
+.diag-tag{
+  flex-shrink:0;
+  display:inline-flex; align-items:center; gap:1px;
+  font-size:11px; padding:3px 9px; border-radius:8px;
+  white-space:nowrap;
+}
+.diag-tag--normal{background:#EFF2F7;color:#5B6680}
+.diag-tag--low{background:#FDEAE4;color:#E5533D;font-weight:500}
+.tag-check{color:#2FA76A;font-weight:600}
+
+/* 展开箭头 */
+.diag-chevron{
+  flex-shrink:0; font-size:16px; color:#B6C0D2;
+  transition:transform .25s ease;
+}
+
+/* 展开详情 */
+.diag-detail{
+  overflow:hidden; max-height:0;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease;
+  opacity:0;
+}
+.diag-detail.open{opacity:1}
+
+/* 展开详情 — 剧本台词排版 */
+/* 客户说 */
+.diag-cust-label{font-size:12px;color:#9AA4B8;margin-bottom:6px}
+.diag-cust-quote{
+  background:#F5F7FB; border-radius:11px;
+  padding:11px 13px;
+  font-size:13px; color:#41506E; line-height:1.7;
+  font-weight:400;
+}
+
+/* 你回 */
+.diag-reply-section{margin-top:13px}
+.diag-reply-label{font-size:12px;color:#2C73E0;margin-bottom:6px}
+.diag-reply-quote{
+  background:#EDF3FD; border-radius:5px 11px 11px 5px;
+  border-left:3px solid #8FB8F2;
+  padding:12px 13px;
+  font-size:13px; color:#3D4B66; line-height:1.78;
+  font-weight:400;
+}
+
+/* 分隔线 */
+.diag-sep{
+  border:none; border-top:1px solid #F0F2F6;
+  margin:16px 0;
+}
+
+/* 你要达到什么 */
+.diag-goal-block{
+  background:#EAF1FE; border-radius:12px;
+  padding:12px 13px;
+}
+.diag-goal-header{
+  display:flex; align-items:center; gap:7px;
+  margin-bottom:9px;
+  font-size:13px; font-weight:600; color:#1A2742;
+}
+.diag-goal-item{
+  display:flex; align-items:center; gap:8px;
+}
+.diag-goal-item + .diag-goal-item{margin-top:9px}
+.diag-goal-dot{
+  flex-shrink:0; width:5px; height:5px; border-radius:50%;
+  background:#2E6FE0;
+}
+.diag-goal-text{font-size:14px;color:#41506E}
+
+/* 按钮下提示 */
+.btn-hint{text-align:center;font-size:12px;color:#9AA4B8;margin-top:9px}
+
+/* ══════════════════════════════════════════════════════════════
+   【面板 ②】录音页 — 四步连讲
+   ══════════════════════════════════════════════════════════════ */
+
+/* 头步信息行 */
+.rec-step-row{
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; z-index:1;
+}
+.rec-close{
+  background:none; border:none; font-size:20px;
+  color:rgba(255,255,255,0.84);
+  cursor:pointer; padding:4px; line-height:1; flex-shrink:0;
+}
+.rec-close:active{opacity:.6}
+.rec-step-label{font-size:15px;font-weight:500;color:#fff}
+.rec-step-name{font-size:12px;color:rgba(255,255,255,0.72);flex-shrink:0;white-space:nowrap}
+
+/* 进度条 */
+.progress-bar{
+  display:flex; gap:6px; margin-top:14px;
+  position:relative; z-index:1;
+}
+.progress-seg{
+  flex:1; height:4px; border-radius:3px;
+  background:rgba(255,255,255,0.25);
+  transition:background .3s ease;
+}
+.progress-seg--lit{background:#EAF2FF}
+
+/* 内容区 */
+.rec-content{
+  flex:1; display:flex; flex-direction:column;
+  padding:18px 16px 24px;
+  min-height:0;
+}
+
+/* 小灰标题 */
+.rec-label{
+  font-size:12px; color:#9AA4B8; margin-bottom:7px;
+}
+.rec-label--top{margin-bottom:7px}
+
+/* 客户说卡 */
+.cust-say-card{
+  background:var(--card-white); border-radius:14px;
+  box-shadow:var(--card-shadow-sm);
+  padding:13px 14px;
+  font-size:14px; color:#41506E; line-height:1.6;
+}
+
+/* 要点卡 */
+.points-card{
+  background:var(--card-white); border-radius:14px;
+  box-shadow:var(--card-shadow-sm);
+  padding:13px 14px;
+  margin-top:0;
+}
+.points-label{margin-top:16px;margin-bottom:9px}
+.point-item{
+  display:flex; align-items:center; gap:9px;
+}
+.point-item + .point-item{margin-top:11px}
+.point-dot{
+  flex-shrink:0; width:6px; height:6px; border-radius:50%;
+  background:#2E6FE0;
+}
+.point-text{font-size:14px;color:#41506E}
+
+/* 声波 */
+.waveform{
+  display:flex; align-items:flex-end; gap:4px;
+  height:46px;
+}
+.wave-bar{
+  width:4px; border-radius:3px;
+  animation: waveBreathe .72s ease-in-out infinite alternate;
+}
+@keyframes waveBreathe{from{transform:scaleY(.5)}to{transform:scaleY(1)}}
+
+/* 圆形结束键 */
+.end-btn-wrap{display:flex;flex-direction:column;align-items:center}
+.end-btn{
+  width:68px; height:68px; border-radius:50%;
+  background:linear-gradient(135deg,#2E54B8,#1B2F6E);
+  box-shadow:0 10px 24px rgba(27,47,110,0.4);
+  display:grid; place-items:center;
+  cursor:pointer; transition:transform .12s;
+  border:none; flex-shrink:0;
+}
+.end-btn:active{transform:scale(.94)}
+.end-hint{
+  margin-top:13px; font-size:12px; color:#9AA4B8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   【面板 ③】点评页 — 四步总评
+   ══════════════════════════════════════════════════════════════ */
+
+.review-header-orb{
+  position:absolute; right:-46px; top:-26px;
+  width:150px; height:150px; border-radius:50%;
+  background:rgba(255,255,255,0.06); pointer-events:none;
+}
+
+/* 奖励区 */
+.reward-area{
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:14px; position:relative; z-index:1;
+}
+.reward-star{font-size:32px;margin-bottom:2px}
+.reward-title{
+  font-size:18px; font-weight:600; color:#fff;
+}
+.reward-title span{color:#FFC470}
+.reward-subtitle{
+  font-size:13px; color:rgba(255,255,255,0.8);
+  margin-top:5px;
+}
+
+/* 内容面板 */
+.review-content{
+  background: var(--bg-page);
+  border-radius:20px 20px 0 0;
+  margin-top:-14px; padding:16px 14px 18px;
+  position:relative; z-index:2; flex-shrink:0;
+}
+
+/* 小标题（含判据） */
+.review-criteria{
+  font-size:13px; color:#9AA4B8;
+  margin:2px 2px 10px;
+}
+
+/* 达标步白卡 */
+.pass-card{border-radius:16px;padding:2px 14px;margin-bottom:0}
+.pass-row{
+  display:flex; align-items:center; gap:9px;
+  padding:14px 0; cursor:pointer; user-select:none;
+  transition:opacity .12s;
+}
+.pass-row:active{opacity:.65}
+.pass-row + .pass-row{border-top:1px solid #F3F5F9}
+.pass-name{font-size:14px;color:#1A2742;flex-shrink:0}
+.pass-badge{font-size:12px;font-weight:500;color:#2FA76A;flex-shrink:0}
+.pass-chevron{font-size:16px;color:#B6C0D2;margin-left:auto;flex-shrink:0;transition:transform .25s ease}
+
+/* 要点勾叉块 */
+.pass-detail{
+  overflow:hidden;
+  transition:max-height .3s cubic-bezier(.4,0,.2,1),opacity .25s ease,margin .25s ease;
+}
+.pass-detail.collapsed{max-height:0!important;opacity:0;margin-top:0!important}
+.pass-check-block{
+  background:#F4F6FA; border-radius:11px;
+  padding:11px 13px; margin-bottom:12px;
+}
+.pass-check-row{
+  display:flex; align-items:center; gap:9px;
+}
+.pass-check-row + .pass-check-row{margin-top:11px}
+.pass-check-icon{flex-shrink:0;width:16px;height:16px}
+
+/* 没达标卡（红边框） */
+.fail-card{
+  border:1.5px solid #F1CCC5; border-radius:16px;
+  padding:4px 14px 14px;
+  background:var(--card-white);
+  box-shadow:0 6px 20px rgba(180,60,40,0.07);
+  margin-top:11px;
+}
+.fail-title-row{
+  display:flex; align-items:center; gap:9px;
+  padding:13px 0; cursor:pointer; user-select:none;
+}
+.fail-title-row:active{opacity:.65}
+.fail-name{font-size:14px;font-weight:500;color:#1A2742}
+.fail-badge{font-size:12px;font-weight:500;color:#E5533D}
+.fail-chevron{font-size:16px;color:#D88A80;margin-left:auto;flex-shrink:0}
+.fail-check-block{
+  background:#FBF3F2; border-radius:11px;
+  padding:11px 13px;
+}
+.fail-check-row{
+  display:flex; align-items:center; gap:9px;
+}
+.fail-check-row + .fail-check-row{margin-top:11px}
+.fail-check-icon{flex-shrink:0;width:16px;height:16px}
+.fail-check-text{font-size:13px;color:#41506E}
+.fail-detail-body{overflow:hidden;transition:max-height .3s cubic-bezier(.4,0,.2,1)}
+.fail-detail-body.collapsed{max-height:0!important}
+
+/* 弱音频行 */
+.audio-weak{
+  display:flex; align-items:center; gap:9px;
+  padding:10px 13px; margin-bottom:14px;
+  border:1px solid #E3E8F0; border-radius:12px;
+  background:transparent;
+  cursor:pointer; user-select:none;
+  transition:background .15s;
+}
+.audio-weak:active{background:#F7F9FB}
+.audio-weak-icon{
+  flex-shrink:0; width:28px; height:28px; border-radius:50%;
+  background:#EAF1FE; display:grid; place-items:center;
+}
+.audio-weak-text{flex:1;font-size:13px;color:#5B6680}
+.audio-weak-time{font-size:12px;color:#9AA4B8;flex-shrink:0}
+
+/* 或 分隔 */
+.or-sep{
+  text-align:center; font-size:12px; color:#B6C0D2;
+  margin:14px 0 10px;
+}
+.review-btns .btn-outline{margin-top:11px}
+
+/* ══════════════════════════════════════════════════════════════
+   Toast
+   ══════════════════════════════════════════════════════════════ */
+.toast{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(.85);
+  background:rgba(0,0,0,.82); color:#fff; font-size:14px; font-weight:500;
+  padding:12px 24px; border-radius:12px; z-index:100;
+  opacity:0; pointer-events:none;
+  transition:opacity .28s ease,transform .28s ease;
+}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* ── Responsive ── */
+@media(max-width:430px){
+  .stage{padding:0}
+  .phone{width:100vw;height:100vh;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}
+  .header-deep{padding-left:env(safe-area-inset-left,16px);padding-right:env(safe-area-inset-right,16px)}
+  .content-panel,.review-content{padding-left:env(safe-area-inset-right,14px);padding-right:env(safe-area-inset-left,14px)}
+  .rec-content{padding-left:env(safe-area-inset-right,16px);padding-right:env(safe-area-inset-left,16px)}
+}
+</style>
+</head>
+<body>
+<main class="stage">
+<div class="phone">
+
+<!-- ═══════════════════════════════════════════════════════════
+   面板 ①：引导练习页（四环节诊断）
+   ═══════════════════════════════════════════════════════════ -->
+<div class="panel active" id="panelGuide">
+  <div class="scroll">
+    <!-- 头部 -->
+    <div class="header-deep header-deep--guide">
+      <div class="header-deep-glow"></div>
+      <div class="nav-row nav-row--centered">
+        <button class="nav-back" onclick="goBack()" aria-label="返回">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="nav-center-col">
+          <span class="nav-name">王先生</span>
+          <span class="status-capsule">
+            <span class="status-dot"></span>试乘试驾未完成
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内容面板 -->
+    <div class="content-panel">
+      <!-- 小标题 -->
+      <div class="guide-section-title">本次接待未成交，SOP与五维服务诊断如下</div>
+
+      <!-- 四环节白卡（JS 渲染） -->
+      <div class="white-card diag-card" id="diagList"></div>
+
+      <!-- 主按钮 -->
+      <div style="margin-top:18px">
+        <button class="btn-primary" onclick="goRecord(1)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+          开始复盘练一次
+        </button>
+        <div class="btn-hint">约 5 分钟，可中途暂停</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+   面板 ②：录音页（四步连讲，结构相同、内容由 JS 驱动）
+   ═══════════════════════════════════════════════════════════ -->
+<div class="panel" id="panelRecord">
+  <div class="scroll" style="display:flex;flex-direction:column">
+    <!-- 头部 -->
+    <div class="header-deep header-deep--record">
+      <div class="header-deep-glow"></div>
+
+      <!-- 第一行：× 关闭 | 第 N 步/共 4 步 | 环节名 -->
+      <div class="rec-step-row">
+        <button class="rec-close" onclick="goGuide()" aria-label="关闭">✕</button>
+        <span class="rec-step-label" id="recStepLabel">第 1 步 / 共 4 步</span>
+        <span class="rec-step-name" id="recStepName">接待破冰</span>
+      </div>
+
+      <!-- 第二行：四格进度条 -->
+      <div class="progress-bar" id="progressBar">
+        <span class="progress-seg progress-seg--lit" data-seg="1"></span>
+        <span class="progress-seg" data-seg="2"></span>
+        <span class="progress-seg" data-seg="3"></span>
+        <span class="progress-seg" data-seg="4"></span>
+      </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="rec-content" id="recContent">
+      <!-- 客户说 -->
+      <div class="rec-label">客户说</div>
+      <div class="cust-say-card" id="custSay">你好，我想看看你们这款车，大概多少钱？</div>
+
+      <!-- 这一步你要讲到 -->
+      <div class="rec-label points-label">这一步你要讲到</div>
+      <div class="points-card" id="pointsCard">
+        <div class="point-item">
+          <span class="point-dot"></span>
+          <span class="point-text">微笑迎接 + 自我介绍</span>
+        </div>
+        <div class="point-item">
+          <span class="point-dot"></span>
+          <span class="point-text">确认客户称呼与来意</span>
+        </div>
+      </div>
+
+      <!-- 弹性空间 -->
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px 0">
+        <!-- 声波 -->
+        <div class="waveform" id="waveform">
+          <div class="wave-bar" style="height:35%;background:#9CC2F5;animation-delay:0s"></div>
+          <div class="wave-bar" style="height:60%;background:#7FB0F2;animation-delay:.06s"></div>
+          <div class="wave-bar" style="height:90%;background:#3B82F6;animation-delay:.12s"></div>
+          <div class="wave-bar" style="height:55%;background:#7FB0F2;animation-delay:.18s"></div>
+          <div class="wave-bar" style="height:100%;background:#3B82F6;animation-delay:.24s"></div>
+          <div class="wave-bar" style="height:45%;background:#9CC2F5;animation-delay:.1s"></div>
+          <div class="wave-bar" style="height:80%;background:#5B97EF;animation-delay:.16s"></div>
+          <div class="wave-bar" style="height:60%;background:#7FB0F2;animation-delay:.22s"></div>
+          <div class="wave-bar" style="height:100%;background:#3B82F6;animation-delay:.04s"></div>
+          <div class="wave-bar" style="height:40%;background:#9CC2F5;animation-delay:.14s"></div>
+          <div class="wave-bar" style="height:70%;background:#5B97EF;animation-delay:.2s"></div>
+        </div>
+      </div>
+
+      <!-- 圆形结束键 -->
+      <div class="end-btn-wrap">
+        <button class="end-btn" onclick="advanceStep()" aria-label="结束这一步">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="end-hint">收音中 <span id="recTimer">0:00</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+   面板 ③：点评页（四步总评）
+   ═══════════════════════════════════════════════════════════ -->
+<div class="panel" id="panelReview">
+  <div class="scroll">
+    <!-- 头部 -->
+    <div class="header-deep header-deep--review">
+      <div class="header-deep-glow"></div>
+      <div class="review-header-orb"></div>
+      <div class="nav-row nav-row--centered">
+        <button class="nav-back" onclick="goBack()" aria-label="返回">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="nav-center-col">
+          <span class="nav-name">王先生</span>
+          <span class="status-capsule">
+            <span class="status-dot"></span>试乘试驾未完成
+          </span>
+        </div>
+      </div>
+
+      <!-- 星星奖励区 -->
+      <div class="reward-area">
+        <div class="reward-star">⭐</div>
+        <div class="reward-title"><span>+1 颗星</span></div>
+      </div>
+    </div>
+
+    <!-- 内容面板 -->
+    <div class="review-content" id="reviewContent"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+</div><!-- /phone -->
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   数据定义
+   ═══════════════════════════════════════════════════════════ */
+
+// 四步内容（对练唯一数据源，引导页 + 录音页 + 点评页共用）
+// custSay / actualReply 均取自导购真实对话原文，1:1
+var stepData = {
+  1: {
+    name: '接待破冰',
+    custSay: '你好，我过来看车。',
+    actualReply: '这次来看车是重点关注它的续航表现，还是智能配置这块呢？',
+    points: ['微笑迎接 + 自我介绍', '确认客户称呼与来意'],
+    sopPass: true,
+    ability: '服务满意度',
+    score: 62
+  },
+  2: {
+    name: '需求洞察',
+    custSay: '我更倾向于看智能驾驶辅助。预算大概在7万。',
+    actualReply: '不过要注意，高速 NOA 只有437智趣版和530智趣版这两款高配，有你预算大概在哪个区间？',
+    points: ['问清楚用车场景', '了解家庭结构与需求'],
+    sopPass: false,
+    ability: '客户经营',
+    score: 45
+  },
+  3: {
+    name: '产品讲解',
+    custSay: '是的，而且我是新手，我很担心我开不好车。',
+    actualReply: '那从容版的540度全景影像加透明底盘，刚好能解决你视线不好的问题。窄路会车、过减速带都能看清地面情况。还有遥控泊车，你可以站在车外操作，不用挤窄车位。要不要试试现场演示一下泊车功能？',
+    points: ['用场景回应参数', '让客户坐进去感受'],
+    sopPass: true,
+    ability: '产品专业',
+    score: 55
+  },
+  4: {
+    name: '客户跟进',
+    custSay: '可以呀，你带我去看一下呗。',
+    actualReply: '咱们现在在宝安的话，去福永那家上汽 MG 店最方便，地址是广深路福永段218号……那你先忙，要是之后想再了解内饰细节或者预约试驾，随时找我就行。',
+    points: ['约一个具体时间', '要到电话或微信'],
+    sopPass: false,
+    ability: '跟进能力',
+    score: 30
+  }
+};
+
+// 点评数据（points 与 stepData 同源）
+var reviewData = {
+  1: { name: '接待破冰', passed: true,  points: stepData[1].points, checks: [true, true] },
+  2: { name: '需求洞察', passed: true,  points: stepData[2].points, checks: [true, true] },
+  3: { name: '产品讲解', passed: true,  points: stepData[3].points, checks: [true, true] },
+  4: { name: '客户跟进', passed: false, points: stepData[4].points, checks: [true, false] }
+};
+
+/* ═══════════════════════════════════════════════════════════
+   计时器
+   ═══════════════════════════════════════════════════════════ */
+var timerInterval = null;
+var timerSeconds = 0;
+var isRecording = false;
+
+function formatTime(s){
+  var m = Math.floor(s / 60);
+  var sec = s % 60;
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function startTimer(){
+  if(timerInterval) return;
+  isRecording = true;
+  timerInterval = setInterval(function(){
+    timerSeconds++;
+    var el = document.getElementById('recTimer');
+    if(el) el.textContent = formatTime(timerSeconds);
+  }, 1000);
+}
+
+function stopTimer(){
+  if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+  isRecording = false;
+}
+
+function resetTimer(){
+  timerSeconds = 0;
+  var el = document.getElementById('recTimer');
+  if(el) el.textContent = '0:00';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   面板切换
+   ═══════════════════════════════════════════════════════════ */
+var panels = ['panelGuide','panelRecord','panelReview'];
+var currentStep = 1;
+
+function switchPanel(showId){
+  stopTimer();
+  panels.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.classList.remove('active');
+  });
+  var showEl = document.getElementById(showId);
+  if(showEl) showEl.classList.add('active');
+}
+
+/* ── 导航 ── */
+function goBack(){
+  window.location.href = '成交教练-phase1-v5.html';
+}
+
+function goGuide(){
+  switchPanel('panelGuide');
+}
+
+/* ── 引导页：展开/收起环节诊断详情 ── */
+function toggleDiag(n){
+  var detail = document.getElementById('diagDetail' + n);
+  var chev = document.getElementById('diagChev' + n);
+  if(!detail || !chev) return;
+  var open = detail.classList.contains('open');
+  if(open){
+    // 收起：锁死当前高度 → 强制回流 → 归零
+    detail.style.maxHeight = detail.scrollHeight + 'px';
+    detail.offsetHeight;
+    detail.style.maxHeight = '0px';
+    detail.classList.remove('open');
+    chev.style.transform = 'rotate(0deg)';
+  } else {
+    // 展开：归零 → 强制回流 → 设为目标高度
+    detail.style.maxHeight = '0px';
+    detail.offsetHeight;
+    detail.style.maxHeight = detail.scrollHeight + 'px';
+    detail.classList.add('open');
+    chev.style.transform = 'rotate(180deg)';
+  }
+}
+
+/* ── 从 stepData 构建引导页诊断列表 ── */
+function buildDiagList(){
+  var container = document.getElementById('diagList');
+  if(!container) return;
+  var html = '';
+  for(var n = 1; n <= 4; n++){
+    var d = stepData[n];
+    var tagClass = d.sopPass ? 'diag-tag--normal' : 'diag-tag--low';
+    var sopMark = d.sopPass ? 'SOP <span class="tag-check">✓</span>' : 'SOP ✗';
+    html += '<div class="diag-row" onclick="toggleDiag(' + n + ')">';
+    html +=   '<span class="diag-num">' + n + '</span>';
+    html +=   '<span class="diag-name">' + d.name + '</span>';
+    html +=   '<span class="diag-tag ' + tagClass + '" style="margin-left:auto">' + sopMark + ' · ' + d.ability + ' ' + d.score + '</span>';
+    html +=   '<span class="diag-chevron" id="diagChev' + n + '">⌄</span>';
+    html += '</div>';
+    html += '<div class="diag-detail" id="diagDetail' + n + '">';
+    // 客户说
+    html +=   '<div class="diag-cust-label">客户说</div>';
+    html +=   '<div class="diag-cust-quote">' + d.custSay + '</div>';
+    // 你回
+    html +=   '<div class="diag-reply-section">';
+    html +=     '<div class="diag-reply-label">你回</div>';
+    html +=     '<div class="diag-reply-quote">' + d.actualReply + '</div>';
+    html +=   '</div>';
+    // 分隔线
+    html +=   '<hr class="diag-sep">';
+    // 你要达到什么
+    html +=   '<div class="diag-goal-block">';
+    html +=     '<div class="diag-goal-header">';
+    html +=       '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2E6FE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">';
+    html +=         '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="#2E6FE0"/>';
+    html +=       '</svg>';
+    html +=       '这一步你要做到';
+    html +=     '</div>';
+    d.points.forEach(function(p){
+      html +=   '<div class="diag-goal-item">';
+      html +=     '<span class="diag-goal-dot"></span>';
+      html +=     '<span class="diag-goal-text">' + p + '</span>';
+      html +=   '</div>';
+    });
+    html +=   '</div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+/* ── 进入录音页某一步 ── */
+function goRecord(step){
+  currentStep = step || 1;
+  stopTimer();
+  resetTimer();
+
+  // 更新头部
+  var data = stepData[currentStep];
+  document.getElementById('recStepLabel').textContent = '第 ' + currentStep + ' 步 / 共 4 步';
+  document.getElementById('recStepName').textContent = data.name;
+
+  // 更新进度条
+  updateProgress(currentStep);
+
+  // 更新内容
+  document.getElementById('custSay').textContent = data.custSay;
+  var pointsHtml = data.points.map(function(p){
+    return '<div class="point-item"><span class="point-dot"></span><span class="point-text">' + p + '</span></div>';
+  }).join('');
+  document.getElementById('pointsCard').innerHTML = pointsHtml;
+
+  switchPanel('panelRecord');
+  setTimeout(startTimer, 400);
+}
+
+function updateProgress(step){
+  var segs = document.querySelectorAll('#progressBar .progress-seg');
+  segs.forEach(function(seg, i){
+    if(i < step) seg.classList.add('progress-seg--lit');
+    else seg.classList.remove('progress-seg--lit');
+  });
+}
+
+/* ── 录音页：点圆圈 → 下一步或点评 ── */
+function advanceStep(){
+  if(currentStep < 4){
+    goRecord(currentStep + 1);
+  } else {
+    goReview();
+  }
+}
+
+/* ── 进入点评页 ── */
+function goReview(){
+  stopTimer();
+  buildReview();
+  // 同步计时到音频行
+  var at = document.getElementById('reviewAudioTime');
+  if(at) at.textContent = formatTime(timerSeconds);
+  switchPanel('panelReview');
+}
+
+/* ── 练下一组客户 ── */
+function nextCustomer(){
+  showToast('正在加载下一组客户...');
+  setTimeout(function(){ goGuide(); }, 600);
+}
+
+/* ── 保存这一段录音，完成 ── */
+function saveAndDone(){
+  // 写 localStorage 标记该条目已完成
+  var params = new URLSearchParams(window.location.search);
+  var itemIdx = parseInt(params.get('item'), 10);
+  if (!isNaN(itemIdx)) {
+    try {
+      var key = 'v5_completed';
+      var data = JSON.parse(localStorage.getItem(key)) || { learn:[], practice:[], champ:[] };
+      if (data.practice.indexOf(itemIdx) === -1) {
+        data.practice.push(itemIdx);
+        localStorage.setItem(key, JSON.stringify(data));
+      }
+      // 标记该对练已有录音（首页区分「听对练」vs「去重练」）
+      localStorage.setItem('v5_practice_audio_' + itemIdx, '1');
+    } catch(e) {}
+  }
+  showToast('✓ 录音已保存，练习完成');
+  setTimeout(function(){ goBack(); }, 800);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   构建点评页内容
+   ═══════════════════════════════════════════════════════════ */
+function buildReview(){
+  var container = document.getElementById('reviewContent');
+  var html = '';
+
+  // 弱音频行
+  html += '<div class="audio-weak" onclick="showToast(\'正在播放录音...\')">';
+  html +=   '<div class="audio-weak-icon">';
+  html +=     '<svg width="13" height="13" viewBox="0 0 24 24" fill="#2E6FE0"><polygon points="6,3 20,12 6,21"/></svg>';
+  html +=   '</div>';
+  html +=   '<span class="audio-weak-text">听这一版录音</span>';
+  html +=   '<span class="audio-weak-time" id="reviewAudioTime">0:00</span>';
+  html += '</div>';
+
+  // 达标步白卡
+  html += '<div class="white-card pass-card">';
+  var passSteps = [1,2,3,4].filter(function(n){ return reviewData[n].passed; });
+  passSteps.forEach(function(n, idx){
+    var d = reviewData[n];
+    html += '<div class="pass-row" onclick="togglePassDetail(' + n + ')" id="passRow' + n + '">';
+    html +=   '<svg width="19" height="19" viewBox="0 0 24 24" fill="#2FA76A"><circle cx="12" cy="12" r="11"/><path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+    html +=   '<span class="pass-name">' + d.name + '</span>';
+    html +=   '<span class="pass-chevron" id="passChev' + n + '" style="transform:rotate(0deg)">⌄</span>';
+    html += '</div>';
+    // 展开内容（默认收起）
+    html += '<div class="pass-detail collapsed" id="passDetail' + n + '" style="max-height:200px">';
+    html +=   '<div class="pass-check-block">';
+    d.points.forEach(function(p, i){
+      html += '<div class="pass-check-row">';
+      html +=   '<svg class="pass-check-icon" viewBox="0 0 24 24" fill="none" stroke="#2FA76A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+      html +=   '<span style="font-size:13px;color:#41506E">' + p + '</span>';
+      html += '</div>';
+    });
+    html +=   '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // 没达标卡
+  var failSteps = [1,2,3,4].filter(function(n){ return !reviewData[n].passed; });
+  failSteps.forEach(function(n){
+    var d = reviewData[n];
+    html += '<div class="fail-card" id="failCard' + n + '">';
+    html +=   '<div class="fail-title-row" onclick="toggleFailDetail(' + n + ')">';
+    html +=     '<svg width="19" height="19" viewBox="0 0 24 24" fill="#E5533D"><circle cx="12" cy="12" r="11"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+    html +=     '<span class="fail-name">' + d.name + '</span>';
+    html +=     '<span class="fail-chevron" id="failChev' + n + '" style="transform:rotate(180deg)">⌃</span>';
+    html +=   '</div>';
+    html +=   '<div class="fail-detail-body" id="failDetail' + n + '" style="max-height:200px">';
+    html +=     '<div class="fail-check-block">';
+    d.points.forEach(function(p, i){
+      var isChecked = d.checks[i];
+      if(isChecked){
+        html += '<div class="fail-check-row">';
+        html +=   '<svg class="fail-check-icon" viewBox="0 0 24 24" fill="none" stroke="#2FA76A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+        html +=   '<span class="fail-check-text">' + p + '</span>';
+        html += '</div>';
+      } else {
+        html += '<div class="fail-check-row">';
+        html +=   '<svg class="fail-check-icon" viewBox="0 0 24 24" fill="none" stroke="#E5533D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+        html +=   '<span class="fail-check-text">' + p + '</span>';
+        html += '</div>';
+      }
+    });
+    html +=     '</div>';
+    html +=   '</div>';
+    html += '</div>';
+  });
+
+  // 按钮组：保存 + 练下一组 左右并排
+  html += '<div class="btn-row" style="margin-top:18px">';
+  html +=   '<button class="btn-outline" onclick="saveAndDone()">保存本次录音</button>';
+  html +=   '<button class="btn-primary" onclick="nextCustomer()">练下一组客户</button>';
+  html += '</div>';
+
+  // 底部文字链接
+  html += '<div class="text-links">';
+  html +=   '<span class="text-link" onclick="goRecord(1)">再练一次</span>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+/* ── 点评页：展开/收起达标步 ── */
+function togglePassDetail(n){
+  var detail = document.getElementById('passDetail' + n);
+  var chev = document.getElementById('passChev' + n);
+  if(!detail || !chev) return;
+  var collapsed = detail.classList.contains('collapsed');
+  if(collapsed){
+    detail.classList.remove('collapsed');
+    chev.style.transform = 'rotate(180deg)';
+  } else {
+    detail.classList.add('collapsed');
+    chev.style.transform = 'rotate(0deg)';
+  }
+}
+
+/* ── 点评页：展开/收起没达标步 ── */
+function toggleFailDetail(n){
+  var detail = document.getElementById('failDetail' + n);
+  var chev = document.getElementById('failChev' + n);
+  if(!detail || !chev) return;
+  var collapsed = detail.classList.contains('collapsed');
+  if(collapsed){
+    detail.classList.remove('collapsed');
+    chev.style.transform = 'rotate(180deg)';
+  } else {
+    detail.classList.add('collapsed');
+    chev.style.transform = 'rotate(0deg)';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Toast
+   ═══════════════════════════════════════════════════════════ */
+var toastTimer;
+function showToast(msg){
+  var t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){
+    t.classList.remove('show');
+  }, 1800);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   URL query param 支持
+   ═══════════════════════════════════════════════════════════ */
+(function initState(){
+  buildDiagList();
+  var params = new URLSearchParams(window.location.search);
+  var state = params.get('state');
+  if(state === 'record'){
+    document.getElementById('panelGuide').classList.remove('active');
+    goRecord(1);
+  } else if(state === 'review'){
+    document.getElementById('panelGuide').classList.remove('active');
+    goReview();
+  }
+})();
+</script>
+
+</body>
+</html>
