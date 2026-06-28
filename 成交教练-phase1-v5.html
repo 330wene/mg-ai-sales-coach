@@ -485,6 +485,7 @@ a{text-decoration:none;color:inherit}
   user-select:none;
 }
 .champ-listen-ring:active{opacity:.75}
+.champ-listen-ring svg{pointer-events:none}
 .champ-play svg{width:12px;height:12px;fill:currentColor;flex-shrink:0}
 
 /* 今日对练 — 正在听内联态（深蓝 · 复用 wvbounce 动画 + HTML 结构） */
@@ -759,7 +760,7 @@ a{text-decoration:none;color:inherit}
     <div class="block-head">
       <span class="block-bar"></span>
       <span class="block-title">今日学习</span>
-      <span class="link-muted" onclick="location.href='index.html#learn-range'" style="cursor:pointer">更多学习资料 ›</span>
+      <span class="link-muted" onclick="location.href='learn-record.html'" style="cursor:pointer">更多学习资料 ›</span>
     </div>
     <div class="info-list">
       <div class="info-item" data-module="learn" data-item="0"><span class="info-num">1</span><span class="info-text">知识点：MG4续航讲解要点</span><span class="info-done-tag">已学完</span><span class="info-action" data-default="去学习" data-done="去重看" onclick="location.href='learning-detail.html?item=0'">去学习</span></div>
@@ -1477,6 +1478,15 @@ window.startListen = function(idx, module){
 
   // 启动 TTS 播放
   stopListenTTS();
+  if(typeof SpeechSynthesisUtterance==='undefined' || typeof speechSynthesis==='undefined'){
+    toast('浏览器不支持语音播放');
+    _listenStartTime = Date.now();
+    _listenEstDuration = Math.max(1, Math.ceil(text.length / 3));
+    clearInterval(_listenTimer);
+    _listenTimer = setInterval(updateListenProgress, 250);
+    updateListenProgress();
+    return;
+  }
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'zh-CN'; u.rate = 0.95;
   u.onend = function(){
@@ -1560,7 +1570,7 @@ function updateListenProgress(){
 }
 
 function stopListenTTS(){
-  speechSynthesis.cancel();
+  try{ speechSynthesis.cancel(); }catch(e){}
   _listenUtt = null;
 }
 
